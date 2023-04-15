@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Spot } = require('../../db/models');
+const { Spot, SpotImage, User } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
     const allSpots = await Spot.findAll();
@@ -9,10 +9,76 @@ router.get('', async (req, res, next) => {
 })
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
-    console.log(ownerId, address, city, state, country, lat, lng, name, description, price);
+    // console.log(ownerId, address, city, state, country, lat, lng, name, description, price);
     const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
 
     res.json(newSpot)
+})
+router.post('/:spotId/images', async (req, res, next) => {
+    const { url, preview } = req.body;
+    const id = req.params.spotId
+    console.log('hello');
+    const newSpotImage = await SpotImage.create({ spotId: id, url, preview });
+    console.log('2');
+    const allSpotImages = await SpotImage.findAll();
+    res.json({ newSpotImage, allSpotImages })
+})
+router.get('/current', async (req, res, next) => {
+    const { user } = req;
+    console.log(user);
+    if (user) {
+        const spotsOfCurrUser = await Spot.findAll({
+            where: {
+                ownerId: user.id
+            }
+        })
+        return res.json(spotsOfCurrUser);
+    } else return res.json({ user: null });
+})
+router.get('/:spotId', async (req, res, next) => {
+    const spot = await Spot.findByPk(req.params.spotId, {
+        include: {
+            model: User
+        }
+    })
+    res.json(spot);
+})
+router.put('/:spotId', async (req, res, next) => {
+    try {
+        const spotId = req.params.spotId;
+        const spot = await Spot.findByPk(spotId);
+        if (!spot) {
+            return res.status(404).json({ message: "Spot not found" });
+        }
+
+        const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
+        const itemsTobeUpdated = [
+            { ownerId },
+            { address },
+            { city },
+            { state },
+            { country },
+            { lat },
+            { lng },
+            { name },
+            { description },
+            { price },
+        ].filter((item) => {
+            const propValue = Object.values(item)[0];
+            if (propValue !== undefined) {
+                return item;
+            }
+        });
+
+        const updatedSpot = await spot.update({ ...Object.assign({}, ...itemsTobeUpdated) });
+
+
+        console.log(itemsTobeUpdated);
+        const newSpot = await Spot.findByPk(spotId);
+        res.json(newSpot);
+    } catch (error) {
+        next(error);
+    }
 })
 
 // {
