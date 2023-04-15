@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Spot.belongsTo(models.User, { foreignKey: 'ownerId', targetKey: 'id' })
+      Spot.belongsTo(models.User, { foreignKey: 'ownerId' })
       Spot.belongsToMany(models.User, {
         through: models.Booking,
         foreignKey: 'spotId',
@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     ownerId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Users'
+        model: 'Users',
+        key: 'id'
       }
     },
     address: DataTypes.STRING,
