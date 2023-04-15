@@ -14,7 +14,10 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
-
+const sayHello = (req, res, next) => {
+    console.log('Worrrrkiing');
+    next()
+}
 // Security Middleware
 if (!isProduction) {
     // enable cors only in development
@@ -27,7 +30,7 @@ app.use(
         policy: "cross-origin"
     })
 );
-
+// app.use(sayHello)
 // Set the _csrf token and create req.csrfToken method
 app.use(
     csurf({
@@ -37,8 +40,9 @@ app.use(
             httpOnly: true
         }
     })
-);
+    );
 
+    // app.use(sayHello)
 const routes = require('./routes');
 
 // ...
