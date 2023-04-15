@@ -15,14 +15,12 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Users'
-        }
       },
       ownerId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users'
+          model: 'Users',
+          key: 'id'
         }
       },
       address: {
