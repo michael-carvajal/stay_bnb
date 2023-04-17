@@ -1,26 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const fn = require('fn')
+const sequelize = require('sequelize')
 const { Spot, SpotImage, User, Review } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
     const allSpots = await Spot.findAll({
-
         include: [{
             model: SpotImage,
             attributes: ['url']
         },
-            {
-                model: Review
-            }
-        ]
+        {
+            model: Review,
+            attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+        }],
+        group: ['Spot.id']
     });
 
-    // const editAllSpots = allSpots.map(spot => {
-    //     console.log(spot);
-
-    // });
-    res.json(editAllSpots)
+    res.json(allSpots);
 })
+
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
     // console.log(ownerId, address, city, state, country, lat, lng, name, description, price);
