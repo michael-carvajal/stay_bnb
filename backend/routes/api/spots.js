@@ -1,11 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, SpotImage, User } = require('../../db/models');
+const { Spot, SpotImage, User, Review } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
-    const allSpots = await Spot.findAll();
+    const allSpots = await Spot.findAll({
 
-    res.json(allSpots)
+        include: [{
+            model: SpotImage,
+            attributes: ['url']
+        },
+            {
+                model: Review
+            }
+        ]
+    });
+
+    // const editAllSpots = allSpots.map(spot => {
+    //     console.log(spot);
+
+    // });
+    res.json(editAllSpots)
 })
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;

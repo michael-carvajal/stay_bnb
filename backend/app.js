@@ -30,9 +30,10 @@ app.use(
         policy: "cross-origin"
     })
 );
-// app.use(sayHello)
+app.use(sayHello)
 // Set the _csrf token and create req.csrfToken method
 app.use(
+    
     csurf({
         cookie: {
             secure: isProduction,
@@ -42,7 +43,7 @@ app.use(
     })
     );
 
-    // app.use(sayHello)
+    app.use(sayHello)
 const routes = require('./routes');
 
 // ...
