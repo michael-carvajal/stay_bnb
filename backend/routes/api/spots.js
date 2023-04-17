@@ -40,12 +40,19 @@ router.get('/current', async (req, res, next) => {
     const { user } = req;
     console.log(user);
     if (user) {
-        const spotsOfCurrUser = await Spot.findAll({
-            where: {
-                ownerId: user.id
-            }
-        })
-        return res.json(spotsOfCurrUser);
+        const allSpots = await Spot.findByPk(user.id,{
+            include: [{
+                model: SpotImage,
+                attributes: ['url']
+            },
+            {
+                model: Review,
+                attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+            }],
+            group: ['Spot.id']
+        });
+
+        return res.json(allSpots);
     } else return res.json({ user: null });
 })
 router.get('/:spotId', async (req, res, next) => {
