@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Review, Spot, SpotImage, ReviewImage, User} = require('../../db/models');
+const { Review, Spot, SpotImage, ReviewImage, User } = require('../../db/models');
 
 
 router.get('/current', async (req, res) => {
     const { user } = req;
     if (!user) {
-        return res.status(403).json({message: "Forbidden"})
+        return res.status(403).json({ message: "Forbidden" })
     }
     const reviews = await Review.findAll({
         where: {
@@ -17,7 +17,7 @@ router.get('/current', async (req, res) => {
         include: [
             {
                 model: User,
-                attributes : ['id','firstName', 'lastName']
+                attributes: ['id', 'firstName', 'lastName']
             },
             {
                 model: Spot,
@@ -65,25 +65,57 @@ router.put('/:reviewId', async (req, res) => {
             }
         })
     }
-try {
-    const reviewToUpdate = await Review.findByPk(reviewId);
-    if (reviewToUpdate.userId !== user.id) {
-        return res.status(403).json({ message: "Forbidden" })
+    try {
+        const reviewToUpdate = await Review.findByPk(reviewId);
+        if (reviewToUpdate.userId !== user.id) {
+            return res.status(403).json({ message: "Forbidden" })
+        }
+
+        await reviewToUpdate.update({ review, stars })
+        const updatedReview = await Review.findByPk(reviewId);
+
+        res.json(updatedReview)
+
+    } catch (error) {
+        res.status(404).json({
+            "message": "Review couldn't be found"
+        })
     }
-
-    await reviewToUpdate.update({review,stars})
-    const updatedReview = await Review.findByPk(reviewId);
-
-    res.json(updatedReview)
-
-} catch (error) {
-    res.status(404).json({
-        "message": "Review couldn't be found"
-    })
-}
 
 })
 
+//////////////DELETE
+
+router.delete('/:reviewId', async (req, res) => {
+    const { user } = req;
+    if (!user) {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+    const reviewId = req.params.reviewId;
+
+    try {
+        console.log(1);
+        const reviewToDelete = await Review.findByPk(reviewId);
+        console.log(2);
+        if (reviewToDelete.userId !== user.id) {
+            return res.status(403).json({
+                message: "Forbidden"
+            })
+        }
+        if (reviewToDelete === null) {
+            return res.status(404).json({ message: "Review couldn't be found" })
+        }
+
+        console.log(3);
+        await reviewToDelete.destroy();
+        console.log(4);
+
+        res.json({ message: "Successfully deleted" })
+    } catch (error) {
+        res.status(404).json({ message: "Review couldn't be found" })
+
+    }
+})
 router.post('/:reviewId/images', async (req, res) => {
     const reviewId = req.params.reviewId;
     const { user } = req;
@@ -115,7 +147,7 @@ router.post('/:reviewId/images', async (req, res) => {
         })
         console.log(maxCount);
         const newReviewImage = await ReviewImage.findByPk(count, {
-            attributes: ['id','url']
+            attributes: ['id', 'url']
         })
         res.json(newReviewImage)
 
@@ -131,7 +163,7 @@ router.get('', async (req, res) => {
     })
 
 
-    res.json({Reviews : allReviews})
+    res.json({ Reviews: allReviews })
 })
 
 
