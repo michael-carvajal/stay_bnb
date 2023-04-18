@@ -47,6 +47,42 @@ router.get('/current', async (req, res) => {
     res.json({ Reviews: spotsWithPreview })
 })
 
+///////////////////edit Review ////////////
+router.put('/:reviewId', async (req, res) => {
+    const { user } = req;
+    if (!user) {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+    const { review, stars } = req.body;
+    const reviewId = req.params.reviewId;
+
+    if (!review || !stars) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "review": "Review text is required",
+                "stars": "Stars must be an integer from 1 to 5",
+            }
+        })
+    }
+try {
+    const reviewToUpdate = await Review.findByPk(reviewId);
+    if (reviewToUpdate.userId !== user.id) {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+
+    await reviewToUpdate.update({review,stars})
+    const updatedReview = await Review.findByPk(reviewId);
+
+    res.json(updatedReview)
+
+} catch (error) {
+    res.status(404).json({
+        "message": "Review couldn't be found"
+    })
+}
+
+})
 
 router.post('/:reviewId/images', async (req, res) => {
     const reviewId = req.params.reviewId;
