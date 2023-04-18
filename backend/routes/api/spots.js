@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fn = require('fn')
 const sequelize = require('sequelize')
-const { Spot, SpotImage, User, Review } = require('../../db/models');
+const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
     // console.log('here is 1');
@@ -101,6 +101,37 @@ router.get('', async (req, res, next) => {
     res.json({ Spots: spotsWithAvgRating });
 
 });
+
+router.get('/:spotId/reviews', async (req, res) => {
+    const spotId = req.params.spotId;
+   try {
+       const spotReviews = await Review.findByPk(spotId, {
+           include: [{
+               model: User,
+               attributes: ['id', 'firstName', 'lastName']
+           },
+           {
+               model: ReviewImage,
+               attributes: ['id', 'url']
+
+           }
+           ],
+
+       })
+       if (spotReviews === null) {
+           res.status(404).json({
+               "message": "Spot couldn't be found"
+           });
+       } else {
+           res.json(spotReviews);
+       }
+
+   } catch (error) {
+       res.status(404).json({
+           "message": "Spot couldn't be found"
+       })
+   }
+})
 
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
