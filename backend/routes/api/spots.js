@@ -27,15 +27,52 @@ router.post('', async (req, res, next) => {
 
     res.json(newSpot)
 })
+
 router.post('/:spotId/images', async (req, res, next) => {
+    const { user } = req;
     const { url, preview } = req.body;
     const id = req.params.spotId
-    console.log('hello');
-    const newSpotImage = await SpotImage.create({ spotId: id, url, preview });
-    console.log('2');
-    const allSpotImages = await SpotImage.findAll();
-    res.json({ newSpotImage, allSpotImages })
+try {
+    const currSpot = await Spot.findByPk(id)
+    console.log(currSpot, currSpot.ownerId);
+
+
+    if (!user) {
+        return res.status(401).json({
+            "message": "Authentication required"
+        })
+    } else {
+
+        if (user.id !== currSpot.ownerId) {
+            return res.status(403).json({
+                "message": "Forbidden"
+            })
+        } else {
+            console.log('hello');
+
+            try {
+                const newSpotImage = await SpotImage.create({ spotId: id, url, preview});
+                        console.log('2');
+                const lastItem = await SpotImage.count();
+                const foundNewImage = await SpotImage.findByPk(lastItem, {
+                    attributes: ['id', 'url', 'preview']
+                })
+                        res.json({ foundNewImage})
+
+            } catch (error) {
+                res.status(404).json({message: "No spot with provided id"})
+            }
+        }
+
+
+    }
+
+} catch (error) {
+    res.status(500).json({ message: "No spot with provided id" })
+}
+
 })
+
 router.get('/current', async (req, res, next) => {
     const { user } = req;
     console.log(user);
