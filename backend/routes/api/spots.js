@@ -23,9 +23,19 @@ router.get('', async (req, res, next) => {
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
     // console.log(ownerId, address, city, state, country, lat, lng, name, description, price);
-    const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
+    const { user } = req;
 
-    res.json(newSpot)
+    try {
+        if (user) {
+            const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
+            return res.status(201).json(newSpot)
+        }
+
+    } catch (error) {
+        error.status = 400;
+        next(error)
+    }
+
 })
 
 router.post('/:spotId/images', async (req, res, next) => {
@@ -60,7 +70,7 @@ try {
                         res.json({ foundNewImage})
 
             } catch (error) {
-                res.status(404).json({message: "No spot with provided id"})
+                res.status(404).json({message: "Spot couldn't be found"})
             }
         }
 
@@ -77,28 +87,61 @@ router.get('/current', async (req, res, next) => {
     const { user } = req;
     console.log(user);
     if (user) {
-        const allSpots = await Spot.findByPk(user.id,{
-            include: [{
-                model: SpotImage,
-                attributes: ['url']
-            },
-            {
-                model: Review,
-                attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-            }],
-            group: ['Spot.id']
-        });
 
-        return res.json(allSpots);
+        try {
+            const allSpots = await Spot.findByPk(user.id,{
+                include: [{
+                    model: SpotImage,
+                    attributes: ['url']
+                },
+                {
+                    model: Review,
+                    attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+                }],
+                group: ['Spot.id']
+            });
+
+            return res.status(200).json(allSpots);
+
+        } catch (error) {
+            res.json({
+                "message": "Spot couldn't be found"
+            })
+        }
     } else return res.json({ user: null });
 })
 router.get('/:spotId', async (req, res, next) => {
-    const spot = await Spot.findByPk(req.params.spotId, {
-        include: {
-            model: User
+    console.log(req.params.spotId);
+
+    const numOfSpots = await Spot.count();
+
+    if (req.params.spotId > numOfSpots) {
+        return res.status(400).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+try {
+    const spot = await Spot.scope('spotId').findByPk(req.params.spotId, {
+
+        include: [{
+            model: Review,
+            attributes: [[sequelize.fn('COUNT', sequelize.col('Reviews.id')), 'numReviews'],
+            [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
+            ]
+        }, {
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }, {
+            model: SpotImage,
+            attributes: ['id', 'url', 'preview']
         }
+        ]
     })
     res.json(spot);
+} catch (error) {
+    error.status = 400
+    next(error)
+}
 })
 router.put('/:spotId', async (req, res, next) => {
     try {
