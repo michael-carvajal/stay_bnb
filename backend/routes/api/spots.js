@@ -9,16 +9,40 @@ router.get('', async (req, res, next) => {
         include: [{
             model: SpotImage,
             attributes: ['url']
-        },
-        {
-            model: Review,
-            attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-        }],
-        group: ['Spot.id']
+        }]
     });
 
-    res.json(allSpots);
-})
+    const spotsArray = [];
+
+    await Promise.all(allSpots.map(async spot => {
+        const eachSpot = await Spot.findByPk(spot.id, {
+            include: {
+                model: Review,
+                attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+            },
+            order: ['id']
+        });
+        const newSpotObj = eachSpot.toJSON();
+        const avgRating = newSpotObj.Reviews[0]
+        const oldSpotObj = spot.toJSON();
+
+
+        if (typeof avgRating !=='object' ) {
+            oldSpotObj.avgRating = null
+            spotsArray.push(oldSpotObj)
+        } else {
+            const updatedObj = {
+                ...oldSpotObj,
+                ...avgRating
+            }
+            spotsArray.push(updatedObj)
+        }
+
+
+    }));
+
+    res.json(spotsArray);
+});
 
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
@@ -143,10 +167,20 @@ try {
     next(error)
 }
 })
+
+
+///////////////////////// Edit SPOT ////////////////////////////////////
 router.put('/:spotId', async (req, res, next) => {
+    const { user } = req;
+    // console.log(user.id);
+
     try {
         const spotId = req.params.spotId;
         const spot = await Spot.findByPk(spotId);
+        // console.log(spot.ownerId);
+        if (user.id !== spot.ownerId) {
+            return res.status(403).json({message: 'Forbidden'})
+        }
         if (!spot) {
             return res.status(404).json({ message: "Spot not found" });
         }
@@ -180,17 +214,28 @@ router.put('/:spotId', async (req, res, next) => {
         next(error);
     }
 })
+///////////////////////// Delete SPOT ////////////////////////////////////
+router.delete('/:spotId', async(req, res, next) => {
+    const { user } = req;
 
-// {
-//     "ownerId": 1,
-//         "address": "123 Main St",
-//             "city": "New York",
-//                 "state": "NY",
-//                     "country": "USA",
-//                         "lat": "40.71427",
-//                             "lng": "-74.00597",
-//                                 "name": "Cozy Apartment",
-//                                     "description": "A comfortable apartment in the heart of the city.",
-//                                         "price": "100"
-// }
+    try {
+        const spotToDelete = await Spot.findByPk(req.params.spotId)
+        if (user.id !== spotToDelete.ownerId) {
+            return res.json({
+                "message": "Forbidden"
+            })
+        }
+
+        await spotToDelete.destroy();
+
+        res.json({
+            "message": "Successfullt deleted"
+        })
+    } catch (error) {
+        res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+})
+
 module.exports = router;
