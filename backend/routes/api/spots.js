@@ -263,12 +263,12 @@ try {
     });
 
     // Get the review stats separately
-    const reviewStats = await Review.aggregate('SpotId', 'count', {
+    const reviewStats = await Review.aggregate('spotId', 'count', {
         distinct: true,
-        where: { SpotId: req.params.spotId }
+        where: { spotId: req.params.spotId }
     }).then(count => {
         return Review.aggregate('stars', 'avg', {
-            where: { SpotId: req.params.spotId }
+            where: { spotId: req.params.spotId }
         }).then(avg => ({ numReviews: count, avgStarRating: avg }));
     });
 
@@ -342,7 +342,7 @@ router.delete('/:spotId', async(req, res, next) => {
         await spotToDelete.destroy();
 
         res.json({
-            "message": "Successfullt deleted"
+            "message": "Successfully deleted"
         })
     } catch (error) {
         res.status(404).json({
