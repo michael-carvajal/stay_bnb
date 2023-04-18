@@ -143,10 +143,20 @@ try {
     next(error)
 }
 })
+
+
+///////////////////////// Edit SPOT ////////////////////////////////////
 router.put('/:spotId', async (req, res, next) => {
+    const { user } = req;
+    // console.log(user.id);
+
     try {
         const spotId = req.params.spotId;
         const spot = await Spot.findByPk(spotId);
+        // console.log(spot.ownerId);
+        if (user.id !== spot.ownerId) {
+            return res.status(403).json({message: 'Forbiden'})
+        }
         if (!spot) {
             return res.status(404).json({ message: "Spot not found" });
         }
@@ -181,16 +191,5 @@ router.put('/:spotId', async (req, res, next) => {
     }
 })
 
-// {
-//     "ownerId": 1,
-//         "address": "123 Main St",
-//             "city": "New York",
-//                 "state": "NY",
-//                     "country": "USA",
-//                         "lat": "40.71427",
-//                             "lng": "-74.00597",
-//                                 "name": "Cozy Apartment",
-//                                     "description": "A comfortable apartment in the heart of the city.",
-//                                         "price": "100"
-// }
+
 module.exports = router;
