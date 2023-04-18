@@ -281,6 +281,62 @@ try {
 }
 })
 ///comment
+router.post('/:spotId/reviews', async (req, res) => {
+    const { user } = req
+    const spotId = req.params.spotId;
+    const userId = user.id;
+    const { review, stars } = req.body;
+
+    if (!user) {
+        return res.status(403).json({
+            message: "Forbidden"
+        })
+    }
+
+    if (!review || !stars) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "review": "Review text is required",
+                "stars": "Stars must be an integer from 1 to 5",
+            }
+        })
+    }
+
+    try {
+        const specificSpot = await Spot.findByPk(spotId, {
+            include: {
+                model: Review,
+                attributes: ['userId']
+            }
+        })
+        const spotObj = specificSpot.toJSON()
+        spotObj.Reviews.forEach(review => {
+            console.log(review.userId);
+            if (review.userId === userId) {
+                return res.status(500).json({
+                    "message": "User already has a review for this spot"
+                })
+            }
+        });
+        // const reviews = await Review.findAll();
+        // reviews.forEach(review => {
+        //     if (review.spotId === spotId && review.userId === userId) {
+        //         return res.status(500).json({
+        //             "message": "User already has a review for this spot"
+        //         })
+        //     }
+        // });
+
+        const newReview = await Review.create({ userId, spotId, review, stars })
+        res.json(newReview)
+
+    } catch (error) {
+        res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+})
 
 ///////////////////////// Edit SPOT ////////////////////////////////////
 router.put('/:spotId', async (req, res, next) => {
