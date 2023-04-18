@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fn = require('fn')
 const sequelize = require('sequelize')
-const { Spot, SpotImage, User, Review } = require('../../db/models');
+const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
     // console.log('here is 1');
@@ -101,6 +101,37 @@ router.get('', async (req, res, next) => {
     res.json({ Spots: spotsWithAvgRating });
 
 });
+
+router.get('/:spotId/reviews', async (req, res) => {
+    const spotId = req.params.spotId;
+   try {
+       const spotReviews = await Review.findByPk(spotId, {
+           include: [{
+               model: User,
+               attributes: ['id', 'firstName', 'lastName']
+           },
+           {
+               model: ReviewImage,
+               attributes: ['id', 'url']
+
+           }
+           ],
+
+       })
+       if (spotReviews === null) {
+           res.status(404).json({
+               "message": "Spot couldn't be found"
+           });
+       } else {
+           res.json(spotReviews);
+       }
+
+   } catch (error) {
+       res.status(404).json({
+           "message": "Spot couldn't be found"
+       })
+   }
+})
 
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
@@ -281,6 +312,62 @@ try {
 }
 })
 ///comment
+router.post('/:spotId/reviews', async (req, res) => {
+    const { user } = req
+    const spotId = req.params.spotId;
+    const userId = user.id;
+    const { review, stars } = req.body;
+
+    if (!user) {
+        return res.status(403).json({
+            message: "Forbidden"
+        })
+    }
+
+    if (!review || !stars) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "review": "Review text is required",
+                "stars": "Stars must be an integer from 1 to 5",
+            }
+        })
+    }
+
+    try {
+        const specificSpot = await Spot.findByPk(spotId, {
+            include: {
+                model: Review,
+                attributes: ['userId']
+            }
+        })
+        const spotObj = specificSpot.toJSON()
+        spotObj.Reviews.forEach(review => {
+            console.log(review.userId);
+            if (review.userId === userId) {
+                return res.status(500).json({
+                    "message": "User already has a review for this spot"
+                })
+            }
+        });
+        // const reviews = await Review.findAll();
+        // reviews.forEach(review => {
+        //     if (review.spotId === spotId && review.userId === userId) {
+        //         return res.status(500).json({
+        //             "message": "User already has a review for this spot"
+        //         })
+        //     }
+        // });
+
+        const newReview = await Review.create({ userId, spotId, review, stars })
+        res.json(newReview)
+
+    } catch (error) {
+        res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+})
 
 ///////////////////////// Edit SPOT ////////////////////////////////////
 router.put('/:spotId', async (req, res, next) => {
