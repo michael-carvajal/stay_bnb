@@ -26,7 +26,8 @@ router.get('/current', async (req, res) => {
                 }
             },
             {
-                model: ReviewImage
+                model: ReviewImage,
+                attributes: ['id', 'url']
             }
         ]
     })
@@ -47,24 +48,53 @@ router.get('/current', async (req, res) => {
 })
 
 
+router.post('/:reviewId/images', async (req, res) => {
+    const reviewId = req.params.reviewId;
+    const { user } = req;
+    const { url } = req.body;
+    if (!user) {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+    const review = Review.findByPk(reviewId);
 
-// const spotsWithAvgRating = await Promise.all(allSpots.map(async spot => {
-//     const avgRating = await Review.findOne({
-//         attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']],
-//         where: { spotId: spot.id }
-//     });
-//     const ratingObj = avgRating.toJSON()
-//     console.log(ratingObj);
-//     return {
-//         ...spot.toJSON(),
-//         ...ratingObj
-//     };
-// }));
+    if (review.userId !== user.id) {
+        return res.status(403).json({ message: "Forbidden" })
 
+    }
+    const count = await ReviewImage.count()
+    const maxCount = await ReviewImage.count({
+        where: {
+            reviewId: reviewId
+        }
+    })
+    if (maxCount > 10) {
+        return res.status(403).json({
+            "message": "Maximum number of images for this resource was reached"
+        })
+    }
+    try {
+        const addReviewImage = await ReviewImage.create({
+            reviewId: reviewId,
+            url
+        })
+        console.log(maxCount);
+        const newReviewImage = await ReviewImage.findByPk(count, {
+            attributes: ['id','url']
+        })
+        res.json(newReviewImage)
+
+    } catch (error) {
+        res.status(404).json({
+            "message": "Review couldn't be found"
+        })
+    }
+})
 router.get('', async (req, res) => {
     const allReviews = await Review.findAll({
         order: [['id']]
     })
+
+
     res.json({Reviews : allReviews})
 })
 
