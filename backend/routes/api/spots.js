@@ -9,16 +9,40 @@ router.get('', async (req, res, next) => {
         include: [{
             model: SpotImage,
             attributes: ['url']
-        },
-        {
-            model: Review,
-            attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-        }],
-        group: ['Spot.id']
+        }]
     });
 
-    res.json(allSpots);
-})
+    const spotsArray = [];
+
+    await Promise.all(allSpots.map(async spot => {
+        const eachSpot = await Spot.findByPk(spot.id, {
+            include: {
+                model: Review,
+                attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+            },
+            order: ['id']
+        });
+        const newSpotObj = eachSpot.toJSON();
+        const avgRating = newSpotObj.Reviews[0]
+        const oldSpotObj = spot.toJSON();
+
+
+        if (typeof avgRating !=='object' ) {
+            oldSpotObj.avgRating = null
+            spotsArray.push(oldSpotObj)
+        } else {
+            const updatedObj = {
+                ...oldSpotObj,
+                ...avgRating
+            }
+            spotsArray.push(updatedObj)
+        }
+
+
+    }));
+
+    res.json(spotsArray);
+});
 
 router.post('', async (req, res, next) => {
     const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
