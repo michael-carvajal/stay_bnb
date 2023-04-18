@@ -280,7 +280,7 @@ try {
     next(error)
 }
 })
-
+///comment
 
 ///////////////////////// Edit SPOT ////////////////////////////////////
 router.put('/:spotId', async (req, res, next) => {
