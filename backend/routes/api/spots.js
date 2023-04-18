@@ -9,18 +9,19 @@ router.get('', async (req, res, next) => {
         include: [{
             model: SpotImage,
             attributes: ['url']
-        }]
+        }],
+        order : [['id']]
     });
 
     const spotsArray = [];
 
     await Promise.all(allSpots.map(async spot => {
+        console.log(spot.id);
         const eachSpot = await Spot.findByPk(spot.id, {
             include: {
                 model: Review,
                 attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-            },
-            order: ['id']
+            }
         });
         const newSpotObj = eachSpot.toJSON();
         const avgRating = newSpotObj.Reviews[0]
@@ -29,12 +30,14 @@ router.get('', async (req, res, next) => {
 
         if (typeof avgRating !=='object' ) {
             oldSpotObj.avgRating = null
+            console.log(oldSpotObj.id);
             spotsArray.push(oldSpotObj)
         } else {
             const updatedObj = {
                 ...oldSpotObj,
                 ...avgRating
             }
+            console.log(updatedObj.id);
             spotsArray.push(updatedObj)
         }
 
@@ -122,7 +125,7 @@ router.get('/current', async (req, res, next) => {
                     model: Review,
                     attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
                 }],
-                group: ['Spot.id']
+
             });
 
             return res.status(200).json(allSpots);
@@ -145,7 +148,7 @@ router.get('/:spotId', async (req, res, next) => {
         })
     }
 try {
-    const spot = await Spot.scope('spotId').findByPk(req.params.spotId, {
+    const spot = await Spot.findByPk(req.params.spotId, {
 
         include: [{
             model: Review,
