@@ -31,11 +31,35 @@ router.get('/current', async (req, res) => {
         ]
     })
 
-    res.json({ Reviews: reviews })
+    const spotsWithPreview = await Promise.all(reviews.map(async review => {
+        const url = await SpotImage.findByPk(review.spotId, {
+            attributes: ['url']
+        })
+        const urlObj = url.toJSON();
+        const reviewObj = review.toJSON();
+
+        // console.log(urlObj.url);
+        console.log(reviewObj.Spot);
+        reviewObj.Spot.previewImage = urlObj.url
+        return reviewObj
+    }));
+    res.json({ Reviews: spotsWithPreview })
 })
 
 
 
+// const spotsWithAvgRating = await Promise.all(allSpots.map(async spot => {
+//     const avgRating = await Review.findOne({
+//         attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']],
+//         where: { spotId: spot.id }
+//     });
+//     const ratingObj = avgRating.toJSON()
+//     console.log(ratingObj);
+//     return {
+//         ...spot.toJSON(),
+//         ...ratingObj
+//     };
+// }));
 
 router.get('', async (req, res) => {
     const allReviews = await Review.findAll({
