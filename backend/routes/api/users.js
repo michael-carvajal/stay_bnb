@@ -32,21 +32,32 @@ router.post(
     async (req, res) => {
         const { email, password, username, firstName, lastName } = req.body;
         const hashedPassword = bcrypt.hashSync(password);
-        const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
-        const safeUser = {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName
-        };
+        try {
+            const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
-        await setTokenCookie(res, safeUser);
+            const safeUser = {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName
+            };
 
-        return res.json({
-            user: safeUser
-        });
+            await setTokenCookie(res, safeUser);
+
+            return res.json({
+                user: safeUser
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                "message": "User already exists",
+                "errors": {
+                    "username": "User with that username already exists"
+                }
+            })
+        }
     }
 );
 router.get('', async (req, res) => {
