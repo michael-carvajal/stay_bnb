@@ -5,46 +5,101 @@ const sequelize = require('sequelize')
 const { Spot, SpotImage, User, Review } = require('../../db/models');
 
 router.get('', async (req, res, next) => {
+    // console.log('here is 1');
+
+    // try {
+    //     const allSpots = await Spot.findAll({
+    //         include: [{
+    //             model: SpotImage,
+    //             attributes: ['url']
+    //         }],
+    //         order : [['id']]
+    //     });
+
+    //     console.log('here is 2');
+    //     const spotsArray = [];
+
+    //     await Promise.all(allSpots.forEach(async spot => {
+    //         console.log('here is 3');
+    //         console.log(spot.id);
+
+    //         const eachSpot = await Spot.findByPk(spot.id, {
+    //             include: {
+    //                 model: Review,
+    //                 attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+    //             }
+    //         });
+
+    //         console.log('here is 4');
+    //         const newSpotObj = eachSpot.toJSON();
+    //         const avgRating = newSpotObj.Reviews[0]
+    //         const oldSpotObj = spot.toJSON();
+
+    //         console.log('here is 5');
+
+    //         if (typeof avgRating !=='object' ) {
+    //             console.log('here is 6');
+    //             oldSpotObj.avgRating = null
+    //             console.log(oldSpotObj.id);
+    //             spotsArray.push(oldSpotObj)
+    //         } else {
+    //             console.log('here is 7');
+    //             const updatedObj = {
+    //                 ...oldSpotObj,
+    //                 ...avgRating
+    //             }
+    //             console.log(updatedObj.id);
+    //             spotsArray.push(updatedObj)
+    //         }
+
+
+    //     }));
+    //     res.json(spotsArray);
+
+    // } catch (error) {
+    //     next(error)
+    // }
+    // const allSpots = await Spot.findAll({
+    //     include: [{
+    //         model: SpotImage,
+    //         attributes: ['url']
+    //     }],
+    //     attributes: [
+    //         'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
+    //         'name', 'description', 'price', 'createdAt', 'updatedAt',
+    //         [sequelize.fn('AVG', sequelize.col('Review.stars')), 'avgRating']
+    //     ],
+    //     group: ['Spot.id', 'SpotImages.id', 'Reviews.id']
+    // });
+
+    // res.json(allSpots);
     const allSpots = await Spot.findAll({
         include: [{
             model: SpotImage,
             attributes: ['url']
         }],
-        order : [['id']]
+        attributes: [
+            'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
+            'name', 'description', 'price', 'createdAt', 'updatedAt',
+        ],
+        group: ['Spot.id', 'SpotImages.id']
     });
 
-    const spotsArray = [];
-
-    await Promise.all(allSpots.map(async spot => {
-        console.log(spot.id);
-        const eachSpot = await Spot.findByPk(spot.id, {
-            include: {
-                model: Review,
-                attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-            }
+    const spotsWithAvgRating = await Promise.all(allSpots.map(async spot => {
+        const avgRating = await Review.findOne({
+            attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']],
+            where: { spotId: spot.id }
         });
-        const newSpotObj = eachSpot.toJSON();
-        const avgRating = newSpotObj.Reviews[0]
-        const oldSpotObj = spot.toJSON();
-
-
-        if (typeof avgRating !=='object' ) {
-            oldSpotObj.avgRating = null
-            console.log(oldSpotObj.id);
-            spotsArray.push(oldSpotObj)
-        } else {
-            const updatedObj = {
-                ...oldSpotObj,
-                ...avgRating
-            }
-            console.log(updatedObj.id);
-            spotsArray.push(updatedObj)
-        }
-
-
+        const ratingObj = avgRating.toJSON()
+        console.log(ratingObj);
+        return {
+            ...spot.toJSON(),
+            ...ratingObj
+        };
     }));
 
-    res.json(spotsArray);
+    res.json({ Spots: spotsWithAvgRating });
+
 });
 
 router.post('', async (req, res, next) => {
@@ -116,20 +171,48 @@ router.get('/current', async (req, res, next) => {
     if (user) {
 
         try {
-            const allSpots = await Spot.findByPk(user.id,{
+            // const allSpots = await Spot.findByPk(user.id,{
+            //     include: [{
+            //         model: SpotImage,
+            //         attributes: ['url']
+            //     },
+            //     {
+            //         model: Review,
+            //         attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
+            //     }],
+
+            // });
+
+            // return res.status(200).json(allSpots);
+            const allSpots = await Spot.findAll({
+                where: {
+                    ownerId: user.id
+                },
                 include: [{
                     model: SpotImage,
                     attributes: ['url']
-                },
-                {
-                    model: Review,
-                    attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
                 }],
-
+                attributes: [
+                    'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
+                    'name', 'description', 'price', 'createdAt', 'updatedAt',
+                ],
+                group: ['Spot.id', 'SpotImages.id']
             });
 
-            return res.status(200).json(allSpots);
+            const spotsWithAvgRating = await Promise.all(allSpots.map(async spot => {
+                const avgRating = await Review.findOne({
+                    attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']],
+                    where: { spotId: spot.id }
+                });
+                const ratingObj = avgRating.toJSON()
+                console.log(ratingObj);
+                return {
+                    ...spot.toJSON(),
+                    ...ratingObj
+                };
+            }));
 
+            res.json({ Spots: spotsWithAvgRating });
         } catch (error) {
             res.json({
                 "message": "Spot couldn't be found"
@@ -148,23 +231,50 @@ router.get('/:spotId', async (req, res, next) => {
         })
     }
 try {
-    const spot = await Spot.findByPk(req.params.spotId, {
+    // const spot = await Spot.findByPk(req.params.spotId, {
 
-        include: [{
-            model: Review,
-            attributes: [[sequelize.fn('COUNT', sequelize.col('Reviews.id')), 'numReviews'],
-            [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
-            ]
-        }, {
-            model: User,
-            attributes: ['id', 'firstName', 'lastName']
-        }, {
-            model: SpotImage,
-            attributes: ['id', 'url', 'preview']
-        }
+    //     include: [{
+    //         model: Review,
+    //         attributes: [[sequelize.fn('COUNT', sequelize.col('Reviews.id')), 'numReviews'],
+    //         [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
+    //         ]
+    //     }, {
+    //         model: User,
+    //         attributes: ['id', 'firstName', 'lastName']
+    //     }, {
+    //         model: SpotImage,
+    //         attributes: ['id', 'url', 'preview']
+    //     }
+    //     ]
+    // })
+    // res.json(spot);
+    const spot = await Spot.findByPk(req.params.spotId, {
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'firstName', 'lastName'],
+                as: 'Owner' // alias the User model as 'Owner'
+            },
+            {
+                model: SpotImage,
+                attributes: ['id', 'url', 'preview']
+            }
         ]
-    })
-    res.json(spot);
+    });
+
+    // Get the review stats separately
+    const reviewStats = await Review.aggregate('SpotId', 'count', {
+        distinct: true,
+        where: { SpotId: req.params.spotId }
+    }).then(count => {
+        return Review.aggregate('stars', 'avg', {
+            where: { SpotId: req.params.spotId }
+        }).then(avg => ({ numReviews: count, avgStarRating: avg }));
+    });
+
+    // Add the review stats to the spot object and return it
+    res.json({ ...spot.toJSON(), ...reviewStats });
+
 } catch (error) {
     error.status = 400
     next(error)
