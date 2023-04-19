@@ -139,7 +139,28 @@ router.post('/:spotId/images', async (req, res, next) => {
 })
 
 /////////////////////////////CREATE A BOOKING FROMA SPOTS ID
+const _getTimeFormat = (dateType, date) => {
+    if (dateType === 'startDate' || dateType === 'endDate') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const outputString = `${dateString}`
+        let newString = outputString.split(',')
+        // console.log(outputString);
+        return newString[0]
+    }
 
+    if (dateType === 'createdAt' || dateType === 'updatedAt') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const timeString = dateType.toLocaleTimeString('en-US', options);
+        const outputString = `${dateString} ${timeString}`;
+        let newString = outputString.split(' ');
+        // console.log(`${newString[0]} ${newString[1]}`);
+        return `${newString[0]} ${newString[1]}`
+    }
+}
 router.post('/:spotId/bookings', requireAuth, async (req, res) => {
     const { user } = req;
     const spotId = req.params.spotId;
@@ -184,7 +205,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
                 (endDate >= bookingStart && endDate <= bookingEnd) ||
                 (bookingStart >= startDate && bookingStart <= endDate) ||
                 (bookingEnd >= startDate && bookingEnd <= endDate)) {
-                return res.status(400).json({
+                return res.status(403).json({
                     "message": "Bad Request",
                     "errors": {
                         "endDate": "The specified dates conflict with an existing booking."
@@ -199,14 +220,30 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
             spotId,
             userId: user.id
         })
-        res.json(bookingCreated)
+        const bookingObj = bookingCreated.toJSON();
+        const formatstartDate = _getTimeFormat('startDate', bookingObj.startDate)
+        const formatendDate = _getTimeFormat('endDate', bookingObj.endDate)
+        const formatcreatedAt = _getTimeFormat('createdAt', bookingObj.createdAt)
+        const formatupdatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
+
+
+
+        res.json({
+            id: 1,
+            spotId: 1,
+            userId: 2,
+            startDate: formatstartDate,
+            endDate: formatendDate,
+            createdAt: formatcreatedAt,
+            updatedAt: formatupdatedAt
+        })
 
     } catch (error) {
         res.status(400).json(error)
     }
 })
 //////////////////////////GET ALL BOOKINGS FOR SPOT BASED ON THE SPOTS ID
-router.get('/:spotId/bookings', async (req, res) => {
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     const spotId = req.params.spotId;
     const { user } = req
 
