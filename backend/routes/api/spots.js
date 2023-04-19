@@ -2,77 +2,10 @@ const express = require('express');
 const router = express.Router();
 const fn = require('fn')
 const sequelize = require('sequelize')
-const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models');
+const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models');
+const {  requireAuth } = require('../../utils/auth');
 
 router.get('', async (req, res, next) => {
-    // console.log('here is 1');
-
-    // try {
-    //     const allSpots = await Spot.findAll({
-    //         include: [{
-    //             model: SpotImage,
-    //             attributes: ['url']
-    //         }],
-    //         order : [['id']]
-    //     });
-
-    //     console.log('here is 2');
-    //     const spotsArray = [];
-
-    //     await Promise.all(allSpots.forEach(async spot => {
-    //         console.log('here is 3');
-    //         console.log(spot.id);
-
-    //         const eachSpot = await Spot.findByPk(spot.id, {
-    //             include: {
-    //                 model: Review,
-    //                 attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']]
-    //             }
-    //         });
-
-    //         console.log('here is 4');
-    //         const newSpotObj = eachSpot.toJSON();
-    //         const avgRating = newSpotObj.Reviews[0]
-    //         const oldSpotObj = spot.toJSON();
-
-    //         console.log('here is 5');
-
-    //         if (typeof avgRating !=='object' ) {
-    //             console.log('here is 6');
-    //             oldSpotObj.avgRating = null
-    //             console.log(oldSpotObj.id);
-    //             spotsArray.push(oldSpotObj)
-    //         } else {
-    //             console.log('here is 7');
-    //             const updatedObj = {
-    //                 ...oldSpotObj,
-    //                 ...avgRating
-    //             }
-    //             console.log(updatedObj.id);
-    //             spotsArray.push(updatedObj)
-    //         }
-
-
-    //     }));
-    //     res.json(spotsArray);
-
-    // } catch (error) {
-    //     next(error)
-    // }
-    // const allSpots = await Spot.findAll({
-    //     include: [{
-    //         model: SpotImage,
-    //         attributes: ['url']
-    //     }],
-    //     attributes: [
-    //         'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
-    //         'name', 'description', 'price', 'createdAt', 'updatedAt',
-    //         [sequelize.fn('AVG', sequelize.col('Review.stars')), 'avgRating']
-    //     ],
-    //     group: ['Spot.id', 'SpotImages.id', 'Reviews.id']
-    // });
-
-    // res.json(allSpots);
     const allSpots = await Spot.findAll({
         include: [{
             model: SpotImage,
@@ -102,6 +35,7 @@ router.get('', async (req, res, next) => {
 
 });
 
+/////////////////////////GET REVIEW BY SPOT ID
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
     try {
@@ -136,6 +70,8 @@ router.get('/:spotId/reviews', async (req, res) => {
     }
 })
 
+//////////////////// Create spot
+
 router.post('', async (req, res, next) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     // console.log( address, city, state, country, lat, lng, name, description, price);
@@ -153,6 +89,9 @@ router.post('', async (req, res, next) => {
     }
 
 })
+
+
+/////////////////// Create spot image
 
 router.post('/:spotId/images', async (req, res, next) => {
     const { user } = req;
@@ -199,6 +138,76 @@ router.post('/:spotId/images', async (req, res, next) => {
 
 })
 
+/////////////////////////////CREATE A BOOKING FROMA SPOTS ID
+
+router.post('/:spotId/bookings', requireAuth, async (req, res) => {
+    const { user } = req;
+    const spotId = req.params.spotId;
+
+    try {
+        let { startDate, endDate } = req.body;
+        if (!startDate || !endDate) {
+            return res.status(400).json({
+                "message": "Bad Request",
+                "errors": {
+                    "endDate": "endDate cannot be on or before startDate"
+                }
+            })
+        }
+        const spot = await Spot.findByPk(spotId)
+        if (spot ===null ||spot.ownerId === user.id) {
+            res.status(404).json({message: "Forbidden or spot not found"})
+        }
+        const bookingsForSpot = await Booking.findAll({
+            where: {
+                spotId : spotId
+            },
+            attributes : ['startDate', 'endDate']
+        })
+
+        const startArray = startDate.split('-')
+        startDate = new Date(startArray[0], startArray[1], startArray[2])
+
+        const endArray = endDate.split('-')
+        endDate = new Date(endArray[0], endArray[1], endArray[2])
+        // const vacancyObj = vacancy.toJSON();
+        console.log(startDate, endDate);
+        // for (let booking of bookingsForSpot) {
+        //     console.log(booking.toJSON());
+        // }
+        for (let booking of bookingsForSpot) {
+            const bookingStart = new Date(booking.startDate);
+            const bookingEnd = new Date(booking.endDate);
+            // console.log(bookingStart, bookingEnd);
+
+            if ((startDate >= bookingStart && startDate <= bookingEnd) ||
+                (endDate >= bookingStart && endDate <= bookingEnd) ||
+                (bookingStart >= startDate && bookingStart <= endDate) ||
+                (bookingEnd >= startDate && bookingEnd <= endDate)) {
+                return res.status(400).json({
+                    "message": "Bad Request",
+                    "errors": {
+                        "endDate": "The specified dates conflict with an existing booking."
+                    }
+                });
+            }
+        }
+
+        const bookingCreated = await Booking.create({
+            startDate: new Date(startArray[0], startArray[1], startArray[2]),
+            endDate: new Date(endArray[0], endArray[1], endArray[2]),
+            spotId,
+            userId: user.id
+        })
+res.json(bookingCreated)
+
+    } catch (error) {
+        res.status(400).json(error)
+    }
+})
+
+
+/////////////////////// GET SPOTS OF CURRENT USER
 router.get('/current', async (req, res, next) => {
     const { user } = req;
     console.log(user);
