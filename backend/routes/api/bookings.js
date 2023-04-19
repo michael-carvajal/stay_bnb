@@ -3,7 +3,28 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { Booking , Spot, SpotImage} = require('../../db/models');
+const _getTimeFormat = (dateType, date) => {
+    if (dateType === 'startDate' || dateType === 'endDate') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const outputString = `${dateString}`
+        let newString = outputString.split(',')
+        // console.log(outputString);
+        return newString[0]
+    }
 
+    if (dateType === 'createdAt' || dateType === 'updatedAt') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const timeString = dateType.toLocaleTimeString('en-US', options);
+        const outputString = `${dateString} ${timeString}`;
+        let newString = outputString.split(' ');
+        // console.log(`${newString[0]} ${newString[1]}`);
+        return `${newString[0]} ${newString[1]}`
+    }
+}
 router.get('',async(req, res) => {
     const allBookings = await Booking.findAll();
 
@@ -42,48 +63,51 @@ router.get('/current', requireAuth, async (req, res) => {
     try {
         const bookingsWithPreview = await Promise.all(allBookings.map( async booking => {
             const bookingObj = booking.toJSON();
-            console.log(bookingObj.spotId);
+            // console.log(bookingObj.spotId);
 
-            const url = await SpotImage.findOne({
+            const url = await Spot.findOne({
                 where: {
-                    spotId: bookingObj.spotId,
-
+                    id: bookingObj.spotId,
                 },
-                attributes: ['url']
+                include: {
+                    model: SpotImage,
+                    attributes: ['url']
+                },
+                attributes: []
             })
             const urlObj = url.toJSON()
             bookingObj.Spot.previewImage = urlObj.url
-            return bookingObj
+            let start = bookingObj.startDate;
+            let end = bookingObj.endDate;
+            start = new Date(start);
+            end = new Date(end)
+            // const editedBooking = await Booking.findByPk(bookingId);
+            const formatstartDate = _getTimeFormat('startDate', start)
+            const formatendDate = _getTimeFormat('endDate', end)
+            const formatcreatedAt = _getTimeFormat('createdAt', bookingObj.createdAt)
+            const formatupdatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
+
+            return {
+                id: bookingObj.id,
+                spotId: bookingObj.spotId,
+                Spot: bookingObj.Spot,
+                userId: user.id,
+                startDate: formatstartDate,
+                endDate: formatendDate,
+                createdAt: formatcreatedAt,
+                updatedAt: formatupdatedAt
+            }
         }))
 
-        res.json(bookingsWithPreview)
+        // console.log(bookingsWithPreview);
+        res.json({Bookings: bookingsWithPreview})
     } catch (error) {
+        console.log(error);
         res.status(400).json(error)
     }
 })
 
-const _getTimeFormat = (dateType, date) => {
-    if (dateType === 'startDate' || dateType === 'endDate') {
-        const dateType = new Date(date);
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12:false };
-        const dateString = dateType.toLocaleDateString('en-US', options);
-        const outputString = `${dateString}`
-        let newString = outputString.split(',')
-        console.log(outputString);
-        return newString[0]
-    }
 
-    if (dateType === 'createdAt' || dateType === 'updatedAt') {
-        const dateType = new Date(date);
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-        const dateString = dateType.toLocaleDateString('en-US', options);
-        const timeString = dateType.toLocaleTimeString('en-US', options);
-        const outputString = `${dateString} ${timeString}`;
-        let newString = outputString.split(' ');
-        console.log(`${newString[0]} ${newString[1]}`);
-        return `${newString[0]} ${newString[1]}`
-    }
-}
 const _dateCeck = (start, end, res) => {
     start = start.toDateString()
     end = end.toDateString()
