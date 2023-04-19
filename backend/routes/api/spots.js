@@ -105,7 +105,7 @@ router.get('', async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
    try {
-       const spotReviews = await Review.findByPk(spotId, {
+       const spotReviews = await Review.findAll( {
            include: [{
                model: User,
                attributes: ['id', 'firstName', 'lastName']
@@ -134,10 +134,10 @@ router.get('/:spotId/reviews', async (req, res) => {
 })
 
 router.post('', async (req, res, next) => {
-    const { ownerId, address, city, state, country, lat, lng, name, description, price } = req.body;
-    // console.log(ownerId, address, city, state, country, lat, lng, name, description, price);
+    const {  address, city, state, country, lat, lng, name, description, price } = req.body;
+    // console.log( address, city, state, country, lat, lng, name, description, price);
     const { user } = req;
-
+    const ownerId = user.id;
     try {
         if (user) {
             const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
@@ -377,6 +377,10 @@ router.put('/:spotId', async (req, res, next) => {
     try {
         const spotId = req.params.spotId;
         const spot = await Spot.findByPk(spotId);
+
+        if (spot === null) {
+            return res.status(404).json({message: 'No spots match provided id'})
+        }
         // console.log(spot.ownerId);
         if (user.id !== spot.ownerId) {
             return res.status(403).json({message: 'Forbidden'})
