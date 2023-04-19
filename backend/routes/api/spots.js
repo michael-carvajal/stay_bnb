@@ -221,7 +221,7 @@ router.get('/:spotId/bookings', async (req, res) => {
         }
     })
 
-    console.log(bookingsForASpot);
+    // console.log(bookingsForASpot);
     if (bookingsForASpot.length === 0) {
         return res.status(404).json({message: "Spot couldn't be found"})
     }
@@ -245,16 +245,17 @@ router.get('/:spotId/bookings', async (req, res) => {
      }
     const appropriateBookings = await Promise.all(bookingsForASpot.map( async booking => {
         const bookingObj = booking.toJSON();
-        console.log(bookingObj);
+        // console.log(bookingObj);
         const startDate = _getTimeFormat('startDate',bookingObj.startDate)
         const endDate = _getTimeFormat('endDate',bookingObj.endDate)
         const createdAt = _getTimeFormat('createdAt',bookingObj.createdAt)
         const updatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
 
         const spotOwner = await Spot.findByPk(spotId, {
-            attributes: ['OwnerId']
+            attributes: ['ownerId']
         })
-
+        console.log(spotOwner.toJSON());
+        console.log(spotOwner.ownerId, user.id);
         if (spotOwner.ownerId === user.id) {
             return {
                 User :bookingObj.User,
