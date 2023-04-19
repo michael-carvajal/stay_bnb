@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Booking.belongsTo(models.User, { foreignKey: 'userId' })
+      Booking.belongsTo(models.Spot, { foreignKey: 'spotId' })
 
     }
   }
@@ -19,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     spotId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Spots'
+        model: 'Spots',
+        onDelete: 'CASCADE'
       }
     },
     userId: {
