@@ -121,15 +121,24 @@ router.post('/:reviewId/images', async (req, res) => {
     const reviewId = req.params.reviewId;
     const { user } = req;
     const { url } = req.body;
+    console.log(1);
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
     }
-    const review = Review.findByPk(reviewId);
+    console.log(2);
+    const review = await Review.findByPk(reviewId);
+    if (review === null) {
+
+        return res.status(404).json({ message: "Review not found" })
+    }
+    console.log(review);
+    console.log(3);
 
     if (review.userId !== user.id) {
         return res.status(403).json({ message: "Forbidden" })
 
     }
+    console.log(4);
     const count = await ReviewImage.count()
     const maxCount = await ReviewImage.count({
         where: {

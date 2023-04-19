@@ -1,5 +1,11 @@
 'use strict';
-const bookings = [{ "spotId": 1, "userId": 3, "startDate": "2023-05-01", "endDate": "2023-05-05" }, { "spotId": 2, "userId": 4, "startDate": "2023-06-01", "endDate": "2023-06-05" }, { "spotId": 3, "userId": 5, "startDate": "2023-07-01", "endDate": "2023-07-05" }, { "spotId": 1, "userId": 5, "startDate": "2023-08-01", "endDate": "2023-08-05" }, { "spotId": 2, "userId": 3, "startDate": "2023-09-01", "endDate": "2023-09-05" }]
+const bookings = [
+  { "spotId": 1, "userId": 3, "startDate": new Date(2023, 5, 1), "endDate": new Date(2023, 5, 5) },
+  { "spotId": 2, "userId": 4, "startDate": new Date(2023, 6, 1), "endDate": new Date(2023, 6, 5) },
+  { "spotId": 3, "userId": 5, "startDate": new Date(2023, 7, 1), "endDate": new Date(2023, 7, 5) },
+  { "spotId": 1, "userId": 5, "startDate": new Date(2023, 8, 1), "endDate": new Date(2023, 8, 5) },
+  { "spotId": 2, "userId": 3, "startDate": new Date(2023, 9, 1), "endDate": new Date(2023, 9, 5) }
+];
 
 const bcrypt = require("bcryptjs");
 
