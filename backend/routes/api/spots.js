@@ -105,7 +105,7 @@ router.get('', async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
     try {
-        const spotReviews = await Review.findAll({
+        const spotReviews = await Review.findOne({
             include: [{
                 model: User,
                 attributes: ['id', 'firstName', 'lastName']
@@ -116,6 +116,9 @@ router.get('/:spotId/reviews', async (req, res) => {
 
             }
             ],
+            where: {
+                spotId : spotId
+            }
 
         })
         if (spotReviews === null) {
@@ -256,11 +259,11 @@ router.get('/:spotId', async (req, res, next) => {
 
     const numOfSpots = await Spot.count();
 
-    if (req.params.spotId > numOfSpots) {
-        return res.status(400).json({
-            "message": "Spot couldn't be found"
-        })
-    }
+    // if (req.params.spotId > numOfSpots) {
+    //     return res.status(400).json({
+    //         "message": "Spot couldn't be found"
+    //     })
+    // }
     try {
         // const spot = await Spot.findByPk(req.params.spotId, {
 
@@ -279,6 +282,8 @@ router.get('/:spotId', async (req, res, next) => {
         //     ]
         // })
         // res.json(spot);
+
+
         const spot = await Spot.findByPk(req.params.spotId, {
             include: [
                 {
@@ -292,6 +297,9 @@ router.get('/:spotId', async (req, res, next) => {
                 }
             ]
         });
+        if (spot === null) {
+            return res.status(404).json({message: "Spot not found"})
+        }
 
         // Get the review stats separately
         const reviewStats = await Review.aggregate('spotId', 'count', {
@@ -438,7 +446,7 @@ router.delete('/:spotId', async (req, res, next) => {
         })
     } catch (error) {
         res.status(404).json({
-            "message": "Spot couldn't be found", error
+            "message": "Spot couldn't be found",
         })
     }
 })
