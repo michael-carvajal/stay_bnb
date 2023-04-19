@@ -10,6 +10,7 @@ router.get('/current', async (req, res) => {
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
     }
+
     const reviews = await Review.findAll({
         where: {
             userId: user.id
