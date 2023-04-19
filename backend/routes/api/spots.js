@@ -423,25 +423,20 @@ router.delete('/:spotId', async (req, res, next) => {
     const { user } = req;
 
     try {
-        console.log(1);
         const spotToDelete = await Spot.findByPk(req.params.spotId)
-        console.log(2);
         if (user.id !== spotToDelete.ownerId) {
             return res.json({
                 "message": "Forbidden"
             })
         }
-        console.log(3);
         // console.log(spotToDelete.toJSON());
 
         await spotToDelete.destroy();
-        console.log(4);
 
         res.json({
             "message": "Successfully deleted"
         })
     } catch (error) {
-        console.log(error);
         res.status(404).json({
             "message": "Spot couldn't be found", error
         })
