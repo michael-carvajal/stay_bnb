@@ -3,7 +3,7 @@ const router = express.Router();
 const fn = require('fn')
 const sequelize = require('sequelize')
 const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models');
-const {  requireAuth } = require('../../utils/auth');
+const { requireAuth } = require('../../utils/auth');
 
 router.get('', async (req, res, next) => {
     const allSpots = await Spot.findAll({
@@ -51,7 +51,7 @@ router.get('/:spotId/reviews', async (req, res) => {
             }
             ],
             where: {
-                spotId : spotId
+                spotId: spotId
             }
 
         })
@@ -139,7 +139,28 @@ router.post('/:spotId/images', async (req, res, next) => {
 })
 
 /////////////////////////////CREATE A BOOKING FROMA SPOTS ID
+const _getTimeFormat = (dateType, date) => {
+    if (dateType === 'startDate' || dateType === 'endDate') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const outputString = `${dateString}`
+        let newString = outputString.split(',')
+        // console.log(outputString);
+        return newString[0]
+    }
 
+    if (dateType === 'createdAt' || dateType === 'updatedAt') {
+        const dateType = new Date(date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateString = dateType.toLocaleDateString('en-US', options);
+        const timeString = dateType.toLocaleTimeString('en-US', options);
+        const outputString = `${dateString} ${timeString}`;
+        let newString = outputString.split(' ');
+        // console.log(`${newString[0]} ${newString[1]}`);
+        return `${newString[0]} ${newString[1]}`
+    }
+}
 router.post('/:spotId/bookings', requireAuth, async (req, res) => {
     const { user } = req;
     const spotId = req.params.spotId;
@@ -155,14 +176,14 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
             })
         }
         const spot = await Spot.findByPk(spotId)
-        if (spot ===null ||spot.ownerId === user.id) {
-            res.status(404).json({message: "Forbidden or spot not found"})
+        if (spot === null || spot.ownerId === user.id) {
+            res.status(404).json({ message: "Forbidden or spot not found" })
         }
         const bookingsForSpot = await Booking.findAll({
             where: {
-                spotId : spotId
+                spotId: spotId
             },
-            attributes : ['startDate', 'endDate']
+            attributes: ['startDate', 'endDate']
         })
 
         const startArray = startDate.split('-')
@@ -184,7 +205,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
                 (endDate >= bookingStart && endDate <= bookingEnd) ||
                 (bookingStart >= startDate && bookingStart <= endDate) ||
                 (bookingEnd >= startDate && bookingEnd <= endDate)) {
-                return res.status(400).json({
+                return res.status(403).json({
                     "message": "Bad Request",
                     "errors": {
                         "endDate": "The specified dates conflict with an existing booking."
@@ -199,13 +220,107 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
             spotId,
             userId: user.id
         })
-res.json(bookingCreated)
+        const bookingObj = bookingCreated.toJSON();
+        const formatstartDate = _getTimeFormat('startDate', bookingObj.startDate)
+        const formatendDate = _getTimeFormat('endDate', bookingObj.endDate)
+        const formatcreatedAt = _getTimeFormat('createdAt', bookingObj.createdAt)
+        const formatupdatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
+
+
+
+        res.json({
+            id: 1,
+            spotId: 1,
+            userId: 2,
+            startDate: formatstartDate,
+            endDate: formatendDate,
+            createdAt: formatcreatedAt,
+            updatedAt: formatupdatedAt
+        })
 
     } catch (error) {
         res.status(400).json(error)
     }
 })
+//////////////////////////GET ALL BOOKINGS FOR SPOT BASED ON THE SPOTS ID
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    const spotId = req.params.spotId;
+    const { user } = req
 
+
+    const bookingsForASpot = await Booking.findAll({
+        where: {
+            spotId: spotId
+        },
+        include: {
+            model: User,
+            attributes: ['id','firstName', 'lastName']
+        }
+    })
+
+    // console.log(bookingsForASpot);
+    if (bookingsForASpot.length === 0) {
+        return res.status(404).json({message: "Spot couldn't be found"})
+    }
+    const _getTimeFormat = (dateType, date) => {
+        if (dateType === 'startDate' || dateType === 'endDate') {
+            const dateType = new Date(date);
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const dateString = dateType.toLocaleDateString('en-US', options);
+            const outputString = `${dateString}`
+            return outputString
+        }
+
+        if (dateType === 'createdAt' || dateType === 'updatedAt') {
+            const dateType = new Date(date);
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const dateString = dateType.toLocaleDateString('en-US', options);
+            const timeString = dateType.toLocaleTimeString('en-US', options);
+            const outputString = `${dateString} ${timeString}`;
+            return outputString
+        }
+     }
+    const appropriateBookings = await Promise.all(bookingsForASpot.map( async booking => {
+        const bookingObj = booking.toJSON();
+        // console.log(bookingObj);
+        const startDate = _getTimeFormat('startDate',bookingObj.startDate)
+        const endDate = _getTimeFormat('endDate',bookingObj.endDate)
+        const createdAt = _getTimeFormat('createdAt',bookingObj.createdAt)
+        const updatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
+
+        const spotOwner = await Spot.findByPk(spotId, {
+            attributes: ['ownerId']
+        })
+        console.log(spotOwner.toJSON());
+        console.log(spotOwner.ownerId, user.id);
+        if (spotOwner.ownerId === user.id) {
+            return {
+                User :bookingObj.User,
+                id :bookingObj.id,
+                spotId,
+                userId: user.id,
+                startDate,
+                endDate,
+                createdAt,
+                updatedAt
+            }
+        }
+        if (spotOwner.ownerId !== user.id) {
+            return {
+
+                spotId,
+                startDate,
+                endDate
+            }
+        }
+
+
+
+        // return  {startDate, endDate, createdAt, updatedAt}
+    }))
+
+    res.json( {Bookings:appropriateBookings})
+})
 
 /////////////////////// GET SPOTS OF CURRENT USER
 router.get('/current', async (req, res, next) => {
@@ -307,7 +422,7 @@ router.get('/:spotId', async (req, res, next) => {
             ]
         });
         if (spot === null) {
-            return res.status(404).json({message: "Spot not found"})
+            return res.status(404).json({ message: "Spot not found" })
         }
 
         // Get the review stats separately
