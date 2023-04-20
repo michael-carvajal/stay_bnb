@@ -51,7 +51,7 @@ router.post(
             });
 
         } catch (error) {
-            res.status(500).json(error.message || error.errors  )
+            res.status(500).json( {" Validation error" :error.errors[0].message}  )
         }
     }
 );

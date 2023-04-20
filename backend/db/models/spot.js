@@ -45,21 +45,34 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     lat: {
-      type : DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL,
       validate: {
-        [Op.between] : [-90,90]
+        isLat(value) {
+          if (this.lat && (this.lat < -90 || this.lat > 90)) {
+            throw new Error('Latitude must be between -90 and 90 degrees');
+          }
+        }
       }
-    },
+    }
+,
     lng: {
-      type : DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL,
       validate: {
-        [Op.between]: [-180,180]
+        isLng(value) {
+          if (this.lng && (this.lng < -180 || this.lng > 180)) {
+            throw new Error('Longitude must be between -180 and 180 degrees');
+          }
+        }
       }
-    },
+    }
+,
     name: {
       type : DataTypes.STRING,
       validate: {
-        len: [0,50]
+        len: {
+          args: [0, 50],
+          msg: "Name must be between 0 and 50 characters long"
+        }
       }
     },
     description: {

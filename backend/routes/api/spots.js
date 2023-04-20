@@ -208,15 +208,15 @@ router.post('', requireAuth,async (req, res, next) => {
     // console.log( address, city, state, country, lat, lng, name, description, price);
     const { user } = req;
     const ownerId = user.id;
+    console.log(lng, lat, typeof lng, typeof lat);
     try {
         if (user) {
-            const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price });
+            const newSpot = await Spot.create({ ownerId, address, city, state, country, lat: lat, lng: lng, name, description, price });
             return res.status(201).json(newSpot)
         }
 
     } catch (error) {
-        error.status = 400;
-        next(error)
+        res.status(400).json(error.errors[0].message)
     }
 
 })
