@@ -73,7 +73,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
 //////////////////// Create spot
 
-router.post('', async (req, res, next) => {
+router.post('', requireAuth,async (req, res, next) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
     // console.log( address, city, state, country, lat, lng, name, description, price);
     const { user } = req;
@@ -177,9 +177,13 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
             })
         }
         const spot = await Spot.findByPk(spotId)
-        if (spot === null || spot.ownerId === user.id) {
-            res.status(404).json({ message: "Forbidden or spot not found" })
+        if (spot === null ) {
+            res.status(404).json({ message: "Spot not found" })
         }
+        if (spot.ownerId === user.id)  {
+            res.status(404).json({ message: "Forbidden" })
+        }
+
         const bookingsForSpot = await Booking.findAll({
             where: {
                 spotId: spotId
@@ -324,7 +328,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 })
 
 /////////////////////// GET SPOTS OF CURRENT USER
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
     const { user } = req;
     console.log(user);
     if (user) {
@@ -445,7 +449,7 @@ router.get('/:spotId', async (req, res, next) => {
     }
 })
 ///comment
-router.post('/:spotId/reviews', async (req, res) => {
+router.post('/:spotId/reviews', requireAuth, async (req, res) => {
     const { user } = req
     const spotId = req.params.spotId;
     const userId = user.id;
@@ -503,7 +507,7 @@ router.post('/:spotId/reviews', async (req, res) => {
 })
 
 ///////////////////////// Edit SPOT ////////////////////////////////////
-router.put('/:spotId', async (req, res, next) => {
+router.put('/:spotId', requireAuth, async (req, res, next) => {
     const { user } = req;
     // console.log(user.id);
 
@@ -552,7 +556,7 @@ router.put('/:spotId', async (req, res, next) => {
     }
 })
 ///////////////////////// Delete SPOT ////////////////////////////////////
-router.delete('/:spotId', async (req, res, next) => {
+router.delete('/:spotId', requireAuth,async (req, res, next) => {
     const { user } = req;
 
     try {
@@ -572,7 +576,7 @@ router.delete('/:spotId', async (req, res, next) => {
     } catch (error) {
 
         res.status(404).json({
-            "message": "Spot couldn't be found", error
+            "message": "Spot couldn't be found"
         })
     }
 })

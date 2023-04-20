@@ -55,7 +55,7 @@ console.log(reviews);
 })
 
 ///////////////////edit Review ////////////
-router.put('/:reviewId', async (req, res) => {
+router.put('/:reviewId', requireAuth,async (req, res) => {
     const { user } = req;
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
@@ -93,7 +93,7 @@ router.put('/:reviewId', async (req, res) => {
 
 //////////////DELETE
 
-router.delete('/:reviewId', async (req, res) => {
+router.delete('/:reviewId', requireAuth,async (req, res) => {
     const { user } = req;
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
@@ -123,7 +123,7 @@ router.delete('/:reviewId', async (req, res) => {
 
     }
 })
-router.post('/:reviewId/images', async (req, res) => {
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
     const reviewId = req.params.reviewId;
     const { user } = req;
     const { url } = req.body;
