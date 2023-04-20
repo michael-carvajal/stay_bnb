@@ -4,8 +4,135 @@ const fn = require('fn')
 const sequelize = require('sequelize')
 const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { Op } = require('sequelize')
 
 router.get('', async (req, res, next) => {
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    const where = {};
+    page = parseInt(page);
+    size = parseInt(size);
+    let errors = {};
+    if (Number.isNaN(page) || page <= 0) page = 1;
+    if (Number.isNaN(size) || size <= 0) size = 20;
+    console.log(page, size);
+
+    if (page !== undefined && isNaN(page)) {
+        errors.page = 'Page must be a number';
+    }
+
+    if (page !== undefined && page < 1) {
+        errors.page = 'Page must be greater than or equal to 1';
+    }
+
+    if (size !== undefined && isNaN(size)) {
+        errors.size = 'Size must be a number';
+    }
+
+    if (size !== undefined && size < 1) {
+        errors.size = 'Size must be greater than or equal to 1';
+    }
+
+    if (minLat !== undefined && isNaN(minLat)) {
+        errors.minLat = 'Minimum lat is invalid';
+    }
+
+    if (maxLat !== undefined && isNaN(maxLat)) {
+        errors.maxLat = 'Maximum lat is invalid';
+    }
+
+    if (minLng !== undefined && isNaN(minLng)) {
+        errors.minLng = 'Minimum lng is invalid';
+    }
+
+    if (maxLng !== undefined && isNaN(maxLng)) {
+        errors.maxLng = 'Maximum lng is invalid';
+    }
+
+    if (minPrice !== undefined && isNaN(minPrice)) {
+        errors.minPrice = 'Minimum price must be a number';
+    }
+
+    if (minPrice !== undefined && minPrice < 0) {
+        errors.minPrice = 'Minimum price must be greater than or equal to 0';
+    }
+
+    if (maxPrice !== undefined && isNaN(maxPrice)) {
+        errors.maxPrice = 'Maximum price must be a number';
+    }
+
+    if (maxPrice !== undefined && maxPrice < 0) {
+        errors.maxPrice = 'Maximum price must be greater than or equal to 0';
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: 'Bad Request',
+            errors: errors
+        })
+    }
+
+
+    if (minLat !== undefined && maxLat !== undefined) {
+        where.lat = {
+            [Op.between]: [minLat, maxLat]
+        }
+    }
+
+    if (minLng !== undefined && maxLng !== undefined) {
+        where.lng = {
+            [Op.between]: [minLng, maxLng]
+        }
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+        where.price = {
+            [Op.between]: [minPrice, maxPrice]
+        }
+    }
+
+    if (minLat !== undefined && !maxLat) {
+        where.lat = {
+            [Op.gte]: minLat
+        }
+    }
+
+    if (!minLat && maxLat !== undefined) {
+        where.lat = {
+            [Op.lte]: maxLat
+        }
+    }
+
+    if (minLng !== undefined && !maxLng) {
+        where.lng = {
+            [Op.gte]: minLng
+        }
+    }
+
+    if (!minLng && maxLng !== undefined) {
+        where.lng = {
+            [Op.lte]: maxLng
+        }
+    }
+
+    if (minPrice !== undefined && !maxPrice) {
+        where.price = {
+            [Op.gte]: minPrice
+        }
+    }
+
+    if (!minPrice && maxPrice !== undefined) {
+        where.price = {
+            [Op.lte]: maxPrice
+        }
+    }
+//     for (let key of where) {
+//         console.log( 'herrere iisss thhheee whhererre '+ where[key]);
+
+// }
+    const whereKeys = Object.keys(where);
+    whereKeys.forEach(ele => {
+        console.log(where[ele], ele);
+    });
     const allSpots = await Spot.findAll({
         include: [{
             model: SpotImage,
@@ -15,9 +142,12 @@ router.get('', async (req, res, next) => {
             'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
             'name', 'description', 'price', 'createdAt', 'updatedAt',
         ],
-        group: ['Spot.id', 'SpotImages.id']
-    });
 
+        order : [['id']],
+        limit: size,
+        offset: size * (page - 1),
+        where
+    });
     const spotsWithAvgRating = await Promise.all(allSpots.map(async spot => {
         const avgRating = await Review.findOne({
             attributes: [[sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']],
@@ -31,7 +161,7 @@ router.get('', async (req, res, next) => {
         };
     }));
 
-    res.json({ Spots: spotsWithAvgRating });
+    res.json({ Spots: spotsWithAvgRating, page: page, size: size });
 
 });
 
@@ -114,16 +244,18 @@ router.post('/:spotId/images',requireAuth, async (req, res, next) => {
                     "message": "Forbidden"
                 })
             } else {
-                console.log('hello');
+                // console.log('hello');
 
                 try {
                     const newSpotImage = await SpotImage.create({ spotId: id, url, preview });
-                    console.log('2');
-                    const lastItem = await SpotImage.count();
-                    const foundNewImage = await SpotImage.findByPk(lastItem, {
-                        attributes: ['id', 'url', 'preview']
-                    })
-                    res.json({ foundNewImage })
+                    // console.log('2');
+                    // const lastItem = await SpotImage.count();
+                    // const foundNewImage = await SpotImage.findByPk(lastItem, {
+                    //     attributes: ['id', 'url', 'preview']
+                    // })
+
+
+                    res.json({ id : newSpotImage.id, url : newSpotImage.url, preview : newSpotImage.preview })
 
                 } catch (error) {
                     res.status(404).json({ message: "Spot couldn't be found" })

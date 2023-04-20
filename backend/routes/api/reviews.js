@@ -161,11 +161,14 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
             reviewId: reviewId,
             url
         })
-        console.log(maxCount);
-        const newReviewImage = await ReviewImage.findByPk(count, {
-            attributes: ['id', 'url']
+        // console.log(maxCount);
+        // const newReviewImage = await ReviewImage.findByPk(count, {
+        //     attributes: ['id', 'url']
+        // })
+        res.json({
+            id: addReviewImage.id,
+            url: addReviewImage.url
         })
-        res.json(newReviewImage)
 
     } catch (error) {
         res.status(404).json({

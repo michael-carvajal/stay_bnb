@@ -190,10 +190,10 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     let { startDate, endDate } = req.body
 
     const startArray = startDate.split('-')
-    startDate = new Date(startArray[0], startArray[1], startArray[2])
+    startDate = new Date(startArray[0], startArray[1] -1, startArray[2])
 
     const endArray = endDate.split('-')
-    endDate = new Date(endArray[0], endArray[1], endArray[2])
+    endDate = new Date(endArray[0], endArray[1] -1, endArray[2])
     const bookingsForSpot = await Booking.findAll({
         where: {
             spotId: bookingToEdit.spotId
