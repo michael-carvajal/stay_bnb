@@ -29,8 +29,20 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Users', onDelete: 'CASCADE'
       }
     },
-    review: DataTypes.STRING,
-    stars: DataTypes.INTEGER
+    review: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    stars: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isBetween(value) {
+          if (value < 1 && value > 5) {
+            throw new Error("Stars must be an integer from 1 to 5");
+          }
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Review',
