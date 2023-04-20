@@ -34,22 +34,28 @@ router.get('/current', requireAuth, async (req, res) => {
     })
 console.log(reviews);
     const spotsWithPreview = await Promise.all(reviews.map(async review => {
-        const url = await SpotImage.findByPk(review.spotId, {
-            attributes: ['url']
-        })
-        const urlObj = url.toJSON();
-        const reviewObj = review.toJSON();
+        try {
+            const url = await SpotImage.findByPk(review.spotId, {
+                attributes: ['url']
+            })
+            const urlObj = url.toJSON();
+            const reviewObj = review.toJSON();
 
-        // console.log(urlObj.url);
-        console.log(reviewObj.Spot);
-        reviewObj.Spot.previewImage = urlObj.url
-        return reviewObj
+            // console.log(urlObj.url);
+            console.log(reviewObj.Spot);
+            reviewObj.Spot.previewImage = urlObj.url
+            return reviewObj
+        } catch (error) {
+            const reviewObj = review.toJSON();
+            reviewObj.Spot.previewImage = null
+            return reviewObj
+        }
     }));
     res.json({ Reviews: spotsWithPreview })
 })
 
 ///////////////////edit Review ////////////
-router.put('/:reviewId', async (req, res) => {
+router.put('/:reviewId', requireAuth,async (req, res) => {
     const { user } = req;
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
@@ -87,7 +93,7 @@ router.put('/:reviewId', async (req, res) => {
 
 //////////////DELETE
 
-router.delete('/:reviewId', async (req, res) => {
+router.delete('/:reviewId', requireAuth,async (req, res) => {
     const { user } = req;
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
@@ -117,7 +123,7 @@ router.delete('/:reviewId', async (req, res) => {
 
     }
 })
-router.post('/:reviewId/images', async (req, res) => {
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
     const reviewId = req.params.reviewId;
     const { user } = req;
     const { url } = req.body;
