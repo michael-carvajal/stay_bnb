@@ -39,7 +39,7 @@ router.get('', async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
     try {
-        const spotReviews = await Review.findOne({
+        const spotReviews = await Review.findAll({
             include: [{
                 model: User,
                 attributes: ['id', 'firstName', 'lastName']
@@ -55,9 +55,10 @@ router.get('/:spotId/reviews', async (req, res) => {
             }
 
         })
-        if (spotReviews === null) {
+        console.log(spotReviews);
+        if (spotReviews.length === 0) {
             res.status(404).json({
-                "message": "Spot couldn't be found"
+                "message": "Reviews couldn't be found"
             });
         } else {
             res.json(spotReviews);
@@ -65,7 +66,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     } catch (error) {
         res.status(404).json({
-            "message": "Spot couldn't be found"
+            "message": "Spot couldn't be found", error
         })
     }
 })
