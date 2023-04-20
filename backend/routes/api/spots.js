@@ -261,7 +261,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
     // console.log(bookingsForASpot);
     if (bookingsForASpot.length === 0) {
-        return res.status(404).json({message: "Spot couldn't be found"})
+        return res.status(404).json({message: "Booking for spot couldn't be found"})
     }
     const _getTimeFormat = (dateType, date) => {
         if (dateType === 'startDate' || dateType === 'endDate') {
