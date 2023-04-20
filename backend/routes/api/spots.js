@@ -561,7 +561,7 @@ router.delete('/:spotId', async (req, res, next) => {
                 "message": "Forbidden"
             })
         }
-        // console.log(spotToDelete.toJSON());
+        console.log(spotToDelete.toJSON());
 
         await spotToDelete.destroy();
 
@@ -569,8 +569,9 @@ router.delete('/:spotId', async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } catch (error) {
+
         res.status(404).json({
-            "message": "Spot couldn't be found",
+            "message": "Spot couldn't be found", error
         })
     }
 })
