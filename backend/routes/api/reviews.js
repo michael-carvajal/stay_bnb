@@ -5,7 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { Review, Spot, SpotImage, ReviewImage, User } = require('../../db/models');
 
 
-router.get('/current', async (req, res) => {
+router.get('/current', requireAuth, async (req, res) => {
     const { user } = req;
     if (!user) {
         return res.status(403).json({ message: "Forbidden" })
@@ -32,7 +32,7 @@ router.get('/current', async (req, res) => {
             }
         ]
     })
-
+console.log(reviews);
     const spotsWithPreview = await Promise.all(reviews.map(async review => {
         const url = await SpotImage.findByPk(review.spotId, {
             attributes: ['url']

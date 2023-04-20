@@ -94,7 +94,7 @@ router.post('', async (req, res, next) => {
 
 /////////////////// Create spot image
 
-router.post('/:spotId/images', async (req, res, next) => {
+router.post('/:spotId/images',requireAuth, async (req, res, next) => {
     const { user } = req;
     const { url, preview } = req.body;
     const id = req.params.spotId
