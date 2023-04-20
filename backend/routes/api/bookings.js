@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Booking , Spot, SpotImage} = require('../../db/models');
+const { Booking, Spot, SpotImage } = require('../../db/models');
 const _getTimeFormat = (dateType, date) => {
     if (dateType === 'startDate' || dateType === 'endDate') {
         const dateType = new Date(date);
@@ -25,25 +25,25 @@ const _getTimeFormat = (dateType, date) => {
         return `${newString[0]} ${newString[1]}`
     }
 }
-router.get('',async(req, res) => {
+router.get('', async (req, res) => {
     const allBookings = await Booking.findAll();
 
     res.json(allBookings)
 })
-router.get('/spotImages/spot',async(req, res) => {
-   try {
-     const url = await SpotImage.findAll({
-         where: {
+router.get('/spotImages/spot', async (req, res) => {
+    try {
+        const url = await SpotImage.findAll({
+            where: {
 
-            spotId: 1
+                spotId: 1
 
-         },
+            },
 
-     })
-     res.json(url)
-   } catch (error) {
+        })
+        res.json(url)
+    } catch (error) {
         res.json(error)
-   }
+    }
 })
 router.get('/current', requireAuth, async (req, res) => {
     const { user } = req;
@@ -61,7 +61,7 @@ router.get('/current', requireAuth, async (req, res) => {
     });
 
     try {
-        const bookingsWithPreview = await Promise.all(allBookings.map( async booking => {
+        const bookingsWithPreview = await Promise.all(allBookings.map(async booking => {
             const bookingObj = booking.toJSON();
             // console.log(bookingObj.spotId);
 
@@ -100,7 +100,7 @@ router.get('/current', requireAuth, async (req, res) => {
         }))
 
         // console.log(bookingsWithPreview);
-        res.json({Bookings: bookingsWithPreview})
+        res.json({ Bookings: bookingsWithPreview })
     } catch (error) {
         console.log(error);
         res.status(400).json(error)
@@ -112,8 +112,8 @@ const _dateCeck = (start, end, res) => {
     start = start.toDateString()
     end = end.toDateString()
 
-    const newStart = new Date (start)
-    const newEnd = new Date (end)
+    const newStart = new Date(start)
+    const newEnd = new Date(end)
 
     if (newStart.getTime() >= newEnd.getTime()) {
 
@@ -131,16 +131,29 @@ const _pastCheck = (start, end, res,) => {
         return true
     } else return false
 }
+const _presentCheck = (start, end, res,) => {
+    const date = new Date();
+    // console.log(date);
+    start = start.toDateString()
+    const newStart = new Date(start)
+    end = end.toDateString()
+    const newEnd = new Date(end)
+
+    // console.log(date.getTime(), newStart.getTime(), date.getTime() < newStart.getTime());
+    if (date.getTime() > newStart.getTime() && date.getTime() < newEnd.getTime()) {
+        return true
+    } else return false
+}
 router.put('/:bookingId', requireAuth, async (req, res) => {
     const { user } = req;
     const bookingId = req.params.bookingId
     const bookingToEdit = await Booking.findByPk(bookingId);
     // console.log(bookingToEdit.toJSON());
     if (bookingToEdit === null) {
-        return res.status(404).json({message: "Booking not found"})
+        return res.status(404).json({ message: "Booking not found" })
     }
     if (bookingToEdit.userId !== user.id) {
-        return res.status(404).json({message: "Forbidden"})
+        return res.status(404).json({ message: "Forbidden" })
     }
 
     let { startDate, endDate } = req.body
@@ -210,6 +223,62 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     })
 })
 
+
+router.delete('/:bookingId', requireAuth, async (req, res) => {
+    const bookingId = req.params.bookingId
+    const { user } = req;
+    try {
+        console.log(1);
+        const bookingToDelete = await Booking.findByPk(bookingId, {
+            include: {
+                model: Spot,
+                attributes: ['id', 'ownerId']
+            }
+        })
+        console.log(2);
+        // console.log('booking spot owner and user and Spot.id' + bookingToDelete.Spot.ownerId + ' ' + bookingToDelete.userId + ' ', + bookingToDelete.Spot.id);
+        // console.log('input spot and user ' +   );
+
+        if (bookingToDelete.userId !== user.id) {
+            return res.status(400).json({
+                message: "Booking must belong to current user to delete"
+            })
+
+        }
+        console.log(3);
+        console.log(bookingToDelete.toJSON());
+
+        // if (bookingToDelete.Spot.ownerId !== bookingToDelete.userId) {
+        //     return res.status(400).json({
+        //         message: "Booking must belong to owner of Spot to delete"
+        //     })
+        // }
+        // console.log(bookingToDelete.startDate.toDateString())
+        // const startArray = bookingToDelete.startDate.split('-')
+        // console.log(4);
+        // let startDate = new Date(startArray[0], startArray[1], startArray[2])
+
+        // const endArray = bookingToDelete.endDate.split('-')
+        // let endDate = new Date(endArray[0], endArray[1], endArray[2])
+        console.log(5);
+        // console.log(startDate, endDate);
+        if (_presentCheck(bookingToDelete.startDate, bookingToDelete.endDate)) {
+            return res.status(403).json({
+                "message": "Bookings that have been started can't be deleted"
+            })
+        }
+        console.log(6);
+
+        // await bookingToDelete.destroy();
+        res.json({
+            "message": "Successfully deleted"
+        })
+    } catch (error) {
+        res.status(404).json({
+            "message": "Booking couldn't be found", error
+        })
+    }
+})
 
 
 module.exports = router;
