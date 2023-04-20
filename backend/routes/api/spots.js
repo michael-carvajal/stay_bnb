@@ -39,7 +39,7 @@ router.get('', async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
     try {
-        const spotReviews = await Review.findOne({
+        const spotReviews = await Review.findAll({
             include: [{
                 model: User,
                 attributes: ['id', 'firstName', 'lastName']
@@ -55,9 +55,10 @@ router.get('/:spotId/reviews', async (req, res) => {
             }
 
         })
-        if (spotReviews === null) {
+        console.log(spotReviews);
+        if (spotReviews.length === 0) {
             res.status(404).json({
-                "message": "Spot couldn't be found"
+                "message": "Reviews couldn't be found"
             });
         } else {
             res.json(spotReviews);
@@ -65,7 +66,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
     } catch (error) {
         res.status(404).json({
-            "message": "Spot couldn't be found"
+            "message": "Spot couldn't be found", error
         })
     }
 })
@@ -93,7 +94,7 @@ router.post('', async (req, res, next) => {
 
 /////////////////// Create spot image
 
-router.post('/:spotId/images', async (req, res, next) => {
+router.post('/:spotId/images',requireAuth, async (req, res, next) => {
     const { user } = req;
     const { url, preview } = req.body;
     const id = req.params.spotId
@@ -260,7 +261,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
     // console.log(bookingsForASpot);
     if (bookingsForASpot.length === 0) {
-        return res.status(404).json({message: "Spot couldn't be found"})
+        return res.status(404).json({message: "Booking for spot couldn't be found"})
     }
     const _getTimeFormat = (dateType, date) => {
         if (dateType === 'startDate' || dateType === 'endDate') {
@@ -561,7 +562,7 @@ router.delete('/:spotId', async (req, res, next) => {
                 "message": "Forbidden"
             })
         }
-        // console.log(spotToDelete.toJSON());
+        console.log(spotToDelete.toJSON());
 
         await spotToDelete.destroy();
 
@@ -569,8 +570,9 @@ router.delete('/:spotId', async (req, res, next) => {
             "message": "Successfully deleted"
         })
     } catch (error) {
+
         res.status(404).json({
-            "message": "Spot couldn't be found",
+            "message": "Spot couldn't be found", error
         })
     }
 })
