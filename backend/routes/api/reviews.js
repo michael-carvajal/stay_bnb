@@ -34,16 +34,22 @@ router.get('/current', requireAuth, async (req, res) => {
     })
 console.log(reviews);
     const spotsWithPreview = await Promise.all(reviews.map(async review => {
-        const url = await SpotImage.findByPk(review.spotId, {
-            attributes: ['url']
-        })
-        const urlObj = url.toJSON();
-        const reviewObj = review.toJSON();
+        try {
+            const url = await SpotImage.findByPk(review.spotId, {
+                attributes: ['url']
+            })
+            const urlObj = url.toJSON();
+            const reviewObj = review.toJSON();
 
-        // console.log(urlObj.url);
-        console.log(reviewObj.Spot);
-        reviewObj.Spot.previewImage = urlObj.url
-        return reviewObj
+            // console.log(urlObj.url);
+            console.log(reviewObj.Spot);
+            reviewObj.Spot.previewImage = urlObj.url
+            return reviewObj
+        } catch (error) {
+            const reviewObj = review.toJSON();
+            reviewObj.Spot.previewImage = null
+            return reviewObj
+        }
     }));
     res.json({ Reviews: spotsWithPreview })
 })
