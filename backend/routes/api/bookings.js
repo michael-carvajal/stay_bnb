@@ -131,19 +131,50 @@ const _pastCheck = (start, end, res,) => {
         return true
     } else return false
 }
-const _presentCheck = (start, end, res,) => {
-    const date = new Date();
-    // console.log(date);
-    start = start.toDateString()
-    const newStart = new Date(start)
-    end = end.toDateString()
-    const newEnd = new Date(end)
+// const _presentCheck = (start, end, res,) => {
+//     const date = new Date();
+//     // console.log(date);
+//     start = start.toDateString()
+//     const newStart = new Date(start)
+//     end = end.toDateString()
+//     const newEnd = new Date(end)
 
-    // console.log(date.getTime(), newStart.getTime(), date.getTime() < newStart.getTime());
-    if (date.getTime() > newStart.getTime() && date.getTime() < newEnd.getTime()) {
-        return true
-    } else return false
+//     // console.log(date.getTime(), newStart.getTime(), date.getTime() < newStart.getTime());
+//     console.log({
+//         date: date.getDate(),
+//         start: newStart.getDate(),
+//         end: newEnd.getDate(),
+//         boolStart: date.getTime() > newStart.getTime(),
+//         boolEnd: date.getTime() < newEnd.getTime(),
+//         dateType: typeof date.getTime(),
+//         startType: typeof newStart.getTime(),
+//     });
+
+//     if (date.getTime() > newStart.getTime() && date.getTime() < newEnd.getTime()) {
+//         return true
+//     } else return false
+// }
+const _presentCheck = (start, end) => {
+    const date = new Date();
+
+    console.log({
+        date: date.getDate(),
+        currentDate: date,
+        start: start.getDate(),
+        end: end.getDate(),
+        boolStart: date.getTime() > start.getTime(),
+        boolEnd: date.getTime() < end.getTime(),
+        dateType: typeof date.getTime(),
+        startType: typeof start.getTime(),
+    });
+
+    if (date.getTime() > start.getTime() && date.getTime() < end.getTime()) {
+        return true;
+    } else {
+        return false;
+    }
 }
+
 router.put('/:bookingId', requireAuth, async (req, res) => {
     const { user } = req;
     const bookingId = req.params.bookingId
@@ -239,28 +270,17 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         // console.log('booking spot owner and user and Spot.id' + bookingToDelete.Spot.ownerId + ' ' + bookingToDelete.userId + ' ', + bookingToDelete.Spot.id);
         // console.log('input spot and user ' +   );
 
-        if (bookingToDelete.userId !== user.id) {
+        if (bookingToDelete.userId !== user.id && bookingToDelete.Spot.ownerId !== bookingToDelete.userId) {
             return res.status(400).json({
                 message: "Booking must belong to current user to delete"
             })
 
         }
         console.log(3);
-        console.log(bookingToDelete.toJSON());
 
-        // if (bookingToDelete.Spot.ownerId !== bookingToDelete.userId) {
-        //     return res.status(400).json({
-        //         message: "Booking must belong to owner of Spot to delete"
-        //     })
-        // }
-        // console.log(bookingToDelete.startDate.toDateString())
-        // const startArray = bookingToDelete.startDate.split('-')
-        // console.log(4);
-        // let startDate = new Date(startArray[0], startArray[1], startArray[2])
 
-        // const endArray = bookingToDelete.endDate.split('-')
-        // let endDate = new Date(endArray[0], endArray[1], endArray[2])
         console.log(5);
+        console.log(bookingToDelete.startDate, bookingToDelete.endDate);
         // console.log(startDate, endDate);
         if (_presentCheck(bookingToDelete.startDate, bookingToDelete.endDate)) {
             return res.status(403).json({
@@ -269,7 +289,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         }
         console.log(6);
 
-        // await bookingToDelete.destroy();
+        await bookingToDelete.destroy();
         res.json({
             "message": "Successfully deleted"
         })

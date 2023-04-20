@@ -216,8 +216,8 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
         }
 
         const bookingCreated = await Booking.create({
-            startDate: new Date(startArray[0], startArray[1], startArray[2]),
-            endDate: new Date(endArray[0], endArray[1], endArray[2]),
+            startDate: new Date(startArray[0], startArray[1] -1, startArray[2]),
+            endDate: new Date(endArray[0], endArray[1] -1, endArray[2]),
             spotId,
             userId: user.id
         })
@@ -230,9 +230,9 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
 
 
         res.json({
-            id: 1,
-            spotId: 1,
-            userId: 2,
+            id : bookingObj.id,
+            spotId,
+            userId: user.id,
             startDate: formatstartDate,
             endDate: formatendDate,
             createdAt: formatcreatedAt,
