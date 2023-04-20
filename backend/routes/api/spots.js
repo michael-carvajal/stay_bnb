@@ -244,16 +244,18 @@ router.post('/:spotId/images',requireAuth, async (req, res, next) => {
                     "message": "Forbidden"
                 })
             } else {
-                console.log('hello');
+                // console.log('hello');
 
                 try {
                     const newSpotImage = await SpotImage.create({ spotId: id, url, preview });
-                    console.log('2');
-                    const lastItem = await SpotImage.count();
-                    const foundNewImage = await SpotImage.findByPk(lastItem, {
-                        attributes: ['id', 'url', 'preview']
-                    })
-                    res.json({ foundNewImage })
+                    // console.log('2');
+                    // const lastItem = await SpotImage.count();
+                    // const foundNewImage = await SpotImage.findByPk(lastItem, {
+                    //     attributes: ['id', 'url', 'preview']
+                    // })
+
+
+                    res.json({ id : newSpotImage.id, url : newSpotImage.url, preview : newSpotImage.preview })
 
                 } catch (error) {
                     res.status(404).json({ message: "Spot couldn't be found" })
