@@ -1,4 +1,5 @@
 'use strict';
+const { Op } = require('sequelize')
 const {
   Model
 } = require('sequelize');
@@ -27,15 +28,61 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    country: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL,
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    price: DataTypes.DECIMAL
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lat: {
+      type: DataTypes.DECIMAL,
+      validate: {
+        isLat(value) {
+          if (this.lat && (this.lat < -90 || this.lat > 90)) {
+            throw new Error('Latitude must be between -90 and 90 degrees');
+          }
+        }
+      }
+    }
+,
+    lng: {
+      type: DataTypes.DECIMAL,
+      validate: {
+        isLng(value) {
+          if (this.lng && (this.lng < -180 || this.lng > 180)) {
+            throw new Error('Longitude must be between -180 and 180 degrees');
+          }
+        }
+      }
+    }
+,
+    name: {
+      type : DataTypes.STRING,
+      validate: {
+        len: {
+          args: [0, 50],
+          msg: "Name must be between 0 and 50 characters long"
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Spot',

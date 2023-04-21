@@ -51,12 +51,7 @@ router.post(
             });
 
         } catch (error) {
-            res.status(500).json({
-                "message": "User already exists",
-                "errors": {
-                    "username": "User with that username already exists"
-                }
-            })
+            res.status(500).json( {" Validation error" :error.errors[0].message}  )
         }
     }
 );
