@@ -71,12 +71,14 @@ router.get('/current', requireAuth, async (req, res) => {
                 },
                 include: {
                     model: SpotImage,
-                    attributes: ['url']
+                    attributes: ['url'],
+
                 },
                 attributes: []
             })
             const urlObj = url.toJSON()
-            bookingObj.Spot.previewImage = urlObj.url
+            // bookingObj.Spot.previewImage = urlObj.url
+            console.log(urlObj.SpotImages[0].url);
             let start = bookingObj.startDate;
             let end = bookingObj.endDate;
             start = new Date(start);
@@ -86,7 +88,12 @@ router.get('/current', requireAuth, async (req, res) => {
             const formatendDate = _getTimeFormat('endDate', end)
             const formatcreatedAt = _getTimeFormat('createdAt', bookingObj.createdAt)
             const formatupdatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
-
+            let previewImage;
+            if (urlObj.SpotImages[0].url === undefined) {
+                bookingObj.Spot.previewImage = null
+            } else {
+                bookingObj.Spot.previewImage = urlObj.SpotImages[0].url
+            }
             return {
                 id: bookingObj.id,
                 spotId: bookingObj.spotId,
@@ -95,7 +102,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 startDate: formatstartDate,
                 endDate: formatendDate,
                 createdAt: formatcreatedAt,
-                updatedAt: formatupdatedAt
+                updatedAt: formatupdatedAt,
             }
         }))
 

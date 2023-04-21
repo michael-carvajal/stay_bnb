@@ -414,7 +414,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
 router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     const spotId = req.params.spotId;
     const { user } = req
+    const spot = await Spot.findByPk(spotId);
+    if (spot === null) {
+        return res.status(404).json({message: "Spot couldn't be found"})
 
+    }
 
     const bookingsForASpot = await Booking.findAll({
         where: {

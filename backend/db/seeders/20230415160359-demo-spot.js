@@ -35,7 +35,7 @@ module.exports = {
         "price": 150.0
       },
       {
-        "ownerId": null,
+        "ownerId": 1,
         "address": "789 Oak St",
         "city": "Miami",
         "state": "FL",
@@ -47,7 +47,7 @@ module.exports = {
         "price": 200.0
       },
       {
-        "ownerId": null,
+        "ownerId": 3,
         "address": "1011 Pine St",
         "city": "Seattle",
         "state": "WA",
@@ -59,7 +59,7 @@ module.exports = {
         "price": 175.0
       },
       {
-        "ownerId": null,
+        "ownerId": 2,
         "address": "1213 Maple St",
         "city": "Los Angeles",
         "state": "CA",
