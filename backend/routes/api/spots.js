@@ -136,7 +136,8 @@ router.get('', async (req, res, next) => {
     const allSpots = await Spot.findAll({
         include: [{
             model: SpotImage,
-            attributes: ['url']
+            attributes: ['url'],
+            limit: 1
         }],
         attributes: [
             'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng',
@@ -154,11 +155,36 @@ router.get('', async (req, res, next) => {
             where: { spotId: spot.id }
         });
         const ratingObj = avgRating.toJSON()
-        console.log(ratingObj);
+        // console.log(ratingObj);
+        const spotObj = spot.toJSON();
+        console.log(spotObj.SpotImages[0]);
+        let previewImage;
+        if (spotObj.SpotImages[0] === undefined) {
+            previewImage = null
+        } else {
+            previewImage = spotObj.SpotImages[0].url
+        }
         return {
-            ...spot.toJSON(),
-            ...ratingObj
-        };
+            id: spotObj.id,
+            ownerId: spotObj.ownerId,
+            address: spotObj.address,
+            city: spotObj.city,
+            state: spotObj.state,
+            country: spotObj.country,
+            lat: spotObj.lat,
+            lng: spotObj.lng,
+            name: spotObj.name,
+            description: spotObj.description,
+            price: spotObj.price,
+            createdAt: spotObj.createdAt,
+            updatedAt: spotObj.updatedAt,
+            ...ratingObj,
+            previewImage: previewImage
+        }
+        // return {
+        //     ...spot.toJSON(),
+        //     ...ratingObj
+        // };
     }));
 
     res.json({ Spots: spotsWithAvgRating, page: page, size: size });
