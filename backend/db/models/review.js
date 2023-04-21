@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       validate: {
         isBetween(value) {
-          if (value < 1 && value > 5) {
+          if (value < 1 || value > 5) {
             throw new Error("Stars must be an integer from 1 to 5");
           }
         }

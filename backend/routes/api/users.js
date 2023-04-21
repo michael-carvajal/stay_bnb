@@ -34,6 +34,20 @@ router.post(
         const hashedPassword = bcrypt.hashSync(password);
 
         try {
+
+            const userExist = await User.findOne({
+                where: {
+                    username: username
+                }
+            })
+            if (userExist !== null) {
+                return res.status(500).json({
+                    "message": "User already exists",
+                    "errors": {
+                        "username": "User with that username already exists"
+                    }
+                })
+            }
             const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
             const safeUser = {
@@ -51,7 +65,7 @@ router.post(
             });
 
         } catch (error) {
-            res.status(500).json( {" Validation error" :error.errors[0].message}  )
+            res.status(400).json( {" Validation error" :error.errors[0].message}  )
         }
     }
 );
