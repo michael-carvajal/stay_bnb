@@ -176,7 +176,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
     const bookingToEdit = await Booking.findByPk(bookingId);
     // console.log(bookingToEdit.toJSON());
     if (bookingToEdit === null) {
-        return res.status(404).json({ message: "Booking not found" })
+        return res.status(404).json({ message: "Booking couldn't be found" })
     }
     if (bookingToEdit.userId !== user.id) {
         return res.status(404).json({ message: "Forbidden" })
@@ -254,27 +254,28 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
     const bookingId = req.params.bookingId
     const { user } = req;
     try {
-        console.log(1);
         const bookingToDelete = await Booking.findByPk(bookingId, {
             include: {
                 model: Spot,
                 attributes: ['id', 'ownerId']
             }
         })
-        console.log(2);
+        if (bookingToDelete === null) {
+            return res.status(404).json({
+                message: "Booking couldn't be found"
+            })
+        }
         // console.log('booking spot owner and user and Spot.id' + bookingToDelete.Spot.ownerId + ' ' + bookingToDelete.userId + ' ', + bookingToDelete.Spot.id);
         // console.log('input spot and user ' +   );
 
         if (bookingToDelete.userId !== user.id && bookingToDelete.Spot.ownerId !== bookingToDelete.userId) {
-            return res.status(400).json({
-                message: "Booking must belong to current user to delete"
+            return res.status(403).json({
+                message: "Forbidden"
             })
 
         }
-        console.log(3);
 
 
-        console.log(5);
         console.log(bookingToDelete.startDate, bookingToDelete.endDate);
         // console.log(startDate, endDate);
         if (_presentCheck(bookingToDelete.startDate, bookingToDelete.endDate)) {
@@ -282,16 +283,13 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
                 "message": "Bookings that have been started can't be deleted"
             })
         }
-        console.log(6);
 
         await bookingToDelete.destroy();
         res.json({
             "message": "Successfully deleted"
         })
     } catch (error) {
-        res.status(404).json({
-            "message": "Booking couldn't be found", error
-        })
+        res.status(400).json(error.message)
     }
 })
 

@@ -63,17 +63,28 @@ router.put('/:reviewId', requireAuth,async (req, res) => {
     const { review, stars } = req.body;
     const reviewId = req.params.reviewId;
 
-    if (!review || !stars) {
-        return res.status(400).json({
-            "message": "Bad Request",
-            "errors": {
-                "review": "Review text is required",
-                "stars": "Stars must be an integer from 1 to 5",
-            }
-        })
-    }
+    // if (!review || !stars) {
+    //     return res.status(400).json({
+    //         "message": "Bad Request",
+    //         "errors": {
+    //             "review": "Review text is required",
+    //             "stars": "Stars must be an integer from 1 to 5",
+    //         }
+    //     })
+    // }
     try {
+        if (stars < 1 || stars > 5) {
+            throw new Error("Stars must be an integer from 1 to 5");
+        }
+        if (review === "") {
+            throw new Error("Review text is required");
+
+        }
         const reviewToUpdate = await Review.findByPk(reviewId);
+
+        if (reviewToUpdate === null) {
+            return res.status(404).json({ message: "Review couldn't be found" })
+        }
         if (reviewToUpdate.userId !== user.id) {
             return res.status(403).json({ message: "Forbidden" })
         }
@@ -84,9 +95,7 @@ router.put('/:reviewId', requireAuth,async (req, res) => {
         res.json(updatedReview)
 
     } catch (error) {
-        res.status(404).json({
-            "message": "Review couldn't be found"
-        })
+        res.status(400).json(error.message)
     }
 
 })
@@ -101,25 +110,24 @@ router.delete('/:reviewId', requireAuth,async (req, res) => {
     const reviewId = req.params.reviewId;
 
     try {
-        console.log(1);
         const reviewToDelete = await Review.findByPk(reviewId);
-        console.log(2);
+        if (reviewToDelete === null) {
+            return res.status(404).json({
+                message: "Review couldn't be found"
+            })
+        }
         if (reviewToDelete.userId !== user.id) {
             return res.status(403).json({
                 message: "Forbidden"
             })
         }
-        if (reviewToDelete === null) {
-            return res.status(404).json({ message: "Review couldn't be found" })
-        }
+        
 
-        console.log(3);
         await reviewToDelete.destroy();
-        console.log(4);
 
         res.json({ message: "Successfully deleted" })
     } catch (error) {
-        res.status(404).json({ message: "Review couldn't be found" })
+        res.status(400).json(error.message)
 
     }
 })
