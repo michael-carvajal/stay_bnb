@@ -7,7 +7,7 @@ const images = [{
 {
   "spotId": 1,
   "url": "https://www.example.com/image2.jpg",
-  "preview": false
+  "preview": true
 },
 {
   "spotId": 5,
@@ -17,7 +17,7 @@ const images = [{
 {
   "spotId": 2,
   "url": "https://www.example.com/image4.jpg",
-  "preview": false
+  "preview": true
 },
 {
   "spotId": 4,

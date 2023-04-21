@@ -71,12 +71,14 @@ router.get('/current', requireAuth, async (req, res) => {
                 },
                 include: {
                     model: SpotImage,
-                    attributes: ['url']
+                    attributes: ['url'],
+
                 },
                 attributes: []
             })
             const urlObj = url.toJSON()
-            bookingObj.Spot.previewImage = urlObj.url
+            // bookingObj.Spot.previewImage = urlObj.url
+            console.log(urlObj.SpotImages[0].url);
             let start = bookingObj.startDate;
             let end = bookingObj.endDate;
             start = new Date(start);
@@ -86,7 +88,12 @@ router.get('/current', requireAuth, async (req, res) => {
             const formatendDate = _getTimeFormat('endDate', end)
             const formatcreatedAt = _getTimeFormat('createdAt', bookingObj.createdAt)
             const formatupdatedAt = _getTimeFormat('updatedAt', bookingObj.updatedAt)
-
+            let previewImage;
+            if (urlObj.SpotImages[0].url === undefined) {
+                bookingObj.Spot.previewImage = null
+            } else {
+                bookingObj.Spot.previewImage = urlObj.SpotImages[0].url
+            }
             return {
                 id: bookingObj.id,
                 spotId: bookingObj.spotId,
@@ -95,7 +102,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 startDate: formatstartDate,
                 endDate: formatendDate,
                 createdAt: formatcreatedAt,
-                updatedAt: formatupdatedAt
+                updatedAt: formatupdatedAt,
             }
         }))
 
@@ -121,7 +128,17 @@ const _dateCeck = (start, end, res) => {
     } else return false
 }
 
-const _pastCheck = (start, end, res,) => {
+// const _pastCheck = (start, end, res,) => {
+//     const date = new Date();
+//     // console.log(date);
+//     start = start.toDateString()
+//     const newStart = new Date(start)
+//     console.log(date.getTime(), newStart.getTime(), date.getTime() < newStart.getTime());
+//     if (date.getTime() > newStart.getTime()) {
+//         return true
+//     } else return false
+// }
+const _pastCheck2 = (start, end, res,) => {
     const date = new Date();
     // console.log(date);
     start = start.toDateString()
@@ -131,29 +148,7 @@ const _pastCheck = (start, end, res,) => {
         return true
     } else return false
 }
-// const _presentCheck = (start, end, res,) => {
-//     const date = new Date();
-//     // console.log(date);
-//     start = start.toDateString()
-//     const newStart = new Date(start)
-//     end = end.toDateString()
-//     const newEnd = new Date(end)
 
-//     // console.log(date.getTime(), newStart.getTime(), date.getTime() < newStart.getTime());
-//     console.log({
-//         date: date.getDate(),
-//         start: newStart.getDate(),
-//         end: newEnd.getDate(),
-//         boolStart: date.getTime() > newStart.getTime(),
-//         boolEnd: date.getTime() < newEnd.getTime(),
-//         dateType: typeof date.getTime(),
-//         startType: typeof newStart.getTime(),
-//     });
-
-//     if (date.getTime() > newStart.getTime() && date.getTime() < newEnd.getTime()) {
-//         return true
-//     } else return false
-// }
 const _presentCheck = (start, end) => {
     const date = new Date();
 
@@ -225,7 +220,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             }
         })
     }
-    if (_pastCheck(startDate, endDate, res)) {
+    if (_pastCheck2(bookingToEdit.startDate, endDate, res)) {
         return res.status(403).json({ message: "Past bookings can't be modified" })
     }
 
