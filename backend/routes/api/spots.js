@@ -157,7 +157,6 @@ router.get('', async (req, res, next) => {
         const ratingObj = avgRating.toJSON()
         // console.log(ratingObj);
         const spotObj = spot.toJSON();
-        console.log(spotObj.SpotImages[0]);
         let previewImage;
         if (spotObj.SpotImages[0] === undefined) {
             previewImage = null
@@ -195,6 +194,12 @@ router.get('', async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res) => {
     const spotId = req.params.spotId;
     try {
+        const spot = await Spot.findByPk(spotId)
+        if (spot === null) {
+            res.status(404).json({
+                "message": "Spot couldn't be found"
+            });
+        }
         const spotReviews = await Review.findAll({
             include: [{
                 model: User,
@@ -217,12 +222,12 @@ router.get('/:spotId/reviews', async (req, res) => {
                 "message": "Reviews couldn't be found"
             });
         } else {
-            res.json(spotReviews);
+            res.json({ Reviews: spotReviews});
         }
 
     } catch (error) {
         res.status(404).json({
-            "message": "Spot couldn't be found", error
+            "message": "Spot couldn't be found"
         })
     }
 })
@@ -350,10 +355,10 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
         })
 
         const startArray = startDate.split('-')
-        startDate = new Date(startArray[0], startArray[1], startArray[2])
+        startDate = new Date(startArray[0], startArray[1] -1, startArray[2])
 
         const endArray = endDate.split('-')
-        endDate = new Date(endArray[0], endArray[1], endArray[2])
+        endDate = new Date(endArray[0], endArray[1]-1, endArray[2])
         // const vacancyObj = vacancy.toJSON();
         console.log(startDate, endDate);
         // for (let booking of bookingsForSpot) {
@@ -527,10 +532,34 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 });
                 const ratingObj = avgRating.toJSON()
                 console.log(ratingObj);
+                const spotObj = spot.toJSON();
+                let previewImage;
+                if (spotObj.SpotImages[0] === undefined) {
+                    previewImage = null
+                } else {
+                    previewImage = spotObj.SpotImages[0].url
+                }
                 return {
-                    ...spot.toJSON(),
-                    ...ratingObj
-                };
+                    id: spotObj.id,
+                    ownerId: spotObj.ownerId,
+                    address: spotObj.address,
+                    city: spotObj.city,
+                    state: spotObj.state,
+                    country: spotObj.country,
+                    lat: spotObj.lat,
+                    lng: spotObj.lng,
+                    name: spotObj.name,
+                    description: spotObj.description,
+                    price: spotObj.price,
+                    createdAt: spotObj.createdAt,
+                    updatedAt: spotObj.updatedAt,
+                    ...ratingObj,
+                    previewImage: previewImage
+                }
+                // return {
+                //     ...spot.toJSON(),
+                //     ...ratingObj
+                // };
             }));
 
             res.json({ Spots: spotsWithAvgRating });
