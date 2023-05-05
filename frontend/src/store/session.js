@@ -37,13 +37,10 @@ export const  sessionLogIn = (user) => async dispatch => {
     } else {
         const error = await response.json();
 
-        console.log("error in else statement ==>", error);
     }
 }
 export const restoreUser = () => async (dispatch) => {
-  console.log("restore user => ", );
   const response = await csrfFetch("/api/session");
-  console.log("restore user => ", );
     const data = await response.json();
     dispatch(logIn(data));
     return response;
