@@ -13,7 +13,6 @@ export  const ShowSpots = () => {
     }, [dispatch])
     return (
         <div className="show-spots">
-            <h3>ShowSpots</h3>
             {allSpots.map(spot => {
                 return (
                     <div key={spot.id} className="spot-card">
