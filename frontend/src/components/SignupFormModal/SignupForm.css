@@ -1,0 +1,19 @@
+.sign-up{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+    width: 400px;
+    margin: 0px auto;
+    position: relative;
+    top: 100px
+}
+.sign-up h1{
+    text-align: center;
+}
+
+.sign-up form {
+    display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+}
