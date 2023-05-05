@@ -65,7 +65,7 @@ router.post(
     }
 );
 router.get(
-    '/', requireAuth,
+    '/', 
     (req, res) => {
         const { user } = req;
         if (user) {
