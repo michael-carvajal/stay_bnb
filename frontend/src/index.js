@@ -6,8 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import './index.css';
 import App from './App';
-import configureStore from './store';
 
+import configureStore from './store';
+import { ModalProvider, Modal } from './context/Modal';
 const store = configureStore();
 // frontend/src/index.js
 // ... other imports
@@ -24,11 +25,15 @@ if (process.env.NODE_ENV !== "production") {
 
 function Root() {
   return (
+    <ModalProvider>
+
     <ReduxProvider store={store}>
       <BrowserRouter>
-        <App />
+          <App />
+          <Modal />
       </BrowserRouter>
     </ReduxProvider>
+    </ModalProvider>
   );
 }
 
