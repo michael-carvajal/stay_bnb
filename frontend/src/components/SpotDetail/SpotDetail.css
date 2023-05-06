@@ -34,3 +34,29 @@
     height: 49%;
     border: 2px black solid;
 }
+.description{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.price-review{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.price-rating{
+    border: 3px solid black;
+    border-radius: 8px;
+    width: 30%;
+    padding: 18px;
+}
+.reserve-btn{
+    padding: 9px;
+    display: block;
+    text-decoration: none;
+    border: 1px solid black;
+    box-shadow: 2px 2px 2px rgb(50, 50, 50);
+    background-color: var(--color-red);
+    color: white;
+    text-align: center;
+}

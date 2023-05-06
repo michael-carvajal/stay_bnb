@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import { NavLink, useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
 
@@ -29,7 +29,19 @@ const SpotDetail = () => {
 
                 </div>
             </div>
-            <div></div>
+            <div className="description">
+                <div className="host-description">
+                    <h2>Hosted by {currentSpot.Owner?.firstName} {currentSpot.Owner?.lastName}</h2>
+                    <p>{currentSpot?.description}</p>
+                </div>
+                <div className="price-rating">
+                    <div className="price-review">
+                        <p>${currentSpot?.price} night</p>
+                        <p>{currentSpot?.avgRating}  # of reviews coming soon</p>
+                    </div>
+                    <NavLink to='/booking/new' className="reserve-btn">Reserve</NavLink>
+                </div>
+            </div>
             <div></div>
         </div>
     )
