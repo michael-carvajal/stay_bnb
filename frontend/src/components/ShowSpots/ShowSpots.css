@@ -1,5 +1,33 @@
 .show-spots {
     display: flex;
-    flex-direction: column;
-    width: 80%;
+    width: 89%;
+    flex-wrap: wrap;
+    margin: 0px auto;
+    gap: 16px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.spot-card:hover{
+    cursor: pointer;
+    box-shadow: 2px 2px 10px rgb(149, 149, 149);
+    border-radius: 10px;
+}
+
+.spot-card {
+    width: 24%;
+    height: 360px;
+}
+
+.preview-image{
+    width: 100%;
+    border: 2px black solid;
+    height: 270px;
+}
+
+
+.location-rating {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0px;
 }
