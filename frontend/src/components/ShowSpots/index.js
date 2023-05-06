@@ -12,18 +12,21 @@ export  const ShowSpots = () => {
     useEffect(() => {
         dispatch(getAllSpots())
     }, [dispatch])
+
+
     return (
         <div className="show-spots">
             {allSpots.map(spot => {
                 return (
-                    <div key={spot?.id} className="spot-card">
-                        <img src={spot?.previewImage} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+                    <div key={spot?.id} className="spot-card" >
+                        <img src={spot?.previewImage} className="preview-image" alt={spot?.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
                             <p>{spot?.city}, {spot?.state}</p>
                             <p>{spot?.avgRating}</p>
                         </div>
                         <div>${spot?.price} night</div>
+
                     </div>
                 )
             })}

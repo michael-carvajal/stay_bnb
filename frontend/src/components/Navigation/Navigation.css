@@ -23,6 +23,9 @@
     padding: 7px;
     border-radius: 45%;
 }
+#profile-btn:hover{
+    cursor: pointer;
+}
 
 .profile-dropdown{
     position: absolute;
@@ -31,6 +34,7 @@
     right: 10px;
     width: 100px;
     padding: 15px;
+    z-index: 100;
 }
 .profile-dropdown > *{
     margin-top: 10px;
@@ -39,3 +43,9 @@
     cursor: pointer;
     background-color: var(--color-dark-red);
 }
+.spot-card {
+    position: relative;
+    display: inline-block;
+}
+
+
