@@ -18,6 +18,7 @@ export  const ShowSpots = () => {
     return (
         <div className="show-spots">
             {allSpots.map(spot => {
+                console.log(spot?.id);
                 return (
                     <NavLink key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
                         <img src={spot?.previewImage} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
