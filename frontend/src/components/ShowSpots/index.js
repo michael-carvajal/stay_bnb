@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getAllSpots } from "../../store/spots";
 import './ShowSpots.css'
 import missingImage from "../../assets/images/no-photo.jpeg"
+import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 export  const ShowSpots = () => {
     const dispatch = useDispatch();
     const allSpots = useSelector(state => {
@@ -18,8 +19,8 @@ export  const ShowSpots = () => {
         <div className="show-spots">
             {allSpots.map(spot => {
                 return (
-                    <div key={spot?.id} className="spot-card" >
-                        <img src={spot?.previewImage} className="preview-image" alt={spot?.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+                    <NavLink key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
+                        <img src={spot?.previewImage} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
                             <p>{spot?.city}, {spot?.state}</p>
@@ -27,7 +28,7 @@ export  const ShowSpots = () => {
                         </div>
                         <div>${spot?.price} night</div>
 
-                    </div>
+                    </NavLink>
                 )
             })}
     </div>

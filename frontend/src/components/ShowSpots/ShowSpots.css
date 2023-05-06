@@ -17,6 +17,8 @@
 .spot-card {
     width: 24%;
     height: 360px;
+    text-decoration: none;
+    color: black;
 }
 
 .preview-image{
