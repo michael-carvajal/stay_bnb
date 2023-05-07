@@ -1,0 +1,40 @@
+.create-spot{
+    width: 35%;
+    border: 2px solid red;
+    margin: 0 auto;
+}
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.form-group input{
+    border: 2px solid black;
+    border-radius: 2px;
+}
+
+.city-state{
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+#create-spot-comma{
+    position: relative;
+    top: 26px;
+    width: fit-content;
+}
+
+#city{
+    width:100%;
+}
+#state{
+    width: 100%;
+}
+#city-create{
+    width:100%;
+}
+#state-create{
+    width: 30%;
+}
