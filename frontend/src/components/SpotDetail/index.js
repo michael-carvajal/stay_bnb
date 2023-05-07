@@ -65,20 +65,26 @@ const SpotDetail = () => {
                 <div className="price-rating">
                     <div className="price-review">
                         <p>${currentSpot?.price} night</p>
-                        <p>{currentSpot?.avgRating}  # of reviews coming soon</p>
+                        <div className="reserve-stats">
+
+                            <i className={` ${checkObj(1)} `}></i>
+                            <i className={` ${checkObj(2)} `}></i>
+                            <i className={` ${checkObj(3)} `}></i>
+                            <i className={` ${checkObj(4)} `}></i>
+                            <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+                        </div>
                     </div>
                     <a href="#" className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
             </div>
             <div className="reviews">
-                <div className="reviewStats">
-                    average of reviews {avgRating}
+                <div className="review-stats">
+
                     <i className={` ${checkObj(1)} `}></i>
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>
-                    {numberOfReviews} reviews
+                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{color:"black", fontSize:"5px"}}></i>  {numberOfReviews} reviews
                 </div>
                 {allReviews.map(review => {
                     const date = new Date(review.updatedAt);
@@ -98,9 +104,9 @@ const SpotDetail = () => {
                     console.log(monthName, dayNumber, yearNumber);
 
                     return (
-                        <div key={review.id}>
+                        <div key={review.id} className="each-review">
                         <p>{review.User.firstName}</p>
-                        <p>{`${monthName} ${yearNumber}`}</p>
+                        <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                             <p>{review.review}</p>
                         </div>
                     )

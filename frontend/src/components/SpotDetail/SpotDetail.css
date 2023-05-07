@@ -1,5 +1,4 @@
 .spot-detail {
-    border: 1px solid rebeccapurple;
     max-width: 1000px;
     margin: 0px auto;
     display: flex;
@@ -59,4 +58,28 @@
     background-color: var(--color-red);
     color: white;
     text-align: center;
+}
+
+.reviews {
+    border-top: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.review-date{
+    color: var(--color-light-gray);
+}
+
+.review-stats {
+    font-size: 20px;
+    margin-top: 20px;
+}
+.fa-circle{
+    position: relative;
+    top: -4px;
+}
+.each-review{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
