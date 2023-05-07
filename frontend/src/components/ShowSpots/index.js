@@ -26,7 +26,7 @@ export  const ShowSpots = () => {
                 console.log(spot?.id);
                 return (
                     <NavLink key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
-                        <img src={spot?.previewImage} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+                        <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
                             <p>{spot?.city}, {spot?.state}</p>

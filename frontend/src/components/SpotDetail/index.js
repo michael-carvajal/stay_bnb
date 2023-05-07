@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink, useParams } from "react-router-dom/cjs/react-router-dom.min"
+import {  useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
 
@@ -23,6 +23,25 @@ const SpotDetail = () => {
             <h1>Loading...</h1>
         )
     }
+
+    const numberOfReviews = allReviews.length;
+    const avgRating = currentSpot.avgStarRating;
+
+    const ratingObj = {};
+
+    for (let i = 1; i <= avgRating; i++) {
+        // console.log(i);
+        ratingObj[i] = i
+    }
+    // console.log(ratingObj);
+    const checkObj = (place) => {
+        if (ratingObj[place] !== undefined) {
+            return "fas fa-star"
+        } else {
+            return "far fa-star"
+        }
+    }
+
     return (
         <div className="spot-detail">
             <h1>{currentSpot?.name}</h1>
@@ -48,10 +67,19 @@ const SpotDetail = () => {
                         <p>${currentSpot?.price} night</p>
                         <p>{currentSpot?.avgRating}  # of reviews coming soon</p>
                     </div>
-                    <a className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
+                    <a href="#" className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
             </div>
             <div className="reviews">
+                <div className="reviewStats">
+                    average of reviews {avgRating}
+                    <i className={` ${checkObj(1)} `}></i>
+                    <i className={` ${checkObj(2)} `}></i>
+                    <i className={` ${checkObj(3)} `}></i>
+                    <i className={` ${checkObj(4)} `}></i>
+                    <i className={` ${checkObj(5)} `}></i>
+                    {numberOfReviews} reviews
+                </div>
                 {allReviews.map(review => {
                     const date = new Date(review.updatedAt);
 
