@@ -32,7 +32,7 @@
     background-color: var(--color-red);
     top: 80px;
     right: 10px;
-    width: 100px;
+    width: fit-content;
     padding: 15px;
     z-index: 100;
 }
@@ -47,5 +47,3 @@
     position: relative;
     display: inline-block;
 }
-
-
