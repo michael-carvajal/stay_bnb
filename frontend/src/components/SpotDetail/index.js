@@ -5,14 +5,17 @@ import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
 
 import './SpotDetail.css'
+import { fetchReview } from "../../store/reviews"
 const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
-    console.log("current spot form use selector",currentSpot);
+    const allReviews = useSelector(state => Object.values(state.reviews).map(review => review))
+    console.log("current review form use selector",allReviews);
 
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getSpotDetails(spotId))
+        dispatch(fetchReview(spotId))
     }, [dispatch, spotId])
     if (!currentSpot) {
         console.log("allSpots is undefined");
@@ -48,8 +51,32 @@ const SpotDetail = () => {
                     <a className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
             </div>
-            <div>
-                
+            <div className="reviews">
+                {allReviews.map(review => {
+                    const date = new Date(review.updatedAt);
+
+                    // Get the name of the month
+                    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                    ];
+                    const monthName = monthNames[date.getMonth()];
+
+                    // Get the number of the day
+                    const dayNumber = date.getDate();
+
+                    // Get the number of the year
+                    const yearNumber = date.getFullYear();
+
+                    console.log(monthName, dayNumber, yearNumber);
+
+                    return (
+                        <div key={review.id}>
+                        <p>{review.User.firstName}</p>
+                        <p>{`${monthName} ${yearNumber}`}</p>
+                            <p>{review.review}</p>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )
