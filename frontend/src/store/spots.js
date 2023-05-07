@@ -38,6 +38,8 @@ export default function spotsReducer(state = initialState, action) {
             return { ...normalizedSpots}
         }
         case CURRENT_SPOT: {
+            // console.log("this is the crrent state ====> ",state);
+            // console.log("this is the current action ====> ",state);
             const spotsWithDetails = { ...state, [action.details.id] : {...action.details} }
 
             return spotsWithDetails

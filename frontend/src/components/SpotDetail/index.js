@@ -14,6 +14,12 @@ const SpotDetail = () => {
     useEffect(() => {
         dispatch(getSpotDetails(spotId))
     }, [dispatch, spotId])
+    if (!currentSpot) {
+        console.log("allSpots is undefined");
+        return (
+            <h1>Loading...</h1>
+        )
+    }
     return (
         <div className="spot-detail">
             <h1>{currentSpot?.name}</h1>
@@ -39,10 +45,12 @@ const SpotDetail = () => {
                         <p>${currentSpot?.price} night</p>
                         <p>{currentSpot?.avgRating}  # of reviews coming soon</p>
                     </div>
-                    <NavLink to='/booking/new' className="reserve-btn">Reserve</NavLink>
+                    <a className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
             </div>
-            <div></div>
+            <div>
+                
+            </div>
         </div>
     )
 }

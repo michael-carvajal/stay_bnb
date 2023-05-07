@@ -14,7 +14,12 @@ export  const ShowSpots = () => {
         dispatch(getAllSpots())
     }, [dispatch])
 
-
+    // if (!allSpots) {
+    //     console.log("allSpots is undefined");
+    //     return (
+    //         <h1>Loading...</h1>
+    //     )
+    // }
     return (
         <div className="show-spots">
             {allSpots.map(spot => {
