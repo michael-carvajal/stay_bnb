@@ -1,3 +1,49 @@
 .hidden {
     display: none;
 }
+
+.header-ul * {
+    text-decoration: none;
+    list-style: none;
+    width: 100%;
+}
+
+.header-ul {
+    border-bottom: 2px lightgray solid ;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 20px;
+    align-items: center;
+}
+#profile-li{
+    width: 70px;
+}
+#profile-btn{
+    padding: 7px;
+    border-radius: 45%;
+}
+#profile-btn:hover{
+    cursor: pointer;
+}
+
+.profile-dropdown{
+    position: absolute;
+    background-color: var(--color-red);
+    top: 80px;
+    right: 10px;
+    width: fit-content;
+    padding: 15px;
+    z-index: 100;
+}
+.profile-dropdown > *{
+    margin-top: 10px;
+}
+.profile-dropdown > *:hover{
+    cursor: pointer;
+    background-color: var(--color-dark-red);
+}
+.spot-card {
+    position: relative;
+    display: inline-block;
+}

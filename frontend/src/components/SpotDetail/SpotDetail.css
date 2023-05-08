@@ -1,0 +1,88 @@
+.spot-detail {
+    max-width: 1000px;
+    margin: 0px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+.image-container {
+    width: 100%;
+    display: flex;
+    height: 300px;
+    justify-content: space-between;
+
+}
+
+#detail-img0{
+    width: 49%;
+    border: 2px black solid;
+}
+
+.sub-images {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
+}
+.sub-images > * {
+    width: 49%;
+    height: 49%;
+    border: 2px black solid;
+}
+.description{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.price-review{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.price-rating{
+    border: 3px solid black;
+    border-radius: 8px;
+    width: 30%;
+    padding: 18px;
+}
+.reserve-btn{
+    padding: 9px;
+    display: block;
+    text-decoration: none;
+    border: 1px solid black;
+    box-shadow: 2px 2px 2px rgb(50, 50, 50);
+    background-color: var(--color-red);
+    color: white;
+    text-align: center;
+}
+.reserve-btn:hover{
+    cursor: pointer;
+}
+
+.reviews {
+    border-top: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.review-date{
+    color: var(--color-light-gray);
+}
+
+.review-stats {
+    font-size: 20px;
+    margin-top: 20px;
+}
+.fa-circle{
+    position: relative;
+    top: -4px;
+}
+.each-review{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
