@@ -234,15 +234,17 @@ router.get('/:spotId/reviews', async (req, res) => {
 
 //////////////////// Create spot
 
-router.post('', requireAuth, async (req, res, next) => {
+router.post('/', requireAuth,async (req, res, next) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
-    // console.log( address, city, state, country, lat, lng, name, description, price);
+    console.log('this is the request body in backend ===>', req.body);
+    console.log( address, city, state, country, name, description, price);
+    console.log("this is from the spot router api backend ================================");
     const { user } = req;
     const ownerId = user.id;
-    console.log(lng, lat, typeof lng, typeof lat);
+
     try {
         if (user) {
-            const newSpot = await Spot.create({ ownerId, address, city, state, country, lat: lat, lng: lng, name, description, price });
+            const newSpot = await Spot.create({ ownerId, address, city, state, country, name, description, price });
             return res.status(201).json(newSpot)
         }
 

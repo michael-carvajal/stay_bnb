@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useDebugValue, useState } from "react";
+import { useDispatch } from "react-redux";
+import { postCreateSpot } from "../../store/spots";
 import "./CreateSpot.css"
 export default function CreateSpot() {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
-    const [currency, setCurrency] = useState("");
     const [previewImage, setPreviewImage] = useState("");
     const [image1, setImage1] = useState("");
     const [image2, setImage2] = useState("");
@@ -19,30 +20,35 @@ export default function CreateSpot() {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
 
-    const [address, setAddress] = useState('');
     const [spotName, setSpotName] = useState('');
 
+    const dispatch = useDispatch();
     function handleSubmit(event) {
         event.preventDefault();
-
-        const formData = {
-            title,
+        const spotDetails = {
+            address: exactAddress,
+            city,
+            state,
+            country,
+            name: spotName,
             description,
-            category,
             price,
+
+
+        };
+        const spotImages = {
             previewImage,
             images: [image1, image2, image3, image4, image5],
-            address: {
-                exactAddress,
-                city,
-                state,
-                country,
-                latitude,
-                longitude
-            }
-        };
+        }
 
-        console.log(formData); // This will log the form data object to the console
+
+        console.log(spotDetails); // This will log the form data object to the console
+        console.log(spotImages); // This will log the form data object to the console
+        const formData = {
+            spot: spotDetails,
+            images: spotImages
+        }
+        dispatch(postCreateSpot(formData))
 
         // Reset the form values to their initial state
         // setTitle("");
@@ -91,8 +97,8 @@ export default function CreateSpot() {
                     name="address"
                     placeholder="Street Address"
                     required
-                    value={address}
-                    onChange={(event) => setAddress(event.target.value)}
+                    value={exactAddress}
+                    onChange={(event) => setExactAddress(event.target.value)}
                 />
             </div>
 
