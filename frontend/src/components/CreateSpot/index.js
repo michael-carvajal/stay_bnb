@@ -18,10 +18,7 @@ export default function CreateSpot() {
     const [country, setCountry] = useState("");
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
-    const [maxGuests, setMaxGuests] = useState(0);
-    const [bedrooms, setBedrooms] = useState(0);
-    const [beds, setBeds] = useState(0);
-    const [baths, setBaths] = useState(0);
+
     const [address, setAddress] = useState('');
     const [spotName, setSpotName] = useState('');
 
