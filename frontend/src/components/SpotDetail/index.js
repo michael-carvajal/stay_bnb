@@ -63,7 +63,11 @@ const SpotDetail = () => {
             <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
                     {restOfImages.map((image, index) => {
                         const imageNumber = index + 1
+                        if (index === 4) {
+                            return 
+                        }
                         return (
+
                             <img id={`detial-img${imageNumber}`} key={ image.id} src={image.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
 
                     )
