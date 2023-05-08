@@ -65,6 +65,7 @@ export const postCreateSpot = (details) => async dispatch => {
 
 
     dispatch(createSpot(spotThatWasCreated))
+    return spotThatWasCreated
 }
 
 

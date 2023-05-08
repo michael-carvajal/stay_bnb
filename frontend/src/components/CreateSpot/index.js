@@ -20,11 +20,13 @@ export default function CreateSpot() {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
 
+    const [formErrors, setFormErrors] = useState({})
     const [spotName, setSpotName] = useState('');
 
     const dispatch = useDispatch();
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
+        const newErrors = {};
         const spotDetails = {
             address: exactAddress,
             city,
@@ -41,14 +43,34 @@ export default function CreateSpot() {
             images: [image1, image2, image3, image4, image5],
         }
 
+        const properFileType = spotImages.images.filter((image, index) => {
+            if (!image) {
+                return
+            }
+            const imageNumber = index + 1
+            if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
+                return
+            } else {
+                newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
+                return imageNumber
+            }
+        })
 
+        if (description.length < 30 ) {
+            newErrors.description = "Description needs a minimum of 30 characters"
+        }
+        if (Object.values(newErrors).length > 0) {
+            setFormErrors(newErrors)
+            console.log("errors prevented further action", formErrors);
+            return
+        }
         console.log(spotDetails); // This will log the form data object to the console
         console.log(spotImages); // This will log the form data object to the console
         const formData = {
             spot: spotDetails,
             images: spotImages
         }
-        dispatch(postCreateSpot(formData))
+        const response  = await dispatch(postCreateSpot(formData))
 
         // Reset the form values to their initial state
         // setTitle("");
@@ -90,7 +112,7 @@ export default function CreateSpot() {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="address">Address</label>
+                <label htmlFor="address">Address {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="text"
                     id="address"
@@ -106,7 +128,7 @@ export default function CreateSpot() {
                 <div className="city-state">
 
                     <div className="form-group city-create">
-                        <label htmlFor="city">City</label>
+                        <label htmlFor="city">City {formErrors.target && <span>{formErrors.target}</span>} </label>
                         <input
                             type="text"
                             id="city"
@@ -121,7 +143,7 @@ export default function CreateSpot() {
                     </div>
 
                     <div className="form-group state-create">
-                        <label htmlFor="state">State</label>
+                        <label htmlFor="state">State {formErrors.target && <span>{formErrors.target}</span>} </label>
                         <input
                             type="text"
                             id="state"
@@ -138,7 +160,7 @@ export default function CreateSpot() {
                 <h3>Describe your place to guests</h3>
                 <p>Mention the best features of your space, any special amentities like
                     fast wif or parking, and what you love about the neighborhood.</p>
-                <label htmlFor="description">Please write at least 30 characters</label>
+                <label htmlFor="description">Please write at least 30 characters </label>
                 <textarea
                     id="description"
                     name="description"
@@ -147,13 +169,14 @@ export default function CreateSpot() {
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
                 />
+                {formErrors.description && <span>{formErrors.description}</span>}
             </div>
 
             <div className="form-group bottom-border">
                 <h3>Create a title for your spot</h3>
                 <p>Catch guests' attention with a spot title that highlights what makes
                     your place special.</p>
-                <label htmlFor="spot-name">Name of your spot</label>
+                <label htmlFor="spot-name">Name of your spot {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="text"
                     id="spot-name"
@@ -168,7 +191,7 @@ export default function CreateSpot() {
                 <h3>Set a base price for your spot</h3>
                 <p>Competitive pricing can help your listing stand out and rank higher
                     in search results.</p>
-                <label htmlFor="price">Price per night (USD)</label>
+                <label htmlFor="price">Price per night (USD) {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="number"
                     id="price"
@@ -184,7 +207,7 @@ export default function CreateSpot() {
                 <h3>Liven up your spot with photos</h3>
                 <p>Competitive pricing can help your listing stand out and rank higher
                     in search results.</p>
-                <label htmlFor="preview-image">Preview Image URL</label>
+                <label htmlFor="preview-image">Preview Image URL  </label>
                 <input
                     type="url"
                     id="preview-image"
@@ -193,10 +216,11 @@ export default function CreateSpot() {
                     value={previewImage}
                     onChange={(event) => setPreviewImage(event.target.value)}
                 />
+                {formErrors['1'] && <span>{formErrors['1']}</span>}
             </div>
 
             <div className="form-group">
-                <label htmlFor="image1">Image URL</label>
+                <label htmlFor="image1">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="url"
                     id="image1"
@@ -208,7 +232,7 @@ export default function CreateSpot() {
             </div>
 
             <div className="form-group">
-                <label htmlFor="image2">Image URL</label>
+                <label htmlFor="image2">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="url"
                     id="image2"
@@ -219,7 +243,7 @@ export default function CreateSpot() {
             </div>
 
             <div className="form-group">
-                <label htmlFor="image3">Image URL</label>
+                <label htmlFor="image3">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="url"
                     id="image3"
@@ -230,7 +254,7 @@ export default function CreateSpot() {
             </div>
 
             <div className="form-group">
-                <label htmlFor="image4">Image URL</label>
+                <label htmlFor="image4">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="url"
                     id="image4"
@@ -241,7 +265,7 @@ export default function CreateSpot() {
             </div>
 
             <div className="form-group bottom-border">
-                <label htmlFor="image5">Image URL</label>
+                <label htmlFor="image5">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <input
                     type="url"
                     id="image5"
