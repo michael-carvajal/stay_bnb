@@ -3,7 +3,7 @@ const GET_SPOTS = "spots/GET_SPOTS"
 
 const CURRENT_SPOT = "spots/CURRENT_SPOT"
 const CREATE_SPOT = "spots/CREATE_SPOT"
-const ADD_IMAGES = "spots/ADD_IMAGES"
+const USER_SPOTS = "spots/USER_SPOTS"
 
 const allSpots = (spots) => {
     return {
@@ -24,7 +24,12 @@ const createSpot = (details) => {
         images : details.images
     }
 }
-
+const userSpots = (spots) => {
+    return {
+        type: USER_SPOTS,
+        spots
+    }
+}
 export const getAllSpots = () => async dispatch => {
     const response = await fetch('/api/spots');
     const returnedSpots = await response.json();
@@ -67,7 +72,12 @@ export const postCreateSpot = (details) => async dispatch => {
     dispatch(createSpot(spotThatWasCreated))
     return spotThatWasCreated
 }
-
+export const fetchUserSpots = () => async dispatch => {
+    const response = await csrfFetch('/api/spots/current');
+    const userSpotsArray = await response.json();
+    console.log('user spots array looks like this ===>',  userSpotsArray);
+    dispatch(allSpots(userSpotsArray.Spots))
+}
 
 const initialState = { "spots": null }
 export default function spotsReducer(state = initialState, action) {
@@ -92,6 +102,7 @@ export default function spotsReducer(state = initialState, action) {
 
             return spotsWithDetails
         }
+
 
 
         default:
