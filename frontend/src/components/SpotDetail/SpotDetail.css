@@ -59,6 +59,9 @@
     color: white;
     text-align: center;
 }
+.reserve-btn:hover{
+    cursor: pointer;
+}
 
 .reviews {
     border-top: 2px solid black;

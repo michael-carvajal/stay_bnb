@@ -71,7 +71,9 @@ export default function CreateSpot() {
         <form onSubmit={handleSubmit} className='create-spot'>
             <h2>Create a new Spot</h2>
 
-            <h3>Create Spot</h3>
+            <h3>Where's your place located?</h3>
+            <p>Guests will only get your exact address once they booked a
+                reservation</p>
 
             <div className="form-group">
                 <label htmlFor="country">Country</label>
@@ -97,7 +99,7 @@ export default function CreateSpot() {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row bottom-border">
                 <div className="city-state">
 
                     <div className="form-group city-create">
@@ -111,7 +113,7 @@ export default function CreateSpot() {
                             onChange={(event) => setCity(event.target.value)}
                         ></input>
                     </div>
-                    <div className="form-group">
+                    <div className="">
                         <p id="create-spot-comma">,</p>
                     </div>
 
@@ -129,32 +131,10 @@ export default function CreateSpot() {
                 </div>
             </div>
 
-
-            <div className="form-group">
-                <label htmlFor="spot-name">Name of your spot</label>
-                <input
-                    type="text"
-                    id="spot-name"
-                    name="spot-name"
-                    required
-                    value={spotName}
-                    onChange={(event) => setSpotName(event.target.value)}
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="price">Price per night (USD)</label>
-                <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    required
-                    value={price}
-                    onChange={(event) => setPrice(event.target.value)}
-                />
-            </div>
-
-            <div className="form-group">
+            <div className="form-group bottom-border">
+                <h3>Describe your place to guests</h3>
+                <p>Mention the best features of your space, any special amentities like
+                    fast wif or parking, and what you love about the neighborhood.</p>
                 <label htmlFor="description">Please write at least 30 characters</label>
                 <textarea
                     id="description"
@@ -166,7 +146,41 @@ export default function CreateSpot() {
                 />
             </div>
 
+            <div className="form-group bottom-border">
+                <h3>Create a title for your spot</h3>
+                <p>Catch guests' attention with a spot title that highlights what makes
+                    your place special.</p>
+                <label htmlFor="spot-name">Name of your spot</label>
+                <input
+                    type="text"
+                    id="spot-name"
+                    name="spot-name"
+                    required
+                    value={spotName}
+                    onChange={(event) => setSpotName(event.target.value)}
+                />
+            </div>
+
+            <div className="form-group bottom-border">
+                <h3>Set a base price for your spot</h3>
+                <p>Competitive pricing can help your listing stand out and rank higher
+                    in search results.</p>
+                <label htmlFor="price">Price per night (USD)</label>
+                <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    required
+                    value={price}
+                    onChange={(event) => setPrice(event.target.value)}
+                />
+            </div>
+
+
             <div className="form-group">
+                <h3>Liven up your spot with photos</h3>
+                <p>Competitive pricing can help your listing stand out and rank higher
+                    in search results.</p>
                 <label htmlFor="preview-image">Preview Image URL</label>
                 <input
                     type="url"
@@ -223,7 +237,7 @@ export default function CreateSpot() {
                 />
             </div>
 
-            <div className="form-group">
+            <div className="form-group bottom-border">
                 <label htmlFor="image5">Image URL</label>
                 <input
                     type="url"
@@ -234,149 +248,8 @@ export default function CreateSpot() {
                 />
             </div>
 
-            <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="exact-address">Street Address</label>
-                    <input
-                        type="text"
-                        id="exact-address"
-                        name="exact-address"
-                        required
-                        value={exactAddress}
-                        onChange={(event) => setExactAddress(event.target.value)}
-                    />
-                </div>
 
-                <div className="form-group">
-                    <label htmlFor="city">City</label>
-                    <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        required
-                        value={city}
-                        onChange={(event) => setCity(event.target.value)}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="state">State</label>
-                    <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        required
-                        value={state}
-                        onChange={(event) => setState(event.target.value)}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="country">Country</label>
-                    <input
-                        type="text"
-                        id="country"
-                        name="country"
-                        required
-                        value={country}
-                        onChange={(event) => setCountry(event.target.value)}
-                    />
-                </div>
-            </div>
-
-            <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="latitude">Latitude</label>
-                    <input
-                        type="number"
-                        id="latitude"
-                        name="latitude"
-                        step="0.000001"
-                        required
-                        value={latitude}
-                        onChange={(event) => setLatitude(parseFloat(event.target.value))}
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="longitude">Longitude</label>
-                    <input
-                        type="number"
-                        id="longitude"
-                        name="longitude"
-                        step="0.000001"
-                        required
-                        value={longitude}
-                        onChange={(event) => setLongitude(parseFloat(event.target.value))}
-                    />
-                </div>
-            </div>
-            <div className="form-group">
-                <label htmlFor="description">Description</label>
-                <textarea
-                    id="description"
-                    name="description"
-                    required
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="price">Price per night</label>
-                <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    required
-                    value={price}
-                    onChange={(event) => setPrice(parseFloat(event.target.value))}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="max-guests">Max Guests</label>
-                <input
-                    type="number"
-                    id="max-guests"
-                    name="max-guests"
-                    required
-                    value={maxGuests}
-                    onChange={(event) => setMaxGuests(parseInt(event.target.value))}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="bedrooms">Number of Bedrooms</label>
-                <input
-                    type="number"
-                    id="bedrooms"
-                    name="bedrooms"
-                    required
-                    value={bedrooms}
-                    onChange={(event) => setBedrooms(parseInt(event.target.value))}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="beds">Number of Beds</label>
-                <input
-                    type="number"
-                    id="beds"
-                    name="beds"
-                    required
-                    value={beds}
-                    onChange={(event) => setBeds(parseInt(event.target.value))}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="baths">Number of Baths</label>
-                <input
-                    type="number"
-                    id="baths"
-                    name="baths"
-                    required
-                    value={baths}
-                    onChange={(event) => setBaths(parseInt(event.target.value))}
-                />
-            </div>
-            <button type="submit">Submit</button>
+            <button type="submit" className="reserve-btn create-spot-btn">Create Spot</button>
 
         </form>)
 }
