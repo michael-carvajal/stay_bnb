@@ -17,3 +17,8 @@ font-family: 'Montserrat', sans-serif;}
 #logo-text {
     color: var(--color-red);
 }
+
+.log-in .sign-up, p{
+    color: red;
+    font-size: 14px;
+}

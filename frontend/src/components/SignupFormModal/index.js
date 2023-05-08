@@ -15,11 +15,12 @@ function SignupFormModal() {
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
 
-    console.log("this is submit for modal sign in =====> ");
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
             setErrors({});
+            console.log("this is submit for modal sign in =====> ");
+
             return dispatch(
                 sessionActions.signup({
                     email,
@@ -32,6 +33,7 @@ function SignupFormModal() {
                 .then(closeModal)
                 .catch(async (res) => {
                     const data = await res.json();
+                    console.log('error in data', data);
                     if (data && data.errors) {
                         setErrors(data.errors);
                     }
