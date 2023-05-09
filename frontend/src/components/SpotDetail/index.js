@@ -38,7 +38,7 @@ const SpotDetail = () => {
         };
         fetchData();
     }, [dispatch, spotId]);
-    if (!currentSpot || !restOfImages) {
+    if (!currentSpot || !restOfImages || !allReviews) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
@@ -146,14 +146,15 @@ const SpotDetail = () => {
                     // Get the number of the year
                     const yearNumber = date.getFullYear();
 
-                    console.log(monthName, dayNumber, yearNumber);
-
+                    // console.log(monthName, dayNumber, yearNumber);
+                    console.log("this is the review inside of map =====> ", review);
+                    console.log("this is the current user inside of map =====> ", currentUser);
                     return (
                         <div key={review.id} className="each-review">
                             <p>{review.user?.firstName || review.User?.firstName}</p>
                             <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                             <p>{review?.review}</p>
-                            {review.User?.id === currentUser.user?.id || review.user?.firstName || review.User?.firstName ?
+                            {review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
                             <button onClick={removeReview} value={review?.id}>Delete</button> : null}
                         </div>
                     )
