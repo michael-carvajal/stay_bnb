@@ -22,12 +22,15 @@ function App() {
         <Route exact path='/'>
       <ShowSpots />
         </Route>
-        <Route path = "/spots/current"><CurrentUserSpots /></Route>
-        <Route exact path='/spots/:spotId'>
-      <SpotDetail />
-        </Route>
-        <Route path='/create/spots'>
+        <Route path={['/spots/new']}>
         <CreateSpot />
+        </Route>
+        <Route path = "/spots/current"><CurrentUserSpots /></Route>
+
+
+
+        <Route exact path='/spots/:spotId'>   //keep generic paths last
+      <SpotDetail />
         </Route>
 
       </Switch>}

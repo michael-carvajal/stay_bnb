@@ -15,7 +15,7 @@ function Navigation({ isLoaded }) {
                 <NavLink exact to="/"><span id='logo-text'>staybnb</span></NavLink>
             </li>
             {sessionUser && (
-                <NavLink  to="/create/spots">Create a new Spot</NavLink>
+                <NavLink  to="/spots/new">Create a new Spot</NavLink>
             )}
             {isLoaded && (
                 <li id='profile-li'>

@@ -2,7 +2,7 @@ import { useDebugValue, useState } from "react";
 import { useDispatch } from "react-redux";
 import { postCreateSpot } from "../../store/spots";
 import "./CreateSpot.css"
-export default function CreateSpot() {
+export default function CreateSpot({formType}) {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
