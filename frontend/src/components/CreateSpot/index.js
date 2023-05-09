@@ -1,7 +1,7 @@
 import { useDebugValue, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { postCreateSpot } from "../../store/spots";
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { postCreateSpot, putSpot } from "../../store/spots";
 import "./CreateSpot.css"
 export default function CreateSpot() {
     const [title, setTitle] = useState("");
@@ -27,6 +27,7 @@ export default function CreateSpot() {
 
 
     const dispatch = useDispatch();
+    const history = useHistory();
     async function handleSubmit(event) {
         event.preventDefault();
         const newErrors = {};
@@ -72,6 +73,14 @@ export default function CreateSpot() {
         const formData = {
             spot: spotDetails,
             images: spotImages
+        }
+
+        if (spotId) {
+            formData.spot.id = spotId
+            const update = await dispatch(putSpot(formData))
+            history.push(`/spots/${spotId}`)
+            return 
+
         }
         const response  = await dispatch(postCreateSpot(formData))
 

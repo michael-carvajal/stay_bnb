@@ -29,7 +29,7 @@ function App() {
 
 
 
-        <Route exact path='/spots/:spotId'>   //keep generic paths last
+        <Route exact path='/spots/:spotId'>   
       <SpotDetail />
         </Route>
 

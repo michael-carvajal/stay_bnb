@@ -4,6 +4,7 @@ const GET_SPOTS = "spots/GET_SPOTS"
 const CURRENT_SPOT = "spots/CURRENT_SPOT"
 const CREATE_SPOT = "spots/CREATE_SPOT"
 const DELETE_SPOT = "spots/DELETE_SPOT"
+const UPDATE_SPOT = "spots/UPDATE_SPOT"
 
 
 const allSpots = (spots) => {
@@ -19,6 +20,13 @@ const currentSpotDetials = (details) => {
     }
 }
 const createSpot = (details) => {
+    return {
+        type: CREATE_SPOT,
+        spot: details.spot,
+        images: details.images
+    }
+}
+const updateSpot = (details) => {
     return {
         type: CREATE_SPOT,
         spot: details.spot,
@@ -88,6 +96,37 @@ export const deleteUserSpot = (spotId) => async dispatch => {
     console.log('deleted message looks like this ===>', deleteMessage);
     dispatch(deleteSpot(spotId))
 }
+export const putSpot = (details) => async dispatch => {
+    console.log("here are the post create spot details ====>", details);
+    const postSpot = await csrfFetch(`/api/spots/${details.spot.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(details.spot)
+    });
+    const updatedSpot = await postSpot.json();
+
+    console.log("created for the spot right here ====>", updatedSpot);
+
+    // const previewImage = await csrfFetch(`/api/spots/${updatedSpot.id}/images`, {
+    //     method: "PUT",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ url: details.images.previewImage, preview: true })
+    // })
+    // const allImages = await Promise.all(
+    //     details.images.images.map(async image => {
+    //         const postImage = await csrfFetch(`/api/spots/${updatedSpot.id}/images`, {
+    //             method: "PUT",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ url: image, preview: false })
+    //         });
+    //         return postImage;
+    //     })
+    // );
+
+
+    dispatch(createSpot(updatedSpot))
+    return updatedSpot
+}
 
 const initialState = { "spots": null }
 export default function spotsReducer(state = initialState, action) {
@@ -115,6 +154,11 @@ export default function spotsReducer(state = initialState, action) {
         case DELETE_SPOT: {
             const newSpotsObj = { ...state }
             delete newSpotsObj[action.spotId]
+            return newSpotsObj
+        }
+        case UPDATE_SPOT: {
+            const newSpotsObj = { ...state }
+            newSpotsObj[action.spot.id] = action.spot
             return newSpotsObj
         }
 

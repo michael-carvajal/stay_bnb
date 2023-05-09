@@ -24,7 +24,7 @@ const SpotDetail = () => {
         dispatch(fetchReview(spotId))
     }, [dispatch, spotId])
 
-    if (!currentSpot, !restOfImages) {
+    if (!currentSpot || !restOfImages) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
