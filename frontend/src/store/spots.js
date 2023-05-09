@@ -132,9 +132,9 @@ const initialState = { "spots": null }
 export default function spotsReducer(state = initialState, action) {
     switch (action.type) {
         case GET_SPOTS: {
-            const normalizedSpots = {};
+            const normalizedSpots = {allSpots : {}};
             action.spots.forEach(spot => {
-                normalizedSpots[spot.id] = spot
+                normalizedSpots.allSpots[spot.id] = spot
             });
             return { ...normalizedSpots }
         }
