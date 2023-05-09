@@ -5,12 +5,15 @@ import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
 import ReviewModal from "./ReviewModal"
 import './SpotDetail.css'
-import { fetchReview } from "../../store/reviews"
+import { fetchReview, deleteReview } from "../../store/reviews"
 import OpenModalButton from "../OpenModalButton"
+
 const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
     let allReviews = useSelector(state => state.reviews)
+    const currentUser = useSelector(state => state.session)
+    console.log("this is the current user bject ====>", currentUser);
     allReviews = Object.values(allReviews).map(review => review)
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
@@ -70,7 +73,10 @@ const SpotDetail = () => {
             return "far fa-star"
         }
     }
-
+    const removeReview = (e) => {
+        const reviewId = e.target.value;
+        dispatch(deleteReview(reviewId))
+    }
     return (
         <div className="spot-detail">
             <h1>{currentSpot?.name}</h1>
@@ -144,9 +150,11 @@ const SpotDetail = () => {
 
                     return (
                         <div key={review.id} className="each-review">
-                            <p>{review.User?.firstName}</p>
+                            <p>{review.user?.firstName || review.User?.firstName}</p>
                             <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                             <p>{review?.review}</p>
+                            {review.User?.id === currentUser.user?.id ?
+                            <button onClick={removeReview} value={review?.id}>Delete</button> : null}
                         </div>
                     )
                 })}

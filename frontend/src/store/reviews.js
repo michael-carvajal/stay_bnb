@@ -1,6 +1,7 @@
 import { csrfFetch } from "./csrf"
 const GET_REVIEW = "/reviews/GET_REVIEW"
 const POST_REVIEW = "/reviews/POST_REVIEW"
+const DELETE_REVIEW = "/reviews/DELETE_REVIEW"
 
 const getReview = (reviews) => {
     return {
@@ -12,6 +13,12 @@ const createReview = (review) => {
     return {
         type: POST_REVIEW,
         review
+    }
+}
+const removeReview = (spotId) => {
+    return {
+        type: DELETE_REVIEW,
+        spotId
     }
 }
 
@@ -30,8 +37,24 @@ export const postReview = (reviewObj) => async dispatch => {
             body: JSON.stringify({ review: reviewObj.review, stars: reviewObj.stars })
         });
         const createdReview = await response.json();
-        console.log(createdReview);
+        console.log("this was created after post requrst ====> ", createdReview);
+        createdReview.user = reviewObj.user.user
         dispatch(createReview(createdReview))
+    } catch (error) {
+        return error.json()
+    }
+
+
+}
+export const deleteReview = (spotId) => async dispatch => {
+    // console.log("this is review OBJ", spotId);
+    try {
+        const response = await csrfFetch(`/api/reviews/${spotId}`, {
+            method: "DELETE"
+        });
+        const deleteMEssage = await response.json();
+        console.log(deleteMEssage);
+        dispatch(removeReview(spotId))
     } catch (error) {
         return error.json()
     }
@@ -52,6 +75,11 @@ const reviewReducer = (state = {}, action) => {
         case POST_REVIEW: {
             const newReviews = { ...state };
             newReviews[action.review.id] = action.review
+            return newReviews
+        }
+        case DELETE_REVIEW: {
+            const newReviews = { ...state };
+            delete newReviews[action.spotId]
             return newReviews
         }
 
