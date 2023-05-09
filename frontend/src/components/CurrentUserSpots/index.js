@@ -25,7 +25,7 @@ console.log("spot id is ==> ",spotId);
         <div className="manage-spots">
             <div className="manage-heading">
                 <h1>Manage Your Spots</h1>
-                <div className="reserve-btn">Create a New Spot</div>
+                <NavLink to="/spots/new" className="reserve-btn">Create a New Spot</NavLink>
             </div>
             <div className="show-spots">
                 {spotsArray.map(spot => {

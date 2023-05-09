@@ -3,47 +3,60 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
-
+import ReviewModal from "./ReviewModal"
 import './SpotDetail.css'
 import { fetchReview } from "../../store/reviews"
+import OpenModalButton from "../OpenModalButton"
 const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
-    const allReviews = useSelector(state => Object.values(state.reviews).map(review => review))
-    console.log("current Spot  ===========>", currentSpot);
+    let allReviews = useSelector(state => state.reviews)
+    allReviews = Object.values(allReviews).map(review => review)
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
         }
     })
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
-    console.log("rest of imagess ------>", restOfImages);
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getSpotDetails(spotId))
-        dispatch(fetchReview(spotId))
-    }, [dispatch, spotId])
 
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                dispatch(getSpotDetails(spotId));
+                console.log("This is the review response ====>");
+                const response = await dispatch(fetchReview(spotId));
+
+                console.log("this is the respinse  ====>", response);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchData();
+    }, [dispatch, spotId]);
     if (!currentSpot || !restOfImages) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
-        )
-    }
-
-    const numberOfReviews = allReviews.length;
-    const avgRating = currentSpot.avgStarRating;
-    const visibleImages = [];
-    const ratingObj = {};
-    for (let i = 0; i <= 3; i++) {
-        const element = restOfImages[i];
-        if (!element) {
-            visibleImages.push("")
-        } else {
-            visibleImages.push(element)
+            )
         }
 
-    }
+        const numberOfReviews = allReviews.length;
+        const avgRating = currentSpot.avgStarRating;
+        const visibleImages = [];
+        const ratingObj = {};
+        for (let i = 0; i <= 3; i++) {
+            const element = restOfImages[i];
+            if (!element) {
+                visibleImages.push("")
+            } else {
+                visibleImages.push(element)
+            }
+
+        }
+        let reviewsAvailable = allReviews.length > 0 ? true : false;
+        console.log("this is allreviews . length =>   ", reviewsAvailable);
 
     for (let i = 1; i <= avgRating; i++) {
         // console.log(i);
@@ -104,7 +117,15 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
-                {allReviews.map(review => {
+                {/* <div className="reserve-btn">Post Your Review <OpenModalButton /></div> */}
+                <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />}/>
+                {!reviewsAvailable ?
+                    <div>
+
+                    <p>Be the first to post a review!</p>
+                    </div>
+                :
+                    allReviews.map(review => {
                     const date = new Date(review.updatedAt);
 
                     // Get the name of the month
@@ -123,9 +144,9 @@ const SpotDetail = () => {
 
                     return (
                         <div key={review.id} className="each-review">
-                            <p>{review.User.firstName}</p>
+                            <p>{review.User?.firstName}</p>
                             <p className="review-date">{`${monthName} ${yearNumber}`}</p>
-                            <p>{review.review}</p>
+                            <p>{review?.review}</p>
                         </div>
                     )
                 })}

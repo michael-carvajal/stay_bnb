@@ -1,33 +1,50 @@
-import { useDebugValue, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDebugValue, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { postCreateSpot, putSpot } from "../../store/spots";
+import { getSpotDetails, postCreateSpot, putSpot } from "../../store/spots";
 import "./CreateSpot.css"
 export default function CreateSpot() {
-    const [title, setTitle] = useState("");
-    const [category, setCategory] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
+    const { spotId } = useParams();
+    const spot = useSelector(state => state.spots[spotId])
+
+    console.log("this is the spot =====>", spot);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    useEffect(() => {
+        dispatch(getSpotDetails(spotId))
+    }, [dispatch])
+    const [country, setCountry] = useState(spot?.country || "");
+    const [exactAddress, setExactAddress] = useState(spot?.address || "");
+    const [city, setCity] = useState(spot?.city || "");
+    const [state, setState] = useState(spot?.state || "");
+    const [description, setDescription] = useState(spot?.description || "");
+    const [spotName, setSpotName] = useState(spot?.name || '');
+    const [price, setPrice] = useState(spot?.price || 0);
     const [previewImage, setPreviewImage] = useState("");
     const [image1, setImage1] = useState("");
     const [image2, setImage2] = useState("");
     const [image3, setImage3] = useState("");
     const [image4, setImage4] = useState("");
     const [image5, setImage5] = useState("");
-    const [exactAddress, setExactAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [country, setCountry] = useState("");
+    const [category, setCategory] = useState("");
+    const [title, setTitle] = useState("");
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
 
     const [formErrors, setFormErrors] = useState({})
-    const [spotName, setSpotName] = useState('');
-    const { spotId } = useParams();
 
 
-    const dispatch = useDispatch();
-    const history = useHistory();
+
+    if (!spot) {
+        return (
+            <h2>Loading...</h2>
+        )
+    }
+    const allSpotImages = spot.SpotImages?.filter(image => {
+        if (image.url) {
+            return image
+        }
+    })
     async function handleSubmit(event) {
         event.preventDefault();
         const newErrors = {};
@@ -47,20 +64,20 @@ export default function CreateSpot() {
             images: [image1, image2, image3, image4, image5],
         }
 
-        const properFileType = spotImages.images.filter((image, index) => {
-            if (!image) {
-                return
-            }
-            const imageNumber = index + 1
-            if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
-                return
-            } else {
-                newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
-                return imageNumber
-            }
-        })
+        // const properFileType = spotImages.images.filter((image, index) => {
+        //     if (!image) {
+        //         return
+        //     }
+        //     const imageNumber = index + 1
+        //     if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
+        //         return
+        //     } else {
+        //         newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
+        //         return imageNumber
+        //     }
+        // })
 
-        if (description.length < 30 ) {
+        if (description.length < 30) {
             newErrors.description = "Description needs a minimum of 30 characters"
         }
         if (Object.values(newErrors).length > 0) {
@@ -79,10 +96,11 @@ export default function CreateSpot() {
             formData.spot.id = spotId
             const update = await dispatch(putSpot(formData))
             history.push(`/spots/${spotId}`)
-            return 
+            return
 
         }
-        const response  = await dispatch(postCreateSpot(formData))
+        const response = await dispatch(postCreateSpot(formData))
+        history.push(`/spots/${spotId}`)
 
         // Reset the form values to their initial state
         // setTitle("");
@@ -119,7 +137,7 @@ export default function CreateSpot() {
                     id="country"
                     name="country"
                     required
-                    value={country}
+                    value={country || spot?.country}
                     onChange={(event) => setCountry(event.target.value)}
                 />
             </div>
@@ -131,7 +149,7 @@ export default function CreateSpot() {
                     name="address"
                     placeholder="Street Address"
                     required
-                    value={exactAddress}
+                    value={exactAddress || spot?.address}
                     onChange={(event) => setExactAddress(event.target.value)}
                 />
             </div>
@@ -146,7 +164,7 @@ export default function CreateSpot() {
                             id="city"
                             name="city"
                             required
-                            value={city}
+                            value={city || spot?.city}
                             onChange={(event) => setCity(event.target.value)}
                         ></input>
                     </div>
@@ -161,7 +179,7 @@ export default function CreateSpot() {
                             id="state"
                             name="state"
                             required
-                            value={state}
+                            value={ state ||spot?.state }
                             onChange={(event) => setState(event.target.value)}
                         />
                     </div>
@@ -178,7 +196,7 @@ export default function CreateSpot() {
                     name="description"
                     minLength="30"
                     required
-                    value={description}
+                    value={ description || spot?.description }
                     onChange={(event) => setDescription(event.target.value)}
                 />
                 {formErrors.description && <span>{formErrors.description}</span>}
@@ -194,7 +212,7 @@ export default function CreateSpot() {
                     id="spot-name"
                     name="spot-name"
                     required
-                    value={spotName}
+                    value={ spotName || spot?.name }
                     onChange={(event) => setSpotName(event.target.value)}
                 />
             </div>
@@ -209,86 +227,99 @@ export default function CreateSpot() {
                     id="price"
                     name="price"
                     required
-                    value={price}
+                    value={  price || spot?.price }
                     onChange={(event) => setPrice(event.target.value)}
                 />
             </div>
 
+            {spotId ?
 
-            <div className="form-group">
-                <h3>Liven up your spot with photos</h3>
-                <p>Competitive pricing can help your listing stand out and rank higher
-                    in search results.</p>
-                <label htmlFor="preview-image">Preview Image URL  </label>
-                <input
-                    type="url"
-                    id="preview-image"
-                    name="preview-image"
-                    required
-                    value={previewImage}
-                    onChange={(event) => setPreviewImage(event.target.value)}
-                />
-                {formErrors['1'] && <span>{formErrors['1']}</span>}
-            </div>
+                <div className="update-images">
+                    {allSpotImages?.map(image => {
+                        return (
+                            <div className="image-placeholder" key={image.id}>
+                                <img className="update-single-image" src={image.url} />
+                                <button>Delete</button>
+                            </div>
+                        )
+                    })}
+            </div>: <div className="create-images">
 
-            <div className="form-group">
-                <label htmlFor="image1">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="url"
-                    id="image1"
-                    name="image1"
-                    required
-                    value={image1}
-                    onChange={(event) => setImage1(event.target.value)}
-                />
-            </div>
+                <div className="form-group">
+                    <h3>Liven up your spot with photos</h3>
+                    <p>Competitive pricing can help your listing stand out and rank higher
+                        in search results.</p>
+                    <label htmlFor="preview-image">Preview Image URL  </label>
+                    <input
+                        type="url"
+                        id="preview-image"
+                        name="preview-image"
+                        required
+                        value={previewImage}
+                        onChange={(event) => setPreviewImage(event.target.value)}
+                    />
+                    {formErrors['1'] && <span>{formErrors['1']}</span>}
+                </div>
 
-            <div className="form-group">
-                <label htmlFor="image2">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="url"
-                    id="image2"
-                    name="image2"
-                    value={image2}
-                    onChange={(event) => setImage2(event.target.value)}
-                />
-            </div>
+                <div className="form-group">
+                    <label htmlFor="image1">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="url"
+                        id="image1"
+                        name="image1"
+                        required
+                        value={image1}
+                        onChange={(event) => setImage1(event.target.value)}
+                    />
+                </div>
 
-            <div className="form-group">
-                <label htmlFor="image3">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="url"
-                    id="image3"
-                    name="image3"
-                    value={image3}
-                    onChange={(event) => setImage3(event.target.value)}
-                />
-            </div>
+                <div className="form-group">
+                    <label htmlFor="image2">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="url"
+                        id="image2"
+                        name="image2"
+                        value={image2}
+                        onChange={(event) => setImage2(event.target.value)}
+                    />
+                </div>
 
-            <div className="form-group">
-                <label htmlFor="image4">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="url"
-                    id="image4"
-                    name="image4"
-                    value={image4}
-                    onChange={(event) => setImage4(event.target.value)}
-                />
-            </div>
+                <div className="form-group">
+                    <label htmlFor="image3">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="url"
+                        id="image3"
+                        name="image3"
+                        value={image3}
+                        onChange={(event) => setImage3(event.target.value)}
+                    />
+                </div>
 
-            <div className="form-group bottom-border">
-                <label htmlFor="image5">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="url"
-                    id="image5"
-                    name="image5"
-                    value={image5}
-                    onChange={(event) => setImage5(event.target.value)}
-                />
-            </div>
+                <div className="form-group">
+                    <label htmlFor="image4">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="url"
+                        id="image4"
+                        name="image4"
+                        value={image4}
+                        onChange={(event) => setImage4(event.target.value)}
+                    />
+                </div>
+
+                <div className="form-group bottom-border">
+                    <label htmlFor="image5">Image URL {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="url"
+                        id="image5"
+                        name="image5"
+                        value={image5}
+                        onChange={(event) => setImage5(event.target.value)}
+                    />
+                </div>
+            </div>}
 
 
-            <button type="submit" className="reserve-btn create-spot-btn">{ spotId ? "Update Spot": "Create Spot"}</button>
+            <button type="submit" className="reserve-btn create-spot-btn">{spotId ? "Update Spot" : "Create Spot"}</button>
 
         </form>)
 }

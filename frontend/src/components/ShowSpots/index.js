@@ -9,7 +9,7 @@ export  const ShowSpots = () => {
     const allSpots = useSelector(state => {
         return Object.values(state.spots).map(spot => spot);
     });
-    console.log(allSpots);
+    // console.log(allSpots);
     useEffect(() => {
         dispatch(getAllSpots())
     }, [dispatch])
@@ -22,10 +22,10 @@ export  const ShowSpots = () => {
     // }
     return (
         <div className="show-spots">
-            {allSpots.map(spot => {
-                console.log(spot?.id);
+            {allSpots.map((spot, index) => {
+                // console.log(spot?.id);
                 return (
-                    <NavLink key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
+                    <NavLink key={ index} className="spot-card" to={`/spots/${spot?.id}`}>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
