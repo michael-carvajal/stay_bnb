@@ -64,17 +64,25 @@ export const deleteReview = (spotId) => async dispatch => {
 const reviewReducer = (state = {}, action) => {
     switch (action.type) {
         case GET_REVIEW: {
-            const normalizeReview = {};
-            // console.log("reviews repsonse =====>", reviews);
+            const normalizeReview = {spot: {}};
+            console.log("reviews repsonse =====>", action.reviews);
             action.reviews.Reviews?.forEach(review => {
-
-                normalizeReview[review.id] = review
+                normalizeReview.spot[review.id] = {
+                    id: review.id,
+                    review: review.review,
+                    createdAt: review.createdAt,
+                    updatedAt: review.updatedAt,
+                    stars: review.stars,
+                    spotId: review.spotId,
+                    User: { ...review.User },
+                    ReviewImages : [...review.ReviewImages]
+                }
             })
             return normalizeReview;
         }
         case POST_REVIEW: {
             const newReviews = { ...state };
-            newReviews[action.review.id] = action.review
+            newReviews.spot[action.review.id] = action.review
             return newReviews
         }
         case DELETE_REVIEW: {

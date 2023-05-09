@@ -11,10 +11,7 @@ import OpenModalButton from "../OpenModalButton"
 const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
-    let allReviews = useSelector(state => state.reviews)
     const currentUser = useSelector(state => state.session)
-    console.log("this is the current user bject ====>", currentUser);
-    allReviews = Object.values(allReviews).map(review => review)
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
@@ -28,38 +25,42 @@ const SpotDetail = () => {
         const fetchData = async () => {
             try {
                 dispatch(getSpotDetails(spotId));
-                console.log("This is the review response ====>");
+                // console.log("This is the review response ====>");
                 const response = await dispatch(fetchReview(spotId));
 
-                console.log("this is the respinse  ====>", response);
+                // console.log("this is the respinse  ====>", response);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchData();
     }, [dispatch, spotId]);
-    if (!currentSpot || !restOfImages || !allReviews) {
+    let allReviews = useSelector(state => state.reviews.spot)
+    console.log("this is theallReviews from use seleector ====>", allReviews);
+    allReviews = !allReviews ? null : Object.values(allReviews).map(review => review)
+    console.log("These are all the reviews in an array ==================>", allReviews);
+    if (!currentSpot || !restOfImages ) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
-            )
+        )
+    }
+
+    const numberOfReviews = allReviews?.length;
+    const avgRating = currentSpot?.avgStarRating;
+    const visibleImages = [];
+    const ratingObj = {};
+    for (let i = 0; i <= 3; i++) {
+        const element = restOfImages[i];
+        if (!element) {
+            visibleImages.push("")
+        } else {
+            visibleImages.push(element)
         }
 
-        const numberOfReviews = allReviews.length;
-        const avgRating = currentSpot.avgStarRating;
-        const visibleImages = [];
-        const ratingObj = {};
-        for (let i = 0; i <= 3; i++) {
-            const element = restOfImages[i];
-            if (!element) {
-                visibleImages.push("")
-            } else {
-                visibleImages.push(element)
-            }
-
-        }
-        let reviewsAvailable = allReviews.length > 0 ? true : false;
-        console.log("this is allreviews . length =>   ", reviewsAvailable);
+    }
+    let reviewsAvailable = allReviews?.length > 0 ? true : false;
+    // console.log("this is allreviews . length =>   ", reviewsAvailable);
 
     for (let i = 1; i <= avgRating; i++) {
         // console.log(i);
@@ -124,41 +125,41 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
                 {/* <div className="reserve-btn">Post Your Review <OpenModalButton /></div> */}
-                <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />}/>
+                <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
                 {!reviewsAvailable ?
                     <div>
 
-                    <p>Be the first to post a review!</p>
+                        <p>Be the first to post a review!</p>
                     </div>
-                :
+                    :
                     allReviews.map(review => {
-                    const date = new Date(review.updatedAt);
+                        const date = new Date(review.updatedAt);
 
-                    // Get the name of the month
-                    const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"
-                    ];
-                    const monthName = monthNames[date.getMonth()];
+                        // Get the name of the month
+                        const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+                        const monthName = monthNames[date.getMonth()];
 
-                    // Get the number of the day
-                    const dayNumber = date.getDate();
+                        // Get the number of the day
+                        const dayNumber = date.getDate();
 
-                    // Get the number of the year
-                    const yearNumber = date.getFullYear();
+                        // Get the number of the year
+                        const yearNumber = date.getFullYear();
 
-                    // console.log(monthName, dayNumber, yearNumber);
-                    console.log("this is the review inside of map =====> ", review);
-                    console.log("this is the current user inside of map =====> ", currentUser);
-                    return (
-                        <div key={review.id} className="each-review">
-                            <p>{review.user?.firstName || review.User?.firstName}</p>
-                            <p className="review-date">{`${monthName} ${yearNumber}`}</p>
-                            <p>{review?.review}</p>
-                            {review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
-                            <button onClick={removeReview} value={review?.id}>Delete</button> : null}
-                        </div>
-                    )
-                })}
+                        // console.log(monthName, dayNumber, yearNumber);
+                        console.log("this is the review inside of map =====> ", review);
+                        console.log("this is the current user inside of map =====> ", currentUser);
+                        return (
+                            <div key={review.id} className="each-review">
+                                <p>{review.user?.firstName || review.User?.firstName}</p>
+                                <p className="review-date">{`${monthName} ${yearNumber}`}</p>
+                                <p>{review?.review}</p>
+                                {review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
+                                    <button onClick={removeReview} value={review?.id}>Delete</button> : null}
+                            </div>
+                        )
+                    })}
             </div>
         </div>
     )
