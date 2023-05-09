@@ -117,10 +117,10 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
+                <div className="reserve-btn">Post Your Review</div>
                 {!reviewsAvailable ?
                     <div>
 
-                    <div className="reserve-btn">Post Your Review</div>
                     <p>Be the first to post a review!</p>
                     </div>
                 :
