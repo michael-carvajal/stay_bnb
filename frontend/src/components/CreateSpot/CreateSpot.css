@@ -50,3 +50,17 @@ span{
     color: red;
     font-size: 14px;
 }
+
+.update-images{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.image-placeholder{
+    width: 33%;
+}
+
+.update-single-image{
+    width: 100%;
+}
