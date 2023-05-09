@@ -153,7 +153,7 @@ const SpotDetail = () => {
                             <p>{review.user?.firstName || review.User?.firstName}</p>
                             <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                             <p>{review?.review}</p>
-                            {review.User?.id === currentUser.user?.id ?
+                            {review.User?.id === currentUser.user?.id || review.user?.firstName || review.User?.firstName ?
                             <button onClick={removeReview} value={review?.id}>Delete</button> : null}
                         </div>
                     )
