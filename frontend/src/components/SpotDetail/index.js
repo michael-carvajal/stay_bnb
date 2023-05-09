@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
-
+import ReviewModal from "./ReviewModal"
 import './SpotDetail.css'
 import { fetchReview } from "../../store/reviews"
+import OpenModalButton from "../OpenModalButton"
 const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
     let allReviews = useSelector(state => state.reviews)
     allReviews = Object.values(allReviews).map(review => review)
-
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
@@ -19,6 +19,8 @@ const SpotDetail = () => {
     })
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
     const dispatch = useDispatch();
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,8 +35,6 @@ const SpotDetail = () => {
         };
         fetchData();
     }, [dispatch, spotId]);
-
-
     if (!currentSpot || !restOfImages) {
         console.log("allSpots is undefined");
         return (
@@ -117,7 +117,8 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
-                <div className="reserve-btn">Post Your Review</div>
+                {/* <div className="reserve-btn">Post Your Review <OpenModalButton /></div> */}
+                <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />}/>
                 {!reviewsAvailable ?
                     <div>
 
@@ -143,9 +144,9 @@ const SpotDetail = () => {
 
                     return (
                         <div key={review.id} className="each-review">
-                            <p>{review.User.firstName}</p>
+                            <p>{review.User?.firstName}</p>
                             <p className="review-date">{`${monthName} ${yearNumber}`}</p>
-                            <p>{review.review}</p>
+                            <p>{review?.review}</p>
                         </div>
                     )
                 })}
