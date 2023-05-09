@@ -12,6 +12,8 @@ const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
     const currentUser = useSelector(state => state.session)
+    let allReviews = useSelector(state => state.reviews.spot)
+    allReviews = !allReviews ? null : Object.values(allReviews).map(review => review)
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
@@ -26,7 +28,7 @@ const SpotDetail = () => {
             try {
                 dispatch(getSpotDetails(spotId));
                 // console.log("This is the review response ====>");
-                const response = await dispatch(fetchReview(spotId));
+                dispatch(fetchReview(spotId));
 
                 // console.log("this is the respinse  ====>", response);
             } catch (error) {
@@ -35,11 +37,9 @@ const SpotDetail = () => {
         };
         fetchData();
     }, [dispatch, spotId]);
-    let allReviews = useSelector(state => state.reviews.spot)
     console.log("this is theallReviews from use seleector ====>", allReviews);
-    allReviews = !allReviews ? null : Object.values(allReviews).map(review => review)
     console.log("These are all the reviews in an array ==================>", allReviews);
-    if (!currentSpot || !restOfImages ) {
+    if (!currentSpot || !restOfImages) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
