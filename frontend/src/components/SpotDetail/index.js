@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {  useParams } from "react-router-dom/cjs/react-router-dom.min"
+import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
 import missingImage from "../../assets/images/no-photo.jpeg"
 
@@ -10,14 +10,21 @@ const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
     const allReviews = useSelector(state => Object.values(state.reviews).map(review => review))
-    console.log("current review form use selector",allReviews);
-
+    console.log("current Spot  ===========>", currentSpot);
+    const previewImage = currentSpot?.SpotImages?.find(image => {
+        if (image.preview === true) {
+            return image.url
+        }
+    })
+    const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
+    console.log("rest of imagess ------>", restOfImages);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getSpotDetails(spotId))
         dispatch(fetchReview(spotId))
     }, [dispatch, spotId])
-    if (!currentSpot) {
+
+    if (!currentSpot || !restOfImages) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
@@ -26,8 +33,17 @@ const SpotDetail = () => {
 
     const numberOfReviews = allReviews.length;
     const avgRating = currentSpot.avgStarRating;
-
+    const visibleImages = [];
     const ratingObj = {};
+    for (let i = 0; i <= 3; i++) {
+        const element = restOfImages[i];
+        if (!element) {
+            visibleImages.push("")
+        } else {
+            visibleImages.push(element)
+        }
+
+    }
 
     for (let i = 1; i <= avgRating; i++) {
         // console.log(i);
@@ -47,14 +63,16 @@ const SpotDetail = () => {
             <h1>{currentSpot?.name}</h1>
             <div>{currentSpot?.city}, {currentSpot?.state} {currentSpot?.country}</div>
             <div className="image-container">
-                <img id="detail-img0" src={""} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+                <img id="detail-img0" src={previewImage?.url} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                 <div className="sub-images">
-                <img id="detail-img1" src={""} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-                <img id="detail-img2" src={""} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-                <img id="detail-img3" src={""} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-                <img id="detail-img4" src={""} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-
+                    {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+                <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+                <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+            <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
+                    {
+                        visibleImages.map((image, index) => <img key={index} src={`${image.url}?${Math.random()}`} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />)
+                    }
                 </div>
             </div>
             <div className="description">
@@ -84,7 +102,7 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{color:"black", fontSize:"5px"}}></i>  {numberOfReviews} reviews
+                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
                 {allReviews.map(review => {
                     const date = new Date(review.updatedAt);
@@ -105,8 +123,8 @@ const SpotDetail = () => {
 
                     return (
                         <div key={review.id} className="each-review">
-                        <p>{review.User.firstName}</p>
-                        <p className="review-date">{`${monthName} ${yearNumber}`}</p>
+                            <p>{review.User.firstName}</p>
+                            <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                             <p>{review.review}</p>
                         </div>
                     )

@@ -42,3 +42,11 @@
 .create-spot-btn{
     margin: 0px auto;
 }
+
+.create-spot p {
+    color: black;
+}
+span{
+    color: red;
+    font-size: 14px;
+}
