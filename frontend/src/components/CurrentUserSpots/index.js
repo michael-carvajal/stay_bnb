@@ -19,7 +19,7 @@ const CurrentUserSpots = () => {
         const spotId = e.target.dataset.spot;
 console.log("spot id is ==> ",spotId);
         dispatch(deleteUserSpot(spotId))
-        
+
     }
     return (
         <div className="manage-spots">
@@ -40,7 +40,7 @@ console.log("spot id is ==> ",spotId);
                             </div>
                             <div>${spot?.price} night</div>
                             <div className="update-delete">
-                            <span className="reserve-btn">Update</span>
+                            <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
                             <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
 
                             </div>

@@ -1,8 +1,9 @@
 import { useDebugValue, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { postCreateSpot } from "../../store/spots";
 import "./CreateSpot.css"
-export default function CreateSpot({formType}) {
+export default function CreateSpot() {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -22,6 +23,8 @@ export default function CreateSpot({formType}) {
 
     const [formErrors, setFormErrors] = useState({})
     const [spotName, setSpotName] = useState('');
+    const { spotId } = useParams();
+
 
     const dispatch = useDispatch();
     async function handleSubmit(event) {
@@ -94,7 +97,7 @@ export default function CreateSpot({formType}) {
 
     return (
         <form onSubmit={handleSubmit} className='create-spot'>
-            <h2>Create a new Spot</h2>
+            {spotId ? <h2>Update your Spot</h2> : <h2>Create a new Spot</h2>}
 
             <h3>Where's your place located?</h3>
             <p>Guests will only get your exact address once they booked a
@@ -276,7 +279,7 @@ export default function CreateSpot({formType}) {
             </div>
 
 
-            <button type="submit" className="reserve-btn create-spot-btn">Create Spot</button>
+            <button type="submit" className="reserve-btn create-spot-btn">{ spotId ? "Update Spot": "Create Spot"}</button>
 
         </form>)
 }

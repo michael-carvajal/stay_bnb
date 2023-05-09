@@ -22,7 +22,7 @@ function App() {
         <Route exact path='/'>
       <ShowSpots />
         </Route>
-        <Route path={['/spots/new']}>
+        <Route path={['/spots/new', '/spots/:spotId/edit']}>
         <CreateSpot />
         </Route>
         <Route path = "/spots/current"><CurrentUserSpots /></Route>
