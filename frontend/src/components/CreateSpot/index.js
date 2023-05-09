@@ -1,33 +1,44 @@
-import { useDebugValue, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDebugValue, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { postCreateSpot, putSpot } from "../../store/spots";
+import { getSpotDetails, postCreateSpot, putSpot } from "../../store/spots";
 import "./CreateSpot.css"
 export default function CreateSpot() {
-    const [title, setTitle] = useState("");
-    const [category, setCategory] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
+    const { spotId } = useParams();
+    const spot = useSelector(state => state.spots[spotId])
+    const [country, setCountry] = useState(spot?.country ||"");
+    const [exactAddress, setExactAddress] = useState(spot?.address || "");
+    const [city, setCity] = useState(spot?.city || "");
+    const [state, setState] = useState(spot?.state || "");
+    const [description, setDescription] = useState(spot?.description || "");
+    const [spotName, setSpotName] = useState(spot?.name || '');
+    const [price, setPrice] = useState(spot?.price || 0);
     const [previewImage, setPreviewImage] = useState("");
     const [image1, setImage1] = useState("");
     const [image2, setImage2] = useState("");
     const [image3, setImage3] = useState("");
     const [image4, setImage4] = useState("");
     const [image5, setImage5] = useState("");
-    const [exactAddress, setExactAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [country, setCountry] = useState("");
+    const [category, setCategory] = useState("");
+    const [title, setTitle] = useState("");
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
 
     const [formErrors, setFormErrors] = useState({})
-    const [spotName, setSpotName] = useState('');
-    const { spotId } = useParams();
 
 
     const dispatch = useDispatch();
     const history = useHistory();
+    useEffect(() => {
+        dispatch(getSpotDetails(spotId))
+    }, [])
+
+    if (!spot) {
+        return (
+            <h2>Loading...</h2>
+        )
+    }
+
     async function handleSubmit(event) {
         event.preventDefault();
         const newErrors = {};
@@ -47,18 +58,18 @@ export default function CreateSpot() {
             images: [image1, image2, image3, image4, image5],
         }
 
-        const properFileType = spotImages.images.filter((image, index) => {
-            if (!image) {
-                return
-            }
-            const imageNumber = index + 1
-            if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
-                return
-            } else {
-                newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
-                return imageNumber
-            }
-        })
+        // const properFileType = spotImages.images.filter((image, index) => {
+        //     if (!image) {
+        //         return
+        //     }
+        //     const imageNumber = index + 1
+        //     if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
+        //         return
+        //     } else {
+        //         newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
+        //         return imageNumber
+        //     }
+        // })
 
         if (description.length < 30 ) {
             newErrors.description = "Description needs a minimum of 30 characters"
@@ -79,7 +90,7 @@ export default function CreateSpot() {
             formData.spot.id = spotId
             const update = await dispatch(putSpot(formData))
             history.push(`/spots/${spotId}`)
-            return 
+            return
 
         }
         const response  = await dispatch(postCreateSpot(formData))
