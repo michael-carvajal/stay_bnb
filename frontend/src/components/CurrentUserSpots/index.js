@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 const CurrentUserSpots = () => {
-    const userSpots = useSelector(state => state.spots.allSpots)
-    const spotsArray = Object.values(userSpots).map(spot => spot)
+    let userSpots = useSelector(state => state.spots.allSpots)
+    const spotsArray= !userSpots ? null : Object.values(userSpots).map(spot => spot)
 
     console.log(spotsArray);
     const dispatch = useDispatch()
@@ -17,7 +17,7 @@ const CurrentUserSpots = () => {
     }
     const deleteSpot = (e) => {
         const spotId = e.target.dataset.spot;
-console.log("spot id is ==> ",spotId);
+        console.log("spot id is ==> ", spotId);
         dispatch(deleteUserSpot(spotId))
 
     }
@@ -40,8 +40,8 @@ console.log("spot id is ==> ",spotId);
                             </div>
                             <div>${spot?.price} night</div>
                             <div className="update-delete">
-                            <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
-                            <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
+                                <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
+                                <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
 
                             </div>
 
