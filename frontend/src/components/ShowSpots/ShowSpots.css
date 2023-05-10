@@ -1,9 +1,9 @@
 .show-spots {
     display: flex;
-    width: 89%;
+    max-width: 80%;
     flex-wrap: wrap;
-    margin: 0px auto;
     gap: 16px;
+    margin: 0px auto;
     margin-top: 30px;
     position: relative;
 }
@@ -15,8 +15,8 @@
 }
 
 .spot-card {
-    width: 24%;
-    height: 360px;
+    width: 23%;
+    height: fit-content;
     text-decoration: none;
     color: black;
 }
@@ -24,7 +24,7 @@
 .preview-image{
     width: 100%;
     border: 2px black solid;
-    height: 270px;
+    height: 75%;
 }
 
 
