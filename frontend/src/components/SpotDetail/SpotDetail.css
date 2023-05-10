@@ -1,10 +1,14 @@
 .spot-detail {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0px auto;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 
+}
+h1 ,h2 {
+    font-weight: 400;
 }
 
 .image-container {
@@ -33,6 +37,13 @@
     height: 49%;
     border: 2px black solid;
 }
+.host-description {
+    width: 60%;
+}
+.host-description > h2{
+    margin-bottom: 5px;
+}
+
 .description{
     display: flex;
     width: 100%;
@@ -42,12 +53,21 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
+    margin-bottom: 15px;
 }
 .price-rating{
     border: 3px solid black;
     border-radius: 8px;
-    width: 30%;
+    width: 40%;
     padding: 18px;
+}
+#reserve-price {
+    font-size: 20px;
+    display: inline;
+}
+.reserve-stats > * {
+    font-size: 14px;
+
 }
 .reserve-btn{
     padding: 9px;

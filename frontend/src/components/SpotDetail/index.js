@@ -82,7 +82,7 @@ const SpotDetail = () => {
 // <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
     return (
         <div className="spot-detail">
-            <h1>{currentSpot.name}</h1>
+            <h1 className="spot-name">{currentSpot.name}</h1>
             <div>{currentSpot.city}, {currentSpot.state} {currentSpot.country}</div>
             <div className="image-container">
                 <img id="detail-img0" src={previewImage.url} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
@@ -100,7 +100,7 @@ const SpotDetail = () => {
                 </div>
                 <div className="price-rating">
                     <div className="price-review">
-                        <p>${currentSpot.price} night</p>
+                        <p><p id="reserve-price">${currentSpot.price}</p> night</p>
                         <div className="reserve-stats">
 
                             <i className={` ${checkObj(1)} `}></i>
