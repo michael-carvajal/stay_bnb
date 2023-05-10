@@ -87,6 +87,7 @@ const reviewReducer = (state = {}, action) => {
         }
         case DELETE_REVIEW: {
             const newReviews = { ...state };
+            console.log("new Reviews inside refucer =======>",newReviews);
             delete newReviews.spot[action.spotId]
             return newReviews
         }

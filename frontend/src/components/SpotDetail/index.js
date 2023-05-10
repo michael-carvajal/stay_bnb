@@ -14,6 +14,7 @@ const SpotDetail = () => {
     const currentUser = useSelector(state => state.session)
     let allReviews = useSelector(state => state.reviews.spot)
     allReviews = !allReviews ? null : Object.values(allReviews).map(review => review)
+    console.log("allReviews from spot detail ===========>   ", allReviews);
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
@@ -26,9 +27,9 @@ const SpotDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                dispatch(fetchReview(spotId));
                 dispatch(getSpotDetails(spotId));
                 // console.log("This is the review response ====>");
-                dispatch(fetchReview(spotId));
 
                 // console.log("this is the respinse  ====>", response);
             } catch (error) {
@@ -37,9 +38,9 @@ const SpotDetail = () => {
         };
         fetchData();
     }, [dispatch, spotId]);
-    console.log("this is theallReviews from use seleector ====>", allReviews);
-    console.log("These are all the reviews in an array ==================>", allReviews);
-    if (!currentSpot || !restOfImages) {
+    // console.log("this is theallReviews from use seleector ====>", allReviews);
+    // console.log("These are all the reviews in an array ==================>", allReviews);
+    if (!currentSpot || !restOfImages || !allReviews) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
@@ -78,31 +79,31 @@ const SpotDetail = () => {
         const reviewId = e.target.value;
         dispatch(deleteReview(reviewId))
     }
+//     {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+// <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+// <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+// <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
     return (
         <div className="spot-detail">
-            <h1>{currentSpot?.name}</h1>
-            <div>{currentSpot?.city}, {currentSpot?.state} {currentSpot?.country}</div>
+            <h1>{currentSpot.name}</h1>
+            <div>{currentSpot.city}, {currentSpot.state} {currentSpot.country}</div>
             <div className="image-container">
-                <img id="detail-img0" src={previewImage?.url} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+                <img id="detail-img0" src={previewImage.url} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                 <div className="sub-images">
-                    {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-                <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-                <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-            <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
                     {
-                        visibleImages.map((image, index) => <img key={index} src={`${image.url}?${Math.random()}`} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />)
+                        visibleImages.map((image, index) => <img key={index} src={`${image.url}${Math.random()}`} alt={currentSpot.name} onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />)
                     }
                 </div>
             </div>
             <div className="description">
                 <div className="host-description">
-                    <h2>Hosted by {currentSpot.Owner?.firstName} {currentSpot.Owner?.lastName}</h2>
-                    <p>{currentSpot?.description}</p>
+                    <h2>Hosted by {currentSpot.Owner.firstName} {currentSpot.Owner.lastName}</h2>
+                    <p>{currentSpot.description}</p>
                 </div>
                 <div className="price-rating">
                     <div className="price-review">
-                        <p>${currentSpot?.price} night</p>
+                        <p>${currentSpot.price} night</p>
                         <div className="reserve-stats">
 
                             <i className={` ${checkObj(1)} `}></i>
@@ -124,7 +125,6 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
                 </div>
-                {/* <div className="reserve-btn">Post Your Review <OpenModalButton /></div> */}
                 <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
                 {!reviewsAvailable ?
                     <div>
@@ -149,14 +149,14 @@ const SpotDetail = () => {
 
                         // console.log(monthName, dayNumber, yearNumber);
                         console.log("this is the review inside of map =====> ", review);
-                        console.log("this is the current user inside of map =====> ", currentUser);
+                        // console.log("this is the current user inside of map =====> ", currentUser);
                         return (
                             <div key={review.id} className="each-review">
-                                <p>{review.user?.firstName || review.User?.firstName}</p>
+                                <p>{review.user?.firstName || review.User.firstName}</p>
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
-                                <p>{review?.review}</p>
-                                {review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
-                                    <button onClick={removeReview} value={review?.id}>Delete</button> : null}
+                                <p>{review.review}</p>
+                                {review.User.id === currentUser.user.id || currentUser.user.firstName === review.User.firstName ?
+                                    <button onClick={removeReview} value={review.id}>Delete</button> : null}
                             </div>
                         )
                     })}
