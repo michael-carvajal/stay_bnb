@@ -19,17 +19,18 @@
     height: fit-content;
     text-decoration: none;
     color: black;
+    padding-bottom: 20px;
 }
 
 .preview-image{
     width: 100%;
+    aspect-ratio: 1/1;
     border: 2px black solid;
-    height: 75%;
 }
 
 
 .location-rating {
     display: flex;
     justify-content: space-between;
-    margin: 10px 0px;
+    margin: 5px 0px;
 }
