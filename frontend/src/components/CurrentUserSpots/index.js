@@ -8,6 +8,7 @@ const CurrentUserSpots = () => {
 
     console.log(spotsArray);
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(fetchUserSpots())
     }, [dispatch])
@@ -15,10 +16,10 @@ const CurrentUserSpots = () => {
     if (!spotsArray) {
         return (<h2>Loading...</h2>)
     }
-    const deleteSpot = (e) => {
+    const deleteSpot = async (e) => {
         const spotId = e.target.dataset.spot;
-        console.log("spot id is ==> ", spotId);
-        dispatch(deleteUserSpot(spotId))
+        // console.log("spot id is ==> ", spotId);
+        await dispatch(deleteUserSpot(spotId))
 
     }
     return (
