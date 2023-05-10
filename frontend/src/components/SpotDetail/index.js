@@ -150,10 +150,10 @@ const SpotDetail = () => {
                         const yearNumber = date.getFullYear();
 
                         // console.log(monthName, dayNumber, yearNumber);
-                        console.log("this is the review inside of map =====> ", review.userId);
+                        // console.log("this is the review inside of map =====> ", review.userId);
                         // console.log("this is the current user inside of map =====> ", currentUser);
-                        console.log("this is the current user ================> ", currentUser.user.id);
-                        console.log(review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName);
+                        // console.log("this is the current user ================> ", currentUser.user.id);
+                        // console.log(review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName);
                         return (
                             <div key={review?.id} className="each-review">
                                 <p>{review.user?.firstName || review.User?.firstName}</p>
