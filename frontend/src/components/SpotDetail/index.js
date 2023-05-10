@@ -10,7 +10,8 @@ import OpenModalButton from "../OpenModalButton"
 
 const SpotDetail = () => {
     const { spotId } = useParams()
-    const currentSpot = useSelector(state => state.spots[spotId])
+    let currentSpot = useSelector(state => state.spots)
+    currentSpot = currentSpot[spotId]
     const currentUser = useSelector(state => state.session)
     let {spot} = useSelector(state => state.reviews)
 
@@ -27,19 +28,12 @@ const SpotDetail = () => {
 
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                dispatch(fetchReview(spotId));
-                dispatch(getSpotDetails(spotId));
-                // console.log("This is the review response ====>");
 
-                // console.log("this is the respinse  ====>", response);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
-    }, [dispatch, spotId]);
+                dispatch(getSpotDetails(spotId));
+                dispatch(fetchReview(spotId));
+
+
+    }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
     // console.log("These are all the reviews in an array ==================>", allReviews);
     if (!currentSpot || !restOfImages || !allReviews) {
@@ -80,6 +74,7 @@ const SpotDetail = () => {
     const removeReview = (e) => {
         const reviewId = e.target.value;
         dispatch(deleteReview(reviewId))
+        dispatch(getSpotDetails(spotId))
     }
 //     {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
 // <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
