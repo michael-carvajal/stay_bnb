@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal"
 export default function ReviewModal({ spotId }) {
@@ -10,6 +10,7 @@ export default function ReviewModal({ spotId }) {
     const [activeRating, setActiveRating] = useState(1)
     const [formErrors, setFormErrors] = useState({})
     const [review, setReview] = useState("")
+    const currentUser = useSelector(state => state.session)
     const onChange = (e) => {
         const value = e.target.getAttribute('data-value');
         console.log(value);
@@ -49,7 +50,8 @@ export default function ReviewModal({ spotId }) {
         const reviewObj = {
             review: review,
             stars: activeRating,
-            spotId
+            spotId,
+            user: currentUser
         }
 
         const response = await dispatch(postReview(reviewObj))

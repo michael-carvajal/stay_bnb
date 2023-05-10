@@ -3,24 +3,26 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 const CurrentUserSpots = () => {
-    const userSpots = useSelector(state => state.spots)
-    const spotsArray = Object.values(userSpots).map(spot => spot)
+    let {allSpots} = useSelector(state => state.spots)
+    console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
+    const spotsArray = !allSpots ? null : Object.values(allSpots).map(spot => spot)
 
     console.log(spotsArray);
     const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(fetchUserSpots())
-    }, [dispatch])
+    }, [])
 
     if (!spotsArray) {
         return (<h2>Loading...</h2>)
     }
-    const deleteSpot = (e) => {
-        const spotId = e.target.dataset.spot;
-console.log("spot id is ==> ",spotId);
-        dispatch(deleteUserSpot(spotId))
 
+    const deleteSpot = async (e) => {
+        const spotId = e.target.dataset.spot;
+         dispatch(deleteUserSpot(spotId))
     }
+
     return (
         <div className="manage-spots">
             <div className="manage-heading">
@@ -40,11 +42,9 @@ console.log("spot id is ==> ",spotId);
                             </div>
                             <div>${spot?.price} night</div>
                             <div className="update-delete">
-                            <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
-                            <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
-
+                                <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
+                                <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
                             </div>
-
                         </div>
                     )
                 })}
@@ -52,4 +52,6 @@ console.log("spot id is ==> ",spotId);
         </div>
     )
 }
+
+
 export default CurrentUserSpots

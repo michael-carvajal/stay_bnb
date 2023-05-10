@@ -100,7 +100,8 @@ export default function CreateSpot() {
 
         }
         const response = await dispatch(postCreateSpot(formData))
-        history.push(`/spots/${spotId}`)
+        console.log("================== response from create spot===============   ",response);
+        history.push(`/spots/${response.id}`)
 
         // Reset the form values to their initial state
         // setTitle("");

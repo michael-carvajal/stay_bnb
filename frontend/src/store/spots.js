@@ -22,8 +22,7 @@ const currentSpotDetials = (details) => {
 const createSpot = (details) => {
     return {
         type: CREATE_SPOT,
-        spot: details.spot,
-        images: details.images
+        details
     }
 }
 const updateSpot = (details) => {
@@ -51,6 +50,8 @@ export const getSpotDetails = (spotId) => async dispatch => {
     console.log("details for the spot right here ====>", details);
     dispatch(currentSpotDetials(details))
 }
+
+
 export const postCreateSpot = (details) => async dispatch => {
     console.log("here are the post create spot details ====>", details.spot);
     const postSpot = await csrfFetch(`/api/spots`, {
@@ -59,8 +60,8 @@ export const postCreateSpot = (details) => async dispatch => {
         body: JSON.stringify(details.spot)
     });
     const spotThatWasCreated = await postSpot.json();
-
     console.log("created for the spot right here ====>", spotThatWasCreated);
+    dispatch(createSpot(spotThatWasCreated))
 
     const previewImage = await csrfFetch(`/api/spots/${spotThatWasCreated.id}/images`, {
         method: "POST",
@@ -93,7 +94,7 @@ export const deleteUserSpot = (spotId) => async dispatch => {
         method: "DELETE"
     });
     const deleteMessage = await response.json();
-    console.log('deleted message looks like this ===>', deleteMessage);
+    // console.log('deleted message looks like this ===>', deleteMessage);
     dispatch(deleteSpot(spotId))
 }
 export const putSpot = (details) => async dispatch => {
@@ -132,9 +133,9 @@ const initialState = { "spots": null }
 export default function spotsReducer(state = initialState, action) {
     switch (action.type) {
         case GET_SPOTS: {
-            const normalizedSpots = {};
+            const normalizedSpots = {allSpots : {}};
             action.spots.forEach(spot => {
-                normalizedSpots[spot.id] = spot
+                normalizedSpots.allSpots[spot.id] = spot
             });
             return { ...normalizedSpots }
         }
@@ -147,13 +148,15 @@ export default function spotsReducer(state = initialState, action) {
         }
         case CREATE_SPOT: {
 
-            const spotsWithDetails = { ...action.spot }
+            const objWithNewSpot = { ...state, [action.details.id]: {...action.details}}
 
-            return spotsWithDetails
+            return objWithNewSpot
         }
         case DELETE_SPOT: {
+            // console.log("this is the real old state =========> ", state);
             const newSpotsObj = { ...state }
-            delete newSpotsObj[action.spotId]
+            delete newSpotsObj.allSpots[action.spotId]
+            // console.log("this is the real new state =========> ", newSpotsObj);
             return newSpotsObj
         }
         case UPDATE_SPOT: {

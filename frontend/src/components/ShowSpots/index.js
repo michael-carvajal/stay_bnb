@@ -4,28 +4,28 @@ import { getAllSpots } from "../../store/spots";
 import './ShowSpots.css'
 import missingImage from "../../assets/images/no-photo.jpeg"
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
-export  const ShowSpots = () => {
+export const ShowSpots = () => {
     const dispatch = useDispatch();
-    const allSpots = useSelector(state => {
-        return Object.values(state.spots).map(spot => spot);
-    });
-    // console.log(allSpots);
+    let allSpots = useSelector(state => state.spots.allSpots);
+    console.log(allSpots);
     useEffect(() => {
+        console.log(1);
         dispatch(getAllSpots())
     }, [dispatch])
 
-    // if (!allSpots) {
-    //     console.log("allSpots is undefined");
-    //     return (
-    //         <h1>Loading...</h1>
-    //     )
-    // }
+    allSpots = !allSpots ? null : Object.values(allSpots).map(spot => spot)
+    if (!allSpots || !Array.isArray(allSpots)) {
+        console.log("allSpots is undefined");
+        return (
+            <h1>Loading...</h1>
+        )
+    }
     return (
         <div className="show-spots">
-            {allSpots.map((spot, index) => {
+            {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 return (
-                    <NavLink key={ index} className="spot-card" to={`/spots/${spot?.id}`}>
+                    <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}` }>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
@@ -37,8 +37,8 @@ export  const ShowSpots = () => {
                     </NavLink>
                 )
             })}
-    </div>
-)
+        </div>
+    )
 }
 
 export default ShowSpots
