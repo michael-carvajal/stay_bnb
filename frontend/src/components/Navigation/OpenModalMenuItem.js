@@ -15,9 +15,10 @@ function OpenModalMenuItem({
         setModalContent(modalComponent);
         if (onItemClick) onItemClick();
     };
-
+    const signUp = itemText === "Sign Up" ? "sign-up-item" : "";
+    console.log(signUp);
     return (
-        <li onClick={onClick}>{itemText}</li>
+        <li className={signUp} onClick={onClick}>{itemText}</li>
     );
 }
 

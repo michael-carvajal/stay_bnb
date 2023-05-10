@@ -46,14 +46,17 @@
 .profile-dropdown{
     position: absolute;
     background-color: var(--color-red);
+    border-radius: 4px;
     top: 80px;
     right: 10px;
     width: fit-content;
+    min-width: 200px;
     padding: 15px;
     z-index: 100;
 }
 .profile-dropdown > *{
     margin-top: 10px;
+    color: white;
 }
 .profile-dropdown > *:hover{
     cursor: pointer;
@@ -62,4 +65,7 @@
 .spot-card {
     position: relative;
     display: inline-block;
+}
+.sign-up-item{
+    font-weight: 600;
 }
