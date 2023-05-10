@@ -12,14 +12,16 @@ const SpotDetail = () => {
     const { spotId } = useParams()
     const currentSpot = useSelector(state => state.spots[spotId])
     const currentUser = useSelector(state => state.session)
-    let allReviews = useSelector(state => state.reviews.spot)
-    allReviews = !allReviews ? null : Object.values(allReviews).map(review => review)
+    let {spot} = useSelector(state => state.reviews)
+
+    let allReviews = !spot ? null : Object.values(spot).map(review => review)
     console.log("allReviews from spot detail ===========>   ", allReviews);
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
         }
     })
+
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
     const dispatch = useDispatch();
 
@@ -148,14 +150,16 @@ const SpotDetail = () => {
                         const yearNumber = date.getFullYear();
 
                         // console.log(monthName, dayNumber, yearNumber);
-                        console.log("this is the review inside of map =====> ", review);
+                        console.log("this is the review inside of map =====> ", review.userId);
                         // console.log("this is the current user inside of map =====> ", currentUser);
+                        console.log("this is the current user ================> ", currentUser.user.id);
+                        console.log(review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName);
                         return (
-                            <div key={review.id} className="each-review">
-                                <p>{review.user?.firstName || review.User.firstName}</p>
+                            <div key={review?.id} className="each-review">
+                                <p>{review.user?.firstName || review.User?.firstName}</p>
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
-                                {review.User.id === currentUser.user.id || currentUser.user.firstName === review.User.firstName ?
+                                {review?.userId === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
                                     <button onClick={removeReview} value={review.id}>Delete</button> : null}
                             </div>
                         )

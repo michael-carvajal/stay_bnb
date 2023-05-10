@@ -153,10 +153,10 @@ export default function spotsReducer(state = initialState, action) {
             return objWithNewSpot
         }
         case DELETE_SPOT: {
-            console.log("this is the real old state =========> ", state);
+            // console.log("this is the real old state =========> ", state);
             const newSpotsObj = { ...state }
             delete newSpotsObj.allSpots[action.spotId]
-            console.log("this is the real new state =========> ", newSpotsObj);
+            // console.log("this is the real new state =========> ", newSpotsObj);
             return newSpotsObj
         }
         case UPDATE_SPOT: {

@@ -82,7 +82,10 @@ const reviewReducer = (state = {}, action) => {
         }
         case POST_REVIEW: {
             const newReviews = { ...state };
+            console.log("this is the action.review =>", action.review);
+            console.log("reviews before ====>  ", newReviews);
             newReviews.spot[action.review.id] = action.review
+            console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
         case DELETE_REVIEW: {
