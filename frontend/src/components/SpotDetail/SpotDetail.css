@@ -61,7 +61,7 @@ h1 ,h2 {
     width: 40%;
     padding: 18px;
 }
-#reserve-price {
+.reserve-price {
     font-size: 20px;
     display: inline;
 }

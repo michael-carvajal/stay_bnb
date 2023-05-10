@@ -100,7 +100,7 @@ const SpotDetail = () => {
                 </div>
                 <div className="price-rating">
                     <div className="price-review">
-                        <p><p id="reserve-price">${currentSpot.price}</p> night</p>
+                        <p><p className="reserve-price">${currentSpot.price}</p> night</p>
                         <div className="reserve-stats">
 
                             <i className={` ${checkObj(1)} `}></i>

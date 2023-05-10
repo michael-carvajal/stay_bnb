@@ -32,7 +32,7 @@ export const ShowSpots = () => {
                             <p className="normal-font">{spot?.city}, {spot?.state}</p>
                             <p className="normal-font">{spot?.avgRating}</p>
                         </div>
-                        <div className="normal-font">${spot?.price} night</div>
+                        <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
 
                     </NavLink>
                 )
