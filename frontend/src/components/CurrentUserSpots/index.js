@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 const CurrentUserSpots = () => {
-    const userSpots = useSelector(state => state.spots)
+    const userSpots = useSelector(state => state.spots.allSpots)
     const spotsArray = Object.values(userSpots).map(spot => spot)
 
     console.log(spotsArray);

@@ -13,19 +13,19 @@ export const ShowSpots = () => {
         dispatch(getAllSpots())
     }, [dispatch])
 
-    if (!allSpots) {
+    allSpots = !allSpots ? null : Object.values(allSpots).map(spot => spot)
+    if (!allSpots || !Array.isArray(allSpots)) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
         )
     }
-    allSpots = Object.values(allSpots).map(spot => spot);
     return (
         <div className="show-spots">
-            {allSpots.map((spot, index) => {
+            {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 return (
-                    <NavLink key={index} className="spot-card" to={`/spots/${spot?.id}`}>
+                    <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}` }>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating">
