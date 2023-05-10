@@ -15,7 +15,7 @@
 }
 
 .spot-card {
-    width: 23%;
+    width: calc(24% - 4px);
     height: fit-content;
     text-decoration: none;
     color: black;
