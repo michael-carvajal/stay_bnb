@@ -22,8 +22,7 @@ const currentSpotDetials = (details) => {
 const createSpot = (details) => {
     return {
         type: CREATE_SPOT,
-        spot: details.spot,
-        images: details.images
+        details
     }
 }
 const updateSpot = (details) => {
@@ -51,6 +50,8 @@ export const getSpotDetails = (spotId) => async dispatch => {
     console.log("details for the spot right here ====>", details);
     dispatch(currentSpotDetials(details))
 }
+
+
 export const postCreateSpot = (details) => async dispatch => {
     console.log("here are the post create spot details ====>", details.spot);
     const postSpot = await csrfFetch(`/api/spots`, {
@@ -59,8 +60,8 @@ export const postCreateSpot = (details) => async dispatch => {
         body: JSON.stringify(details.spot)
     });
     const spotThatWasCreated = await postSpot.json();
-
     console.log("created for the spot right here ====>", spotThatWasCreated);
+    dispatch(createSpot(spotThatWasCreated))
 
     const previewImage = await csrfFetch(`/api/spots/${spotThatWasCreated.id}/images`, {
         method: "POST",
@@ -147,9 +148,9 @@ export default function spotsReducer(state = initialState, action) {
         }
         case CREATE_SPOT: {
 
-            const spotsWithDetails = { ...action.spot }
+            const objWithNewSpot = { ...state, [action.details.id]: {...action.details}}
 
-            return spotsWithDetails
+            return objWithNewSpot
         }
         case DELETE_SPOT: {
             const newSpotsObj = { ...state }
