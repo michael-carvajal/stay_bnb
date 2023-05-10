@@ -3,25 +3,26 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 const CurrentUserSpots = () => {
-    let userSpots = useSelector(state => state.spots.allSpots)
-    const spotsArray= !userSpots ? null : Object.values(userSpots).map(spot => spot)
+    let {allSpots} = useSelector(state => state.spots)
+    console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
+    const spotsArray = !allSpots ? null : Object.values(allSpots).map(spot => spot)
 
     console.log(spotsArray);
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(fetchUserSpots())
-    }, [dispatch])
+    }, [])
 
     if (!spotsArray) {
         return (<h2>Loading...</h2>)
     }
+
     const deleteSpot = async (e) => {
         const spotId = e.target.dataset.spot;
-        // console.log("spot id is ==> ", spotId);
-        await dispatch(deleteUserSpot(spotId))
-
+         dispatch(deleteUserSpot(spotId))
     }
+
     return (
         <div className="manage-spots">
             <div className="manage-heading">
@@ -43,9 +44,7 @@ const CurrentUserSpots = () => {
                             <div className="update-delete">
                                 <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
                                 <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
-
                             </div>
-
                         </div>
                     )
                 })}
@@ -53,4 +52,6 @@ const CurrentUserSpots = () => {
         </div>
     )
 }
+
+
 export default CurrentUserSpots

@@ -94,7 +94,7 @@ export const deleteUserSpot = (spotId) => async dispatch => {
         method: "DELETE"
     });
     const deleteMessage = await response.json();
-    console.log('deleted message looks like this ===>', deleteMessage);
+    // console.log('deleted message looks like this ===>', deleteMessage);
     dispatch(deleteSpot(spotId))
 }
 export const putSpot = (details) => async dispatch => {
@@ -153,8 +153,10 @@ export default function spotsReducer(state = initialState, action) {
             return objWithNewSpot
         }
         case DELETE_SPOT: {
+            console.log("this is the real old state =========> ", state);
             const newSpotsObj = { ...state }
             delete newSpotsObj.allSpots[action.spotId]
+            console.log("this is the real new state =========> ", newSpotsObj);
             return newSpotsObj
         }
         case UPDATE_SPOT: {
