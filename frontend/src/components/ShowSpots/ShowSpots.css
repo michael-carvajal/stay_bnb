@@ -2,7 +2,7 @@
     display: flex;
     max-width: 80%;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 10px;
     margin: 0px auto;
     margin-top: 30px;
     position: relative;
@@ -15,7 +15,7 @@
 }
 
 .spot-card {
-    width: calc(24% - 4px);
+    width: calc(24%  );
     height: fit-content;
     text-decoration: none;
     color: black;

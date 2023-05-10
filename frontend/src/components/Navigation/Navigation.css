@@ -7,7 +7,12 @@
     list-style: none;
     width: 100%;
 }
-
+#logo-text{
+    width: 70%;
+}
+#create-spot-li{
+    width: fit-content;
+}
 .header-ul {
     border-bottom: 2px lightgray solid ;
     height: 70px;
@@ -17,12 +22,23 @@
     align-items: center;
 }
 #profile-li{
-    width: 70px;
+    width: fit-content;
 }
 #profile-btn{
-    padding: 7px;
-    border-radius: 45%;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 25px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
 }
+#profile-btn > *{
+    font-size: 26px;
+}
+
 #profile-btn:hover{
     cursor: pointer;
 }
