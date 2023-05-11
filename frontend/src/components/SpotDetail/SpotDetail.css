@@ -72,6 +72,8 @@ h1 ,h2 {
 .reserve-stats  {
     font-size: 14px;
     align-self: flex-end;
+    display: flex;
+    gap: 10px;
 }
 .reserve-btn{
     padding: 9px;
@@ -110,11 +112,11 @@ h1 ,h2 {
     flex-direction: column;
     gap: 2px;
 }
-.stars > * {
+#stars > * {
 
     font-size: 20px;
 }
-.stars{
+#stars{
     margin-top: 20px;
     align-self: flex-start;
 }
