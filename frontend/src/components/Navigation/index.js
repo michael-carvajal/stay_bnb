@@ -5,14 +5,19 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 import CreateSpot from '../CreateSpot';
-
+import logo from "../../assets/images/logo.png"
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
 
     return (
         <ul className='header-ul '>
             <li id='logo-text'>
-                <NavLink exact to="/"><span >staybnb</span></NavLink>
+                <NavLink className='logo-png-text' exact to="/">
+
+                    <img id='logo' src={logo} />
+                    <span id='staybnb'>staybnb</span>
+
+                </NavLink>
             </li>
             <li id='create-spot-li'>
 

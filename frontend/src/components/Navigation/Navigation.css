@@ -2,6 +2,24 @@
     display: none;
 }
 
+.logo-png-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-png-text  > span{
+    font-size: 22px;
+}
+.logo-png-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#logo {
+    width: 50px;
+}
 .header-ul * {
     text-decoration: none;
     list-style: none;
