@@ -5,7 +5,7 @@ import { useModal } from "../../context/Modal"
 import { getSpotDetails } from "../../store/spots";
 import { fetchUser, restoreUser } from "../../store/session";
 export default function ReviewModal({ spotId }) {
-        const { closeModal } = useModal()
+    const { closeModal } = useModal()
     console.log("spotId from props in review modal =====> ", spotId);
     const ratingObj = {};
     const dispatch = useDispatch()
@@ -67,14 +67,14 @@ export default function ReviewModal({ spotId }) {
             return
         }
 
-        console.log("this is response from thunnk dispatch",  response);
+        console.log("this is response from thunnk dispatch", response);
         closeModal()
     }
     return (
         <form className="review-modal" onSubmit={handleSubmit}>
             <h1>How was your stay?</h1>
             {formErrors.exists && <p>{formErrors.exists}</p>}
-            <textarea placeholder="Just a quick review." value={review} rows="5" cols={40} onChange={(e) => setReview(e.target.value)}></textarea>
+            <textarea placeholder="Leave your review here..." value={review} rows="5" cols={40} onChange={(e) => setReview(e.target.value)}></textarea>
             <div className="review-stats">
 
                 <input
@@ -85,14 +85,18 @@ export default function ReviewModal({ spotId }) {
                     style={{ display: "none" }}
                 />
                 <div className="rating-input">
+                    <div className="review-modal-stars">
+
                     <i className={`${checkObj(1)} fa-star`} data-value="1" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
                     <i className={`${checkObj(2)} fa-star`} data-value="2" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
                     <i className={`${checkObj(3)} fa-star`} data-value="3" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
                     <i className={`${checkObj(4)} fa-star`} data-value="4" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
-                    <i className={`${checkObj(5)} fa-star`} data-value="5" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i> Starts
+                    <i className={`${checkObj(5)} fa-star`} data-value="5" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                    </div>
+                    <p>Stars</p>
                 </div>
-                <button>Submit Your Review</button>
             </div>
+            <button className="reserve-btn submit-review">Submit Your Review</button>
         </form>
     )
 }
