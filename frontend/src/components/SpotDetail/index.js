@@ -12,10 +12,10 @@ const SpotDetail = () => {
     const { spotId } = useParams()
     let currentSpot = useSelector(state => state.spots)
     currentSpot = currentSpot[spotId]
-    let {session} = useSelector(state => state)
+    let { session } = useSelector(state => state)
     const currentUser = session
     // console.log("this is the current user ====================>", currentUser);
-    let {spot} = useSelector(state => state.reviews)
+    let { spot } = useSelector(state => state.reviews)
 
     let allReviews = !spot ? null : Object.values(spot).map(review => review)
     // console.log("allReviews from spot detail ===========>   ", allReviews);
@@ -32,8 +32,8 @@ const SpotDetail = () => {
     useEffect(() => {
 
         async function getDetails() {
-                await  dispatch(getSpotDetails(spotId));
-                await  dispatch(fetchReview(spotId));
+            await dispatch(getSpotDetails(spotId));
+            await dispatch(fetchReview(spotId));
 
         }
         getDetails()
@@ -56,7 +56,7 @@ const SpotDetail = () => {
 
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
-            <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
+            <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
             <p>Be the first to post a review!</p>
         </div>
     )
@@ -66,10 +66,10 @@ const SpotDetail = () => {
     const numberOfReviews = allReviews?.length;
     const reviewRender = (reviewsLength, size) => {
         if (size === "small") {
-            if (reviewsLength > 0 ) {
+            if (reviewsLength > 0) {
                 return (<div className="reserve-stats">
 
-                <i className={` ${checkObj(1)} `}></i>
+                    <i className={` ${checkObj(1)} `}></i>
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
@@ -79,14 +79,14 @@ const SpotDetail = () => {
                 return (<div className="reserve-stats">
 
                     <i className={`fas fa-star`} ></i> <p className="new">New</p>
-                    </div>)
+                </div>)
             }
 
         } else {
-            if (reviewsLength > 0 ) {
+            if (reviewsLength > 0) {
                 return (<div className="reserve-stats" id="stars">
 
-                <i className={` ${checkObj(1)} `}></i>
+                    <i className={` ${checkObj(1)} `}></i>
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
@@ -99,7 +99,7 @@ const SpotDetail = () => {
 
                     <i className={`fas fa-star`} ></i>
                     <p className="new">New</p>
-                    </div>)
+                </div>)
             }
 
         }
@@ -137,10 +137,10 @@ const SpotDetail = () => {
         dispatch(deleteReview(reviewId))
         dispatch(getSpotDetails(spotId))
     }
-//     {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-// <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-// <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
-// <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
+    //     {/* <img id="detail-img1" src={restOfImages[0]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+    // <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+    // <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
+    // <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
     return (
         <div className="spot-detail">
             <h1 className="spot-name">{currentSpot.name}</h1>
@@ -162,7 +162,7 @@ const SpotDetail = () => {
                 <div className="price-rating">
                     <div className="price-review">
                         <p><label className="reserve-price">${currentSpot.price}</label> night</p>
-                      {reviewRender(numberOfReviews, "small")}
+                        {reviewRender(numberOfReviews, "small")}
                     </div>
                     <a href="#" className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
@@ -201,7 +201,7 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
-                                    <button onClick={removeReview} className="reserve-btn" id="delete-review"  value={review.id}>Delete</button> : null}
+                                    <button onClick={removeReview} className="smaller-btn" id="delete-review" value={review.id}>Delete</button> : null}
                             </div>
                         )
                     })}

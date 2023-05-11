@@ -16,7 +16,7 @@ function OpenModalButton({
         setModalContent(modalComponent);
     };
 
-    return <button className="reserve-btn" onClick={onClick}>{buttonText}</button>;
+    return <button className="smaller-btn" onClick={onClick}>{buttonText}</button>;
 }
 
 export default OpenModalButton;
