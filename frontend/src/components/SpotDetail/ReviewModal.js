@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { postReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal"
 import { getSpotDetails } from "../../store/spots";
+import { fetchUser, restoreUser } from "../../store/session";
 export default function ReviewModal({ spotId }) {
         const { closeModal } = useModal()
     console.log("spotId from props in review modal =====> ", spotId);
@@ -56,7 +57,8 @@ export default function ReviewModal({ spotId }) {
         }
 
         const response = await dispatch(postReview(reviewObj))
-        dispatch(getSpotDetails(spotId))
+        await dispatch(getSpotDetails(spotId))
+        await dispatch(fetchUser())
         if (response) {
             newErrors.exists = response.message
         }

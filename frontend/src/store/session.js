@@ -4,6 +4,7 @@
 import { csrfFetch } from "./csrf"
 const LOG_IN = "session/LOG_IN"
 const LOG_OUT = "session/LOG_OUT"
+const GET_CURRENT_USER = "session/GET_CURRENT_USER"
 
 const logIn = (user) => {
     return {
@@ -16,7 +17,21 @@ const logOut = () => {
         type: LOG_OUT
     }
 }
+const getUser =(user)  => {
+    return {
+        type: GET_CURRENT_USER,
+        user
+    }
+}
 
+export const fetchUser = () => async dispatch => {
+    const response = await csrfFetch("/api/session");
+
+    const user = await response.json();
+    dispatch(getUser(user))
+    return user
+
+}
 export const  sessionLogIn = (user) => async dispatch => {
 
 
@@ -77,6 +92,8 @@ export default function sessionReducer(state = initialState, action) {
             return {...action.user} }
         case LOG_OUT:{
             return initialState }
+        case GET_CURRENT_USER:{
+            return {...action.user} }
 
         default:
             return state

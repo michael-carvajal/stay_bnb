@@ -12,11 +12,13 @@ const SpotDetail = () => {
     const { spotId } = useParams()
     let currentSpot = useSelector(state => state.spots)
     currentSpot = currentSpot[spotId]
-    const currentUser = useSelector(state => state.session)
+    let {session} = useSelector(state => state)
+    const currentUser = session
+    // console.log("this is the current user ====================>", currentUser);
     let {spot} = useSelector(state => state.reviews)
 
     let allReviews = !spot ? null : Object.values(spot).map(review => review)
-    console.log("allReviews from spot detail ===========>   ", allReviews);
+    // console.log("allReviews from spot detail ===========>   ", allReviews);
     const previewImage = currentSpot?.SpotImages?.find(image => {
         if (image.preview === true) {
             return image.url
@@ -36,13 +38,13 @@ const SpotDetail = () => {
     }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
     // console.log("These are all the reviews in an array ==================>", allReviews);
-    if (!currentSpot || !restOfImages || !allReviews) {
+    if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
         console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
         )
     }
-
+    console.log("current user is  ===================>", currentUser);
     const ownerOfSpot = (
         <div>
             <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
@@ -150,7 +152,7 @@ const SpotDetail = () => {
                 </div>
                 <div className="price-rating">
                     <div className="price-review">
-                        <p><p className="reserve-price">${currentSpot.price}</p> night</p>
+                        <p><label className="reserve-price">${currentSpot.price}</label> night</p>
                       {reviewRender(numberOfReviews, "small")}
                     </div>
                     <a href="#" className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
@@ -162,7 +164,6 @@ const SpotDetail = () => {
                 {
                     allReviews.map(review => {
                         const date = new Date(review.updatedAt);
-
                         // Get the name of the month
                         const monthNames = ["January", "February", "March", "April", "May", "June",
                             "July", "August", "September", "October", "November", "December"
@@ -176,16 +177,20 @@ const SpotDetail = () => {
                         const yearNumber = date.getFullYear();
 
                         // console.log(monthName, dayNumber, yearNumber);
-                        // console.log("this is the review inside of map =====> ", review.userId);
+                        // console.log("this is the review inside of map =====> ", review);
                         // console.log("this is the current user inside of map =====> ", currentUser);
+                        const userId = currentUser.user?.id
+                        const reviewOwnerId = review.user?.id || review.User?.id
+                        // console.log(userId, reviewOwnerId);
                         // console.log("this is the current user ================> ", currentUser.user.id);
                         // console.log(review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName);
+                        // console.log(userId === reviewOwnerId);
                         return (
                             <div key={review?.id} className="each-review">
                                 <p>{review.user?.firstName || review.User?.firstName}</p>
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
-                                {review?.userId === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName ?
+                                {userId === reviewOwnerId ?
                                     <button onClick={removeReview} value={review.id}>Delete</button> : null}
                             </div>
                         )
