@@ -106,3 +106,10 @@ h1 ,h2 {
     flex-direction: column;
     gap: 2px;
 }
+.stars > * {
+
+    font-size: 20px;
+}
+.stars{
+    margin-top: 20px;
+}

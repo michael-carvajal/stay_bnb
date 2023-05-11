@@ -44,6 +44,24 @@ const SpotDetail = () => {
     }
 
     const numberOfReviews = allReviews?.length;
+    const reviewRender = (reviewsLength) => {
+        if (reviewsLength > 0 ) {
+            return (<div className="reserve-stats">
+
+            <i className={` ${checkObj(1)} `}></i>
+                <i className={` ${checkObj(2)} `}></i>
+                <i className={` ${checkObj(3)} `}></i>
+                <i className={` ${checkObj(4)} `}></i>
+                <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+            </div>)
+        } else {
+            return (<div className="reserve-stats">
+
+                <i className={`fas fa-star`} id="stars"></i> New
+                </div>)
+        }
+    }
+
     const avgRating = currentSpot?.avgStarRating;
     const visibleImages = [];
     const ratingObj = {};
@@ -101,26 +119,15 @@ const SpotDetail = () => {
                 <div className="price-rating">
                     <div className="price-review">
                         <p><p className="reserve-price">${currentSpot.price}</p> night</p>
-                        <div className="reserve-stats">
-
-                            <i className={` ${checkObj(1)} `}></i>
-                            <i className={` ${checkObj(2)} `}></i>
-                            <i className={` ${checkObj(3)} `}></i>
-                            <i className={` ${checkObj(4)} `}></i>
-                            <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
-                        </div>
+                      {reviewRender(numberOfReviews)}
                     </div>
                     <a href="#" className="reserve-btn" onClick={() => alert("Feature Coming Soon...")}>Reserve</a>
                 </div>
             </div>
             <div className="reviews">
-                <div className="review-stats">
+                <div className="reserve-stats stars">
 
-                    <i className={` ${checkObj(1)} `}></i>
-                    <i className={` ${checkObj(2)} `}></i>
-                    <i className={` ${checkObj(3)} `}></i>
-                    <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+                    <i className={`fas fa-star`} id="stars"></i> New
                 </div>
                 <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
                 {!reviewsAvailable ?
