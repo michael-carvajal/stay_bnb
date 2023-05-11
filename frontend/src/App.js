@@ -7,6 +7,7 @@ import ShowSpots from "./components/ShowSpots";
 import SpotDetail from "./components/SpotDetail";
 import CreateSpot from "./components/CreateSpot";
 import CurrentUserSpots from "./components/CurrentUserSpots";
+import CurrentUserReview from "./components/CurrentUserReview/CurrentUserReview";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,10 +27,11 @@ function App() {
         <CreateSpot />
         </Route>
         <Route path = "/spots/current"><CurrentUserSpots /></Route>
+        <Route path = "/reviews/current"><CurrentUserReview /></Route>
 
 
 
-        <Route exact path='/spots/:spotId'>   
+        <Route exact path='/spots/:spotId'>
       <SpotDetail />
         </Route>
 

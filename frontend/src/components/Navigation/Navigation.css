@@ -81,7 +81,7 @@
 }
 .profile-dropdown > *:hover{
     cursor: pointer;
-    background-color: var(--color-dark-red);
+    /* background-color: var(--color-dark-red); */
 }
 .spot-card {
     position: relative;
@@ -108,4 +108,9 @@
 width: 100%;
 text-align: center;
 padding-bottom: 10px;
+}
+.manage-user {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

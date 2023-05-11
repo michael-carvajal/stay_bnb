@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
 import "./SignupForm.css";
@@ -14,7 +15,7 @@ function SignupFormModal() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState({});
     const { closeModal } = useModal();
-
+    const history = useHistory()
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
@@ -30,7 +31,7 @@ function SignupFormModal() {
                     password,
                 })
             )
-                .then(closeModal)
+                .then(closeModal) .then(() => history.push('/'))
                 .catch(async (res) => {
                     const data = await res.json();
                     console.log('error in data', data);
