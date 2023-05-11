@@ -46,3 +46,36 @@
     gap: 15px;
     width: 100%;
 }
+
+.confirm-delete.yes-delete{
+        padding: 15px;
+            display: block;
+            text-decoration: none;
+            border: 1px solid black;
+            box-shadow: 2px 2px 4px rgb(50, 50, 50);
+            background-color: var(--color-red);
+            color: white;
+            text-align: center;
+            width: 350px;
+
+}
+.confirm-delete.no-keep{
+        padding: 15px;
+            display: block;
+            text-decoration: none;
+            border: 1px solid black;
+            box-shadow: 2px 2px 4px rgb(50, 50, 50);
+            background-color: var(--color-dark-gray);
+            color: white;
+            text-align: center;
+            width: 350px;
+
+}
+
+.delete-review-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 350px;
+    align-items: center;
+}

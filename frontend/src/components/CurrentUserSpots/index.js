@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 import "./CurrentUserSpots.css"
+import OpenModalButton from "../OpenModalButton";
+import DeleteSpotModal from "./DeleteSpotModal";
 const CurrentUserSpots = () => {
     let {allSpots} = useSelector(state => state.spots)
     console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
@@ -19,11 +21,7 @@ const CurrentUserSpots = () => {
         return (<h2>Loading...</h2>)
     }
 
-    const deleteSpot = async (e) => {
-        const spotId = e.target.dataset.spot;
-         dispatch(deleteUserSpot(spotId))
-    }
-
+   
     return (
         <div className="manage-spots">
             <div className="manage-heading">
@@ -44,7 +42,7 @@ const CurrentUserSpots = () => {
                             <div>${spot?.price} night</div>
                             <div className="update-delete">
                                 <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
-                                <span data-spot={spot?.id} className="reserve-btn" onClick={deleteSpot}>Delete</span>
+                                <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteSpotModal spotId={spot?.id} />} />
                             </div>
                         </div>
                     )
