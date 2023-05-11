@@ -34,7 +34,7 @@ const CurrentUserSpots = () => {
                 {spotsArray.map(spot => {
                     console.log(spot?.id);
                     return (
-                        <div key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
+                        <div key={spot?.id} className="manage-spot-card" to={`/spots/${spot?.id}`}>
                             <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; }} />
 
                             <div className="location-rating">
