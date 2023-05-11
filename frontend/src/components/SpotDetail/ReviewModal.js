@@ -96,7 +96,7 @@ export default function ReviewModal({ spotId }) {
     return (
         <form className="review-modal" onSubmit={handleSubmit}>
             <h1>How was your stay?</h1>
-            {formErrors.exists && <p>{formErrors.exists}</p>}
+            {formErrors.exists && <span>{formErrors.exists}</span>}
             <textarea placeholder="Leave your review here..." value={review} rows="7" cols={40} onChange={(e) => setReview(e.target.value)}></textarea>
             <div className="review-stats">
 

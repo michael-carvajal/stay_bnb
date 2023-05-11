@@ -101,7 +101,6 @@ h1 ,h2 {
 
 .review-stats {
     font-size: 20px;
-    margin-top: 20px;
 }
 .fa-circle{
     position: relative;
@@ -152,7 +151,7 @@ h1 ,h2 {
     flex-direction: column;
     width: 100%;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
 }
 .review-modal > h1{
     font-size: 20px;
