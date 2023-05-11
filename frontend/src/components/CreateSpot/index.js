@@ -7,12 +7,20 @@ export default function CreateSpot() {
     const { spotId } = useParams();
     const spot = useSelector(state => state.spots[spotId])
 
-    console.log("this is the spot =====>", spot);
+    // console.log("this is the spot =====>", spot);
     const dispatch = useDispatch();
     const history = useHistory();
     useEffect(() => {
-        dispatch(getSpotDetails(spotId))
+            dispatch(getSpotDetails(spotId))
     }, [dispatch])
+
+    const checkUndefined = (key) => {
+        const state = key
+        if (spot?.state === undefined) {
+            return ""
+        }
+        return spot.state
+    }
     const [country, setCountry] = useState(spot?.country || "");
     const [exactAddress, setExactAddress] = useState(spot?.address || "");
     const [city, setCity] = useState(spot?.city || "");
@@ -26,16 +34,12 @@ export default function CreateSpot() {
     const [image3, setImage3] = useState("");
     const [image4, setImage4] = useState("");
     const [image5, setImage5] = useState("");
-    const [category, setCategory] = useState("");
-    const [title, setTitle] = useState("");
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
 
     const [formErrors, setFormErrors] = useState({})
 
 
 
-    if (!spot) {
+    if (!spot ) {
         return (
             <h2>Loading...</h2>
         )
@@ -64,18 +68,6 @@ export default function CreateSpot() {
             images: [image1, image2, image3, image4, image5],
         }
 
-        // const properFileType = spotImages.images.filter((image, index) => {
-        //     if (!image) {
-        //         return
-        //     }
-        //     const imageNumber = index + 1
-        //     if (image.endsWith(".png") || image.endsWith(".jpg") || image.endsWith(".jpeg")) {
-        //         return
-        //     } else {
-        //         newErrors[imageNumber] = "Image URL must end in .png, .jpg, or .jpeg"
-        //         return imageNumber
-        //     }
-        // })
 
         if (description.length < 30) {
             newErrors.description = "Description needs a minimum of 30 characters"
@@ -85,8 +77,8 @@ export default function CreateSpot() {
             console.log("errors prevented further action", formErrors);
             return
         }
-        console.log(spotDetails); // This will log the form data object to the console
-        console.log(spotImages); // This will log the form data object to the console
+        // console.log(spotDetails); // This will log the form data object to the console
+        // console.log(spotImages); // This will log the form data object to the console
         const formData = {
             spot: spotDetails,
             images: spotImages
@@ -94,13 +86,13 @@ export default function CreateSpot() {
 
         if (spotId) {
             formData.spot.id = spotId
-            const update = await dispatch(putSpot(formData))
+            dispatch(putSpot(formData))
             history.push(`/spots/${spotId}`)
             return
 
         }
         const response = await dispatch(postCreateSpot(formData))
-        console.log("================== response from create spot===============   ",response);
+        // console.log("================== response from create spot===============   ",response);
         history.push(`/spots/${response.id}`)
 
         // Reset the form values to their initial state
