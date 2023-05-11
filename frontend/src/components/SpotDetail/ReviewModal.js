@@ -74,7 +74,7 @@ export default function ReviewModal({ spotId }) {
         <form className="review-modal" onSubmit={handleSubmit}>
             <h1>How was your stay?</h1>
             {formErrors.exists && <p>{formErrors.exists}</p>}
-            <textarea placeholder="Just a quick review." value={review} onChange={(e) => setReview(e.target.value)}></textarea>
+            <textarea placeholder="Just a quick review." value={review} rows="5" cols={40} onChange={(e) => setReview(e.target.value)}></textarea>
             <div className="review-stats">
 
                 <input
