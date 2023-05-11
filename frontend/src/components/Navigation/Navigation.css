@@ -2,12 +2,35 @@
     display: none;
 }
 
+.logo-png-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-png-text  > span{
+    font-size: 22px;
+}
+.logo-png-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#logo {
+    width: 50px;
+}
 .header-ul * {
     text-decoration: none;
     list-style: none;
     width: 100%;
 }
-
+#logo-text{
+    width: 70%;
+}
+#create-spot-li{
+    width: fit-content;
+}
 .header-ul {
     border-bottom: 2px lightgray solid ;
     height: 70px;
@@ -17,12 +40,23 @@
     align-items: center;
 }
 #profile-li{
-    width: 70px;
+    width: fit-content;
 }
 #profile-btn{
-    padding: 7px;
-    border-radius: 45%;
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 25px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
 }
+#profile-btn > *{
+    font-size: 26px;
+}
+
 #profile-btn:hover{
     cursor: pointer;
 }
@@ -30,14 +64,20 @@
 .profile-dropdown{
     position: absolute;
     background-color: var(--color-red);
+    border-radius: 4px;
     top: 80px;
-    right: 10px;
+    right: 20px;
     width: fit-content;
-    padding: 15px;
+    min-width: 200px;
+    padding: 5px;
     z-index: 100;
 }
 .profile-dropdown > *{
-    margin-top: 10px;
+    color: white;
+    border-bottom: black solid 1px;
+}
+.profile-dropdown > li {
+    margin: 10px auto;
 }
 .profile-dropdown > *:hover{
     cursor: pointer;
@@ -46,4 +86,26 @@
 .spot-card {
     position: relative;
     display: inline-block;
+}
+.sign-up-item{
+    font-weight: 600;
+}
+.logout-btn{
+    position: relative;
+        width: fit-content;
+        height: fit-content;
+        border-radius: 25px;
+        background-color: #ccc;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        gap: 10px;
+}
+
+
+
+.manage-spot-btn {
+width: 100%;
+text-align: center;
+padding-bottom: 10px;
 }

@@ -28,11 +28,11 @@ export const ShowSpots = () => {
                     <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}` }>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
-                        <div className="location-rating">
-                            <p>{spot?.city}, {spot?.state}</p>
-                            <p>{spot?.avgRating}</p>
+                        <div className="location-rating ">
+                            <p className="normal-font">{spot?.city}, {spot?.state}</p>
+                            <p className="normal-font">{spot?.avgRating}</p>
                         </div>
-                        <div>${spot?.price} night</div>
+                        <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
 
                     </NavLink>
                 )

@@ -1,10 +1,14 @@
 .spot-detail {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0px auto;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 
+}
+h1 ,h2 {
+    font-weight: 400;
 }
 
 .image-container {
@@ -33,6 +37,13 @@
     height: 49%;
     border: 2px black solid;
 }
+.host-description {
+    width: 60%;
+}
+.host-description > h2{
+    margin-bottom: 5px;
+}
+
 .description{
     display: flex;
     width: 100%;
@@ -42,12 +53,27 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
+    margin-bottom: 15px;
 }
 .price-rating{
     border: 3px solid black;
     border-radius: 8px;
-    width: 30%;
+    width: 40%;
     padding: 18px;
+}
+.reserve-price {
+    font-size: 20px;
+    display: inline;
+}
+.reserve-stats > * {
+    font-size: 14px;
+
+}
+.reserve-stats  {
+    font-size: 14px;
+    align-self: flex-end;
+    display: flex;
+    width: fit-content;
 }
 .reserve-btn{
     padding: 9px;
@@ -75,14 +101,81 @@
 
 .review-stats {
     font-size: 20px;
-    margin-top: 20px;
 }
 .fa-circle{
     position: relative;
-    top: -4px;
+    top: 7px;
+    padding: 0px 10px;
 }
 .each-review{
     display: flex;
     flex-direction: column;
     gap: 2px;
+}
+#stars > * {
+
+    font-size: 20px;
+}
+#stars{
+    margin-top: 20px;
+    align-self: flex-start;
+}
+.new{
+    margin-left: 7px;
+}
+
+#delete-review{
+    width: fit-content;
+}
+.post-review{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.post-review > *{
+    width: fit-content;
+}
+
+.smaller-btn {
+    padding: 3px 9px;
+    display: block;
+    text-decoration: none;
+    border: 2px solid black;
+    box-shadow: 2px 2px 2px rgb(50, 50, 50);
+    background-color: var(--color-red);
+    color: white;
+    text-align: center;
+}
+.review-modal{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 25px;
+}
+.review-modal > h1{
+    font-size: 20px;
+}
+.submit-review{
+    display: block;
+    width: 100%;
+    height: 50px;
+}
+
+.rating-input{
+        display: flex;
+            justify-content: center;
+            height: fit-content;
+            align-items: center;
+            gap: 10px;
+}
+
+.review-modal-stars >  *{
+    font-size: 30px;
+}
+.disable-btn {
+        background-color: white;
+            box-shadow: 5px 5px 5px rgb(198 197 197);
+            border: 3px #cec7c7 solid;
+            color: #aba9a9;
 }

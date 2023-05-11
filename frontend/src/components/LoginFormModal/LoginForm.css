@@ -1,8 +1,34 @@
 .log-in {
     display: flex;
     flex-direction: column;
+    align-items: center;
     border: 2px;
-    width: 400px;
+    width: 300px;
     margin: 0px auto;
+    gap: 10px;
+}
+.form-labels label {
+    display: none;
+}
+
+.form-labels input {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    background-color: rgb(213, 237, 245);
+}
+
+.form-labels{
+    display: flex   ;
+    flex-direction: column;
+    width: 100%;
+    gap: 7px;
 
 }
+.login-btn {
+    margin-top: 13px;
+    margin-bottom: 13px;
+}
+ .span-error{
+    margin: 15px 0px;
+ }

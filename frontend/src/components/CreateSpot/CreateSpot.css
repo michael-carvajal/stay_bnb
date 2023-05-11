@@ -1,6 +1,9 @@
 .create-spot{
     width: 35%;
-    margin: 0 auto;
+    margin: 30px auto;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
 }
 .form-group{
     display: flex;
@@ -9,9 +12,11 @@
     margin-bottom: 10px;
     width: 100%;
 }
-.form-group textarea input{
-    border: 2px solid black;
-    border-radius: 2px;
+textarea, input{
+    border: 3px solid black;
+    border-radius: 3px;
+    background-color: rgb(224, 246, 253);
+    padding: 5px;
 }
 
 .city-state{
@@ -27,9 +32,11 @@
 }
 
 #city{
-    width: 300px;
+    width: 240px;
 }
-
+#state {
+    width: 100%;
+}
 #city-create{
     width: 10%;
     align-self: flex-end;
@@ -63,4 +70,17 @@ span{
 
 .update-single-image{
     width: 100%;
+}
+
+.create-price {
+    display: flex;
+    align-items: center;
+}
+.create-price > * {
+    height: 100%;
+    width: 100%;
+}
+.create-price > p {
+    width: 20px;
+    font-size: 20px;
 }

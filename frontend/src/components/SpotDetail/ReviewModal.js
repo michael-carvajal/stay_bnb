@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { postReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal"
+import { getSpotDetails } from "../../store/spots";
+import { fetchUser, restoreUser } from "../../store/session";
 export default function ReviewModal({ spotId }) {
-        const { closeModal } = useModal()
-    console.log("spotId from props in review modal =====> ", spotId);
+    const { closeModal } = useModal()
+    // console.log("spotId from props in review modal =====> ", spotId);
     const ratingObj = {};
     const dispatch = useDispatch()
     const [activeRating, setActiveRating] = useState(1)
     const [formErrors, setFormErrors] = useState({})
     const [review, setReview] = useState("")
+    const [btnDisable, setBtnDisable] = useState(true)
+    const [booleanTen, setBooleanTen] = useState("disable-btn")
     const currentUser = useSelector(state => state.session)
     const onChange = (e) => {
         const value = e.target.getAttribute('data-value');
@@ -17,6 +21,27 @@ export default function ReviewModal({ spotId }) {
         setActiveRating(value)
         console.log(activeRating);
     }
+
+    const textOverTen = () => {
+        console.log("text over tejn -==========>", review.length);
+        if (review.length < 10) {
+            setBooleanTen("disable-btn")
+            return true
+        } else {
+
+            setBooleanTen("")
+            return false
+        }
+    }
+
+    useEffect(() => {
+        if (textOverTen()) {
+            setBtnDisable(true)
+        } else {
+            setBtnDisable(false)
+        }
+    }, [textOverTen])
+
     for (let i = 1; i <= activeRating; i++) {
         // console.log(i);
         ratingObj[i] = i
@@ -55,6 +80,8 @@ export default function ReviewModal({ spotId }) {
         }
 
         const response = await dispatch(postReview(reviewObj))
+        await dispatch(getSpotDetails(spotId))
+        await dispatch(fetchUser())
         if (response) {
             newErrors.exists = response.message
         }
@@ -63,14 +90,14 @@ export default function ReviewModal({ spotId }) {
             return
         }
 
-        console.log("this is response from thunnk dispatch",  response);
+        console.log("this is response from thunnk dispatch", response);
         closeModal()
     }
     return (
         <form className="review-modal" onSubmit={handleSubmit}>
             <h1>How was your stay?</h1>
-            {formErrors.exists && <p>{formErrors.exists}</p>}
-            <textarea placeholder="Just a quick review." value={review} onChange={(e) => setReview(e.target.value)}></textarea>
+            {formErrors.exists && <span>{formErrors.exists}</span>}
+            <textarea placeholder="Leave your review here..." value={review} rows="7" cols={40} onChange={(e) => setReview(e.target.value)}></textarea>
             <div className="review-stats">
 
                 <input
@@ -81,14 +108,18 @@ export default function ReviewModal({ spotId }) {
                     style={{ display: "none" }}
                 />
                 <div className="rating-input">
-                    <i className={`${checkObj(1)} fa-star`} data-value="1" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
-                    <i className={`${checkObj(2)} fa-star`} data-value="2" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
-                    <i className={`${checkObj(3)} fa-star`} data-value="3" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
-                    <i className={`${checkObj(4)} fa-star`} data-value="4" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
-                    <i className={`${checkObj(5)} fa-star`} data-value="5" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i> Starts
+                    <div className="review-modal-stars">
+
+                        <i className={`${checkObj(1)} fa-star`} data-value="1" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                        <i className={`${checkObj(2)} fa-star`} data-value="2" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                        <i className={`${checkObj(3)} fa-star`} data-value="3" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                        <i className={`${checkObj(4)} fa-star`} data-value="4" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                        <i className={`${checkObj(5)} fa-star`} data-value="5" onMouseOver={mouseOver} onMouseLeave={mouseLeave} onClick={onChange}></i>
+                    </div>
+                    <p>Stars</p>
                 </div>
-                <button>Submit Your Review</button>
             </div>
+            <button disabled={btnDisable} className={`reserve-btn submit-review ${booleanTen}`}>Submit Your Review</button>
         </form>
     )
 }
