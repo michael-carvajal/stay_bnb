@@ -69,6 +69,10 @@ h1 ,h2 {
     font-size: 14px;
 
 }
+.reserve-stats  {
+    font-size: 14px;
+    align-self: flex-end;
+}
 .reserve-btn{
     padding: 9px;
     display: block;
@@ -112,4 +116,5 @@ h1 ,h2 {
 }
 .stars{
     margin-top: 20px;
+    align-self: flex-start;
 }
