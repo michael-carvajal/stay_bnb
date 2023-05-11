@@ -46,7 +46,7 @@ const SpotDetail = () => {
     }
     console.log("current user is  ===================>", currentUser);
     const ownerOfSpot = (
-        <div>
+        <div className="post-review">
             <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
             <p>Be the first to post a review!</p>
         </div>
@@ -191,7 +191,7 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
-                                    <button onClick={removeReview} value={review.id}>Delete</button> : null}
+                                    <button onClick={removeReview} className="reserve-btn" id="delete-review"  value={review.id}>Delete</button> : null}
                             </div>
                         )
                     })}

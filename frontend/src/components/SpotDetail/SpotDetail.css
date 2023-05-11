@@ -124,3 +124,15 @@ h1 ,h2 {
 .new{
     margin-left: 7px;
 }
+
+#delete-review{
+    width: fit-content;
+}
+.post-review{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.post-review > *{
+    width: fit-content;
+}
