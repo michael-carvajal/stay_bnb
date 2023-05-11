@@ -11,7 +11,7 @@ export default function CreateSpot() {
     const dispatch = useDispatch();
     const history = useHistory();
     useEffect(() => {
-            dispatch(getSpotDetails(spotId))
+        dispatch(getSpotDetails(spotId))
     }, [dispatch])
 
 
@@ -33,7 +33,7 @@ export default function CreateSpot() {
 
 
 
-    if (!spot ) {
+    if (!spot) {
         return (
             <h2>Loading...</h2>
         )
@@ -111,67 +111,72 @@ export default function CreateSpot() {
 
     return (
         <form onSubmit={handleSubmit} className='create-spot'>
-            {spotId ? <h2>Update your Spot</h2> : <h2>Create a new Spot</h2>}
-
-            <h3>Where's your place located?</h3>
-            <p>Guests will only get your exact address once they booked a
-                reservation</p>
-
             <div className="form-group">
-                <label htmlFor="country">Country</label>
-                <input
-                    type="text"
-                    id="country"
-                    name="country"
-                    placeholder="Country"
-                    required
-                    value={country || spot?.country}
-                    onChange={(event) => setCountry(event.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="address">Address {formErrors.target && <span>{formErrors.target}</span>} </label>
-                <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    placeholder="Street Address"
-                    required
-                    value={exactAddress || spot?.address}
-                    onChange={(event) => setExactAddress(event.target.value)}
-                />
+
+                {spotId ? <h2>Update your Spot</h2> : <h2>Create a new Spot</h2>}
+
+                <h3>Where's your place located?</h3>
+                <p>Guests will only get your exact address once they booked a
+                    reservation</p>
             </div>
 
-            <div className="form-row bottom-border">
-                <div className="city-state">
+            <div className="form-group">
+                <div className="form-group">
+                    <label htmlFor="country">Country</label>
+                    <input
+                        type="text"
+                        id="country"
+                        name="country"
+                        placeholder="Country"
+                        required
+                        value={country || spot?.country}
+                        onChange={(event) => setCountry(event.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="address">Street Address {formErrors.target && <span>{formErrors.target}</span>} </label>
+                    <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        placeholder="Address"
+                        required
+                        value={exactAddress || spot?.address}
+                        onChange={(event) => setExactAddress(event.target.value)}
+                    />
+                </div>
 
-                    <div className="form-group city-create">
-                        <label htmlFor="city">City {formErrors.target && <span>{formErrors.target}</span>} </label>
-                        <input
-                            type="text"
-                            id="city"
-                            name="city"
-                            placeHolder="City"
-                            required
-                            value={city || spot?.city}
-                            onChange={(event) => setCity(event.target.value)}
-                        ></input>
-                    </div>
-                    <div className="">
-                        <p id="create-spot-comma">,</p>
-                    </div>
+                <div className="form-row bottom-border">
+                    <div className="city-state">
 
-                    <div className="form-group state-create">
-                        <label htmlFor="state">State {formErrors.target && <span>{formErrors.target}</span>} </label>
-                        <input
-                            type="text"
-                            id="state"
-                            name="state"
-                            required
-                            placeholder="STATE"
-                            value={ state ||spot?.state }
-                            onChange={(event) => setState(event.target.value)}
-                        />
+                        <div className="form-group city-create">
+                            <label htmlFor="city">City {formErrors.target && <span>{formErrors.target}</span>} </label>
+                            <input
+                                type="text"
+                                id="city"
+                                name="city"
+                                placeHolder="City"
+                                required
+                                value={city || spot?.city}
+                                onChange={(event) => setCity(event.target.value)}
+                            ></input>
+                        </div>
+                        <div className="">
+                            <p id="create-spot-comma">,</p>
+                        </div>
+
+                        <div className="form-group state-create">
+                            <label htmlFor="state">State {formErrors.target && <span>{formErrors.target}</span>} </label>
+                            <input
+                                type="text"
+                                id="state"
+                                name="state"
+                                required
+                                placeholder="STATE"
+                                value={state || spot?.state}
+                                onChange={(event) => setState(event.target.value)}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -186,7 +191,7 @@ export default function CreateSpot() {
                     name="description"
                     minLength="30"
                     required
-                    value={ description || spot?.description }
+                    value={description || spot?.description}
                     onChange={(event) => setDescription(event.target.value)}
                     rows="8" cols="50"
                     placeholder="Please write at least 30 characters "
@@ -204,7 +209,7 @@ export default function CreateSpot() {
                     id="spot-name"
                     name="spot-name"
                     required
-                    value={ spotName || spot?.name }
+                    value={spotName || spot?.name}
                     placeholder="Name of your spot"
                     onChange={(event) => setSpotName(event.target.value)}
                 />
@@ -216,16 +221,16 @@ export default function CreateSpot() {
                     in search results.</p>
                 <label htmlFor="price"> {formErrors.target && <span>{formErrors.target}</span>} </label>
                 <div className="create-price">
-                <p>$</p>
-                <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    required
+                    <p>$</p>
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        required
                         placeholder="Price per night (USD)"
-                    value={  price || spot?.price }
-                    onChange={(event) => setPrice(event.target.value)}
-                />
+                        value={price || spot?.price}
+                        onChange={(event) => setPrice(event.target.value)}
+                    />
                 </div>
             </div>
 
@@ -240,86 +245,86 @@ export default function CreateSpot() {
                             </div>
                         )
                     })}
-            </div>: <div className="create-images">
+                </div> : <div className="create-images">
 
-                <div className="form-group">
-                    <h3>Liven up your spot with photos</h3>
-                    <p>Competitive pricing can help your listing stand out and rank higher
-                        in search results.</p>
-                    <label htmlFor="preview-image"></label>
-                    <input
-                        type="url"
-                        id="preview-image"
-                        name="preview-image"
-                        required
+                    <div className="form-group">
+                        <h3>Liven up your spot with photos</h3>
+                        <p>Competitive pricing can help your listing stand out and rank higher
+                            in search results.</p>
+                        <label htmlFor="preview-image"></label>
+                        <input
+                            type="url"
+                            id="preview-image"
+                            name="preview-image"
+                            required
                             placeholder="Preview Image URL"
-                        value={previewImage}
-                        onChange={(event) => setPreviewImage(event.target.value)}
-                    />
-                    {formErrors['1'] && <span>{formErrors['1']}</span>}
-                </div>
+                            value={previewImage}
+                            onChange={(event) => setPreviewImage(event.target.value)}
+                        />
+                        {formErrors['1'] && <span>{formErrors['1']}</span>}
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="image1"> {formErrors.target && <span>{formErrors.target}</span>} </label>
-                    <input
-                        type="url"
-                        id="image1"
-                        name="image1"
-                        placeholder="Image URL"
-                        required
-                        value={image1}
-                        onChange={(event) => setImage1(event.target.value)}
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="image1"> {formErrors.target && <span>{formErrors.target}</span>} </label>
+                        <input
+                            type="url"
+                            id="image1"
+                            name="image1"
+                            placeholder="Image URL"
+                            required
+                            value={image1}
+                            onChange={(event) => setImage1(event.target.value)}
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="image2"> {formErrors.target && <span>{formErrors.target}</span>} </label>
-                    <input
-                        type="url"
-                        id="image2"
-                        name="image2"
-                        placeholder="Image URL"
-                        value={image2}
-                        onChange={(event) => setImage2(event.target.value)}
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="image2"> {formErrors.target && <span>{formErrors.target}</span>} </label>
+                        <input
+                            type="url"
+                            id="image2"
+                            name="image2"
+                            placeholder="Image URL"
+                            value={image2}
+                            onChange={(event) => setImage2(event.target.value)}
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="image3"> {formErrors.target && <span>{formErrors.target}</span>} </label>
-                    <input
-                        type="url"
-                        id="image3"
-                        name="image3"
-                        placeholder="Image URL"
-                        value={image3}
-                        onChange={(event) => setImage3(event.target.value)}
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="image3"> {formErrors.target && <span>{formErrors.target}</span>} </label>
+                        <input
+                            type="url"
+                            id="image3"
+                            name="image3"
+                            placeholder="Image URL"
+                            value={image3}
+                            onChange={(event) => setImage3(event.target.value)}
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="image4"> {formErrors.target && <span>{formErrors.target}</span>} </label>
-                    <input
-                        type="url"
-                        id="image4"
-                        name="image4"
-                        placeholder="Image URL"
-                        value={image4}
-                        onChange={(event) => setImage4(event.target.value)}
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="image4"> {formErrors.target && <span>{formErrors.target}</span>} </label>
+                        <input
+                            type="url"
+                            id="image4"
+                            name="image4"
+                            placeholder="Image URL"
+                            value={image4}
+                            onChange={(event) => setImage4(event.target.value)}
+                        />
+                    </div>
 
-                <div className="form-group bottom-border">
-                    <label htmlFor="image5"> {formErrors.target && <span>{formErrors.target}</span>} </label>
-                    <input
-                        type="url"
-                        id="image5"
-                        name="image5"
-                        placeholder="Image URL"
-                        value={image5}
-                        onChange={(event) => setImage5(event.target.value)}
-                    />
-                </div>
-            </div>}
+                    <div className="form-group bottom-border">
+                        <label htmlFor="image5"> {formErrors.target && <span>{formErrors.target}</span>} </label>
+                        <input
+                            type="url"
+                            id="image5"
+                            name="image5"
+                            placeholder="Image URL"
+                            value={image5}
+                            onChange={(event) => setImage5(event.target.value)}
+                        />
+                    </div>
+                </div>}
 
 
             <button type="submit" className="reserve-btn create-spot-btn">{spotId ? "Update Spot" : "Create Spot"}</button>

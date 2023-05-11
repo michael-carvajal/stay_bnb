@@ -2,6 +2,7 @@
     width: 35%;
     margin: 30px auto;
     display: flex;
+    gap: 20px;
     flex-direction: column;
 }
 .form-group{
