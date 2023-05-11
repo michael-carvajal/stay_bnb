@@ -46,71 +46,83 @@ function SignupFormModal() {
 
     return (
         <div className="sign-up">
-            <h1>Sign Up</h1>
+            <h1 style={{marginBottom: "20px"}}>Sign Up</h1>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Email
+                    {errors.firstName && <span>{errors.firstName}</span>}
+                        {errors.password && <span>{errors.password}</span>}
+                {errors.email && <span>{errors.email}</span>}
+                    {errors.lastName && <span>{errors.lastName}</span>}
+                    {errors.username && <span>{errors.username}</span>}
+                    {errors.confirmPassword && (
+                        <span>{errors.confirmPassword}</span>
+                    )}
+                <div className="sign-up-container">
+
+                    <label>
+                        Email
+                    </label>
                     <input
                         type="text"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                    />
-                </label>
-                {errors.email && <p>{errors.email}</p>}
-                <label>
-                    Username
+                        />
+
+                    <label>
+                        Username
+                    </label>
                     <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
-                </label>
-                {errors.username && <p>{errors.username}</p>}
-                <label>
-                    First Name
+                </div>
+                <div className="sign-up-container">
+
+                    <label>
+                        First Name
+                    </label>
                     <input
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
-                </label>
-                {errors.firstName && <p>{errors.firstName}</p>}
-                <label>
-                    Last Name
+
+                    <label>
+                        Last Name
+                    </label>
                     <input
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
                     />
-                </label>
-                {errors.lastName && <p>{errors.lastName}</p>}
-                <label>
-                    Password
+                </div>
+                <div className="sign-up-container">
+
+                    <label>
+                        Password
+                    </label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                </label>
-                {errors.password && <p>{errors.password}</p>}
-                <label>
-                    Confirm Password
+
+                    <label>
+                        Confirm Password
+                    </label>
                     <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
-                </label>
-                {errors.confirmPassword && (
-                    <p>{errors.confirmPassword}</p>
-                )}
-                <button type="submit">Sign Up</button>
+                </div>
+                <button className="reserve-btn" id="sign-up-btn" type="submit">Sign Up</button>
             </form>
         </div>
     );
