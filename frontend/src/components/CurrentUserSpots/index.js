@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { deleteUserSpot, fetchUserSpots } from "../../store/spots";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
+import "./CurrentUserSpots.css"
 const CurrentUserSpots = () => {
     let {allSpots} = useSelector(state => state.spots)
     console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
@@ -27,9 +28,9 @@ const CurrentUserSpots = () => {
         <div className="manage-spots">
             <div className="manage-heading">
                 <h1>Manage Your Spots</h1>
-                <NavLink to="/spots/new" className="reserve-btn">Create a New Spot</NavLink>
+                <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>
             </div>
-            <div className="show-spots">
+            <div className="current-spots">
                 {spotsArray.map(spot => {
                     console.log(spot?.id);
                     return (

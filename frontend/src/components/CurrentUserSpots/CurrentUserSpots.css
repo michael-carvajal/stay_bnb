@@ -1,0 +1,26 @@
+.manage-spots {
+        max-width: 80%;
+        margin: 30px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+.manage{
+    width: 100%;
+    margin: 0;
+}
+
+.current-spots{
+    display: flex;
+        max-width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0px auto;
+        margin-top: 30px;
+        position: relative;
+}
+
+.manage-create-spot{
+    width: fit-content;
+    margin-top: 5px;
+}
