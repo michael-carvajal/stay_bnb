@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
 import { getSpotDetails } from "../../store/spots"
@@ -28,16 +28,19 @@ const SpotDetail = () => {
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
     const dispatch = useDispatch();
 
-
+    const [didUserPost, setDidUserPost] = useState(false)
     useEffect(() => {
 
-                dispatch(getSpotDetails(spotId));
-                dispatch(fetchReview(spotId));
+        async function getDetails() {
+                await  dispatch(getSpotDetails(spotId));
+                await  dispatch(fetchReview(spotId));
 
+        }
+        getDetails()
 
     }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
-    // console.log("These are all the reviews in an array ==================>", allReviews);
+    console.log("These are all the reviews in an array ==================>", allReviews);
     if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
         console.log("allSpots is undefined");
         return (
@@ -45,7 +48,13 @@ const SpotDetail = () => {
         )
     }
     console.log("current user is  ===================>", currentUser);
-    const ownerOfSpot = (
+    allReviews.forEach(review => {
+        if (review.User?.id === currentUser.user?.id) {
+            // setDidUserPost(true)
+        }
+    });
+
+    const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
             <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
             <p>Be the first to post a review!</p>
@@ -185,6 +194,7 @@ const SpotDetail = () => {
                         // console.log("this is the current user ================> ", currentUser.user.id);
                         // console.log(review.User?.id === currentUser.user?.id || currentUser.user?.firstName === review.User?.firstName);
                         // console.log(userId === reviewOwnerId);
+
                         return (
                             <div key={review?.id} className="each-review">
                                 <p>{review.user?.firstName || review.User?.firstName}</p>
