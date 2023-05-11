@@ -73,7 +73,7 @@ h1 ,h2 {
     font-size: 14px;
     align-self: flex-end;
     display: flex;
-    gap: 10px;
+    width: fit-content;
 }
 .reserve-btn{
     padding: 9px;
@@ -105,7 +105,8 @@ h1 ,h2 {
 }
 .fa-circle{
     position: relative;
-    top: -4px;
+    top: 7px;
+    padding: 0px 10px;
 }
 .each-review{
     display: flex;
@@ -119,4 +120,7 @@ h1 ,h2 {
 #stars{
     margin-top: 20px;
     align-self: flex-start;
+}
+.new{
+    margin-left: 7px;
 }

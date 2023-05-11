@@ -42,7 +42,14 @@ const SpotDetail = () => {
             <h1>Loading...</h1>
         )
     }
-    const renderPostReview = currentUser.user.id === currentSpot.ownerId ? null : <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
+
+    const ownerOfSpot = (
+        <div>
+            <OpenModalButton className="reserve-btn" buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
+            <p>Be the first to post a review!</p>
+        </div>
+    )
+    const renderPostReview = currentUser.user?.id === currentSpot.ownerId ? null : ownerOfSpot;
 
 
     const numberOfReviews = allReviews?.length;
@@ -60,7 +67,7 @@ const SpotDetail = () => {
             } else {
                 return (<div className="reserve-stats">
 
-                    <i className={`fas fa-star`} ></i> <p>New</p>
+                    <i className={`fas fa-star`} ></i> <p className="new">New</p>
                     </div>)
             }
 
@@ -72,13 +79,15 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
+
+                    <p>{numberOfReviews} reviews</p>
                 </div>)
             } else {
                 return (<div className="reserve-stats" id="stars">
 
                     <i className={`fas fa-star`} ></i>
-                    <p>New</p>
+                    <p className="new">New</p>
                     </div>)
             }
 
@@ -150,12 +159,7 @@ const SpotDetail = () => {
             <div className="reviews">
                 {reviewRender(numberOfReviews, "big")}
                 {renderPostReview}
-                {!reviewsAvailable ?
-                    <div>
-
-                        <p>Be the first to post a review!</p>
-                    </div>
-                    :
+                {
                     allReviews.map(review => {
                         const date = new Date(review.updatedAt);
 
