@@ -174,3 +174,9 @@ h1 ,h2 {
 .review-modal-stars >  *{
     font-size: 30px;
 }
+.disable-btn {
+        background-color: white;
+            box-shadow: 5px 5px 5px rgb(198 197 197);
+            border: 3px #cec7c7 solid;
+            color: #aba9a9;
+}
