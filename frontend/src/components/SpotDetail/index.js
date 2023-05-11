@@ -7,6 +7,7 @@ import ReviewModal from "./ReviewModal"
 import './SpotDetail.css'
 import { fetchReview, deleteReview } from "../../store/reviews"
 import OpenModalButton from "../OpenModalButton"
+import DeleteReviewModal from "./DeleteReviewModal"
 
 const SpotDetail = () => {
     const { spotId } = useParams()
@@ -201,7 +202,10 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
-                                    <button onClick={removeReview} className="smaller-btn" id="delete-review" value={review.id}>Delete</button> : null}
+                                    <div className="post-review">
+                                        <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={spot?.id} reviewId={review?.id} />} />
+                                    </div>
+                                    : null}
                             </div>
                         )
                     })}
