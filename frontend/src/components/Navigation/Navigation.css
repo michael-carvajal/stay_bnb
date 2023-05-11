@@ -69,3 +69,14 @@
 .sign-up-item{
     font-weight: 600;
 }
+.logout-btn{
+    position: relative;
+        width: fit-content;
+        height: fit-content;
+        border-radius: 25px;
+        background-color: #ccc;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        gap: 10px;
+}
