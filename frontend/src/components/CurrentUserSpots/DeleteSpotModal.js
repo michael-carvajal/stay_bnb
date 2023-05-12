@@ -7,6 +7,7 @@ export default function DeleteSpotModal({ spotId }) {
     const dispatch = useDispatch()
     const deleteSpot = async (e) => {
         const spotId = e.target.dataset.spot;
+
         dispatch(deleteUserSpot(spotId))
         closeModal()
     }

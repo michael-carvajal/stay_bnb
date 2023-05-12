@@ -34,7 +34,7 @@ const CurrentUserSpots = () => {
                     const roundedAvg = spot?.avgRating
                     const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
                     return (
-                        <div key={spot?.id} className="manage-spot-card" to={`/spots/${spot?.id}`}>
+                        <NavLink key={spot?.id} className="manage-spot-card" to={`/spots/${spot?.id}`}>
                             <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; }} />
 
                             <div className="location-rating">
@@ -46,7 +46,7 @@ const CurrentUserSpots = () => {
                                 <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
                                 <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteSpotModal spotId={spot?.id} />} />
                             </div>
-                        </div>
+                        </NavLink>
                     )
                 })}
             </div>
