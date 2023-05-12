@@ -26,7 +26,7 @@ const CurrentUserSpots = () => {
         <div className="manage-spots">
             <div className="manage-heading">
                 <h1>Manage Your Spots</h1>
-                <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>
+                {spotsArray.length  === 0 && <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>}
             </div>
             <div className="current-spots">
                 {spotsArray.map(spot => {
