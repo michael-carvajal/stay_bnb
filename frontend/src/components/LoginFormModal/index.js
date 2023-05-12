@@ -71,7 +71,7 @@ console.log("this is log in modal");
 
                 <button className="reserve-btn login-btn" type="submit">Log In</button>
             </form>
-                <p style={{color: "purple", textDecoration: "underline", cursor:"pointer"}} onClick={handleDemoUser}>Demo User</p>
+                <p style={{color: "purple", textDecoration: "underline", cursor:"pointer"}} onClick={handleDemoUser}>Log in as Demo User</p>
         </div>
     );
 }
