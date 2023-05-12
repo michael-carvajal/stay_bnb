@@ -21,7 +21,7 @@ const CurrentUserSpots = () => {
         return (<h2>Loading...</h2>)
     }
 
-   
+
     return (
         <div className="manage-spots">
             <div className="manage-heading">
@@ -31,13 +31,15 @@ const CurrentUserSpots = () => {
             <div className="current-spots">
                 {spotsArray.map(spot => {
                     console.log(spot?.id);
+                    const roundedAvg = spot?.avgRating
+                    const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
                     return (
                         <div key={spot?.id} className="manage-spot-card" to={`/spots/${spot?.id}`}>
                             <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; }} />
 
                             <div className="location-rating">
                                 <p>{spot?.city}, {spot?.state}</p>
-                                <p>{spot?.avgRating}</p>
+                                {rating}
                             </div>
                             <div>${spot?.price} night</div>
                             <div className="update-delete">
