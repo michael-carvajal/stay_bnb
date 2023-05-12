@@ -76,7 +76,7 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }
                 </div>)
             } else {
                 return (<div className="reserve-stats">
@@ -95,7 +95,7 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
 
-                    <p>{numberOfReviews} reviews</p>
+                    <p>{numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }</p>
                 </div>)
             } else {
                 return (<div className="reserve-stats" id="stars">
