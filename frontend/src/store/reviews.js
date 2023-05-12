@@ -120,7 +120,8 @@ const reviewReducer = (state = {}, action) => {
                     stars: review.stars,
                     spotId: review.spotId,
                     User: { ...review.User },
-                    ReviewImages: [...review.ReviewImages]
+                    ReviewImages: [...review.ReviewImages],
+                    Spot: {...review.Spot}
                 }
             })
             return normalizeReview;
