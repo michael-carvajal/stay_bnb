@@ -103,9 +103,8 @@ h1 ,h2 {
     font-size: 20px;
 }
 .fa-circle{
-    position: relative;
-    top: 7px;
     padding: 0px 10px;
+    align-self: center;
 }
 .each-review{
     display: flex;

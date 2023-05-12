@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf"
 const GET_REVIEW = "/reviews/GET_REVIEW"
 const POST_REVIEW = "/reviews/POST_REVIEW"
 const DELETE_REVIEW = "/reviews/DELETE_REVIEW"
+const USER_REVIEWS = "/reviews/USER_REVIEWS"
 
 const getReview = (reviews) => {
     return {
@@ -21,11 +22,24 @@ const removeReview = (spotId) => {
         spotId
     }
 }
+const userReviews = (reviews) => {
+    return {
+        type: USER_REVIEWS,
+        reviews
+    }
+}
 
 export const fetchReview = (spotId) => async dispatch => {
     const response = await fetch(`/api/spots/${spotId}/reviews`);
     const reviews = await response.json();
     return dispatch(getReview(reviews))
+
+}
+export const getUserReviews = () => async dispatch => {
+    const response = await csrfFetch(`/api/reviews/current`);
+    const reviews = await response.json();
+    console.log("These are a reviews of current user ========>", reviews);
+    return dispatch(userReviews(reviews))
 
 }
 export const postReview = (reviewObj) => async dispatch => {
@@ -55,6 +69,7 @@ export const deleteReview = (spotId) => async dispatch => {
         const deleteMEssage = await response.json();
         console.log(deleteMEssage);
         dispatch(removeReview(spotId))
+        dispatch(getUserReviews())
     } catch (error) {
         return error.json()
     }
@@ -64,10 +79,9 @@ export const deleteReview = (spotId) => async dispatch => {
 const reviewReducer = (state = {}, action) => {
     switch (action.type) {
         case GET_REVIEW: {
-            const normalizeReview = {spot: {}};
-            console.log("reviews repsonse =====>", action.reviews);
-            action.reviews.Reviews?.forEach(review => {
-                normalizeReview.spot[review.id] = {
+            const normalizedReviews = {};
+            action.reviews.Reviews?.forEach((review) => {
+                normalizedReviews[review.id] = {
                     id: review.id,
                     review: review.review,
                     createdAt: review.createdAt,
@@ -75,11 +89,12 @@ const reviewReducer = (state = {}, action) => {
                     stars: review.stars,
                     spotId: review.spotId,
                     User: { ...review.User },
-                    ReviewImages : [...review.ReviewImages]
-                }
-            })
-            return normalizeReview;
+                    ReviewImages: [...review.ReviewImages],
+                };
+            });
+            return { spot: normalizedReviews };
         }
+
         case POST_REVIEW: {
             const newReviews = { ...state };
             console.log("this is the action.review =>", action.review);
@@ -88,11 +103,30 @@ const reviewReducer = (state = {}, action) => {
             console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
-        case DELETE_REVIEW: {
-            const newReviews = { ...state };
-            console.log("new Reviews inside refucer =======>",newReviews);
-            delete newReviews.spot[action.spotId]
-            return newReviews
+        case DELETE_REVIEW:
+            const newSpots = { ...state.spots };
+            delete newSpots[action.spotId];
+            return {
+                ...state,
+                spots: newSpots,
+            };
+        case USER_REVIEWS: {
+            const normalizeReview = { user: {} };
+            console.log("reviews repsonse =====>", action.reviews);
+            action.reviews.Reviews?.forEach(review => {
+                normalizeReview.user[review.id] = {
+                    id: review.id,
+                    review: review.review,
+                    createdAt: review.createdAt,
+                    updatedAt: review.updatedAt,
+                    stars: review.stars,
+                    spotId: review.spotId,
+                    User: { ...review.User },
+                    ReviewImages: [...review.ReviewImages],
+                    Spot: { ...review.Spot }
+                }
+            })
+            return normalizeReview;
         }
 
         default:

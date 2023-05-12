@@ -44,33 +44,46 @@ function ProfileButton({ user }) {
     return (
         <>
             <button onClick={openMenu} id='profile-btn'>
-                <i className="fas fa-bars"/>
+                <i className="fas fa-bars" />
                 <i className="fas fa-user-circle" />
             </button>
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (
                     <>
-                        <li className="manage-spot-btn">Hello, {user.username}
-                            <p>{user.email}</p></li>
+                        <li className="manage-spot-btn">
+                            <div className="manage-user">
+                            <p>
+                                Hello, {user.username}
+                            </p>
+                            <p>{user.email}</p>
 
-                        <li className="manage-spot-btn"><NavLink to="/spots/current">Manage Spots</NavLink></li>
+                            <hr />
+                            </div>
+                        </li>
+                        <li className="manage-spot-btn">
+                            <div className="manage-user">
+                                <NavLink to="/spots/current">Manage Spots</NavLink>
+                                <NavLink to="/reviews/current">Manage Reviews</NavLink>
+                            <hr />
+                            </div>
+                        </li>
                         <li className="logout-btn" >
                             <p onClick={logout}>Log Out</p>
                         </li>
                     </>
                 ) : (
-                    <>
-                            <OpenModalMenuItem
-                                itemText="Sign Up"
-                                onItemClick={closeMenu}
-                                modalComponent={<SignupFormModal />}
-                            />
+                    <div className="signup-login">
+                        <OpenModalMenuItem
+                            itemText="Sign Up"
+                            onItemClick={closeMenu}
+                            modalComponent={<SignupFormModal />}
+                        />
                         <OpenModalMenuItem
                             itemText="Log In"
                             onItemClick={closeMenu}
                             modalComponent={<LoginFormModal />}
                         />
-                    </>
+                    </div >
                 )}
             </ul>
         </>

@@ -33,8 +33,8 @@ const SpotDetail = () => {
     useEffect(() => {
 
         async function getDetails() {
-            await dispatch(getSpotDetails(spotId));
-            await dispatch(fetchReview(spotId));
+            dispatch(getSpotDetails(spotId));
+            dispatch(fetchReview(spotId));
 
         }
         getDetails()
@@ -44,16 +44,18 @@ const SpotDetail = () => {
     console.log("These are all the reviews in an array ==================>", allReviews);
     if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
         console.log("allSpots is undefined");
+        dispatch(fetchReview(spotId))
         return (
             <h1>Loading...</h1>
         )
     }
     console.log("current user is  ===================>", currentUser);
-    allReviews.forEach(review => {
-        if (review.User?.id === currentUser.user?.id) {
-            // setDidUserPost(true)
-        }
-    });
+    // allReviews.forEach(review => {
+    //     if (review.User?.id === currentUser.user?.id) {
+
+    //         // setDidUserPost(true)
+    //     }
+    // });
 
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
@@ -74,7 +76,7 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(2)} `}></i>
                     <i className={` ${checkObj(3)} `}></i>
                     <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} reviews
+                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }
                 </div>)
             } else {
                 return (<div className="reserve-stats">
@@ -93,7 +95,7 @@ const SpotDetail = () => {
                     <i className={` ${checkObj(4)} `}></i>
                     <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
 
-                    <p>{numberOfReviews} reviews</p>
+                    <p>{numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }</p>
                 </div>)
             } else {
                 return (<div className="reserve-stats" id="stars">
