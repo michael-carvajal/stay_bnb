@@ -15,13 +15,13 @@ export default function CurrentUserReview() {
     if (!allReviews) {
         return (<h1>Loading...</h1>)
     }
-console.log("allReviews of current =====>", allReviews);
+    console.log("allReviews of current =====>", allReviews);
     return (
         <div className="manage-spots">
             <div>
                 <h1>Manage Your Reviews</h1>
             </div>
-            <div className="reviews" style={{border:"none"}}>
+            <div className="reviews" style={{ border: "none" }}>
                 {
                     allReviews.map(review => {
                         const date = new Date(review.updatedAt);
@@ -48,7 +48,7 @@ console.log("allReviews of current =====>", allReviews);
                                 <p>{review.review}</p>
                                 <div className="update-delete">
                                     <OpenModalButton buttonText={"Update"} modalComponent={<DeleteReviewModal spotId={review.Spot.id} reviewId={review.id} />} />
-                                    <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={review.Spot.id} reviewId={review.id} />} />
+                                    <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={review.Spot.id} reviewId={review.id} deleteType="review" />} />
                                 </div>
                                 {/* <p>{review.user?.firstName || review.User?.firstName}</p>
                                 {userId === reviewOwnerId ?
