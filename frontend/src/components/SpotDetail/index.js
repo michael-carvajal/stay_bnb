@@ -44,18 +44,18 @@ const SpotDetail = () => {
     console.log("These are all the reviews in an array ==================>", allReviews);
     if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
         console.log("allSpots is undefined");
-        dispatch(fetchReview())
+        dispatch(fetchReview(spotId))
         return (
             <h1>Loading...</h1>
         )
     }
     console.log("current user is  ===================>", currentUser);
-    allReviews.forEach(review => {
-        if (review.User?.id === currentUser.user?.id) {
+    // allReviews.forEach(review => {
+    //     if (review.User?.id === currentUser.user?.id) {
 
-            // setDidUserPost(true)
-        }
-    });
+    //         // setDidUserPost(true)
+    //     }
+    // });
 
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
