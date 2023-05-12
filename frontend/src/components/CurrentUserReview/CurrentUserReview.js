@@ -18,7 +18,7 @@ export default function CurrentUserReview() {
 console.log("allReviews of current =====>", allReviews);
     return (
         <div className="manage-spots">
-            <div className="manage-heading">
+            <div>
                 <h1>Manage Your Reviews</h1>
             </div>
             <div className="reviews" style={{border:"none"}}>
