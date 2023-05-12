@@ -33,8 +33,8 @@ const SpotDetail = () => {
     useEffect(() => {
 
         async function getDetails() {
-            await dispatch(getSpotDetails(spotId));
-            await dispatch(fetchReview(spotId));
+            dispatch(getSpotDetails(spotId));
+            dispatch(fetchReview(spotId));
 
         }
         getDetails()
@@ -44,6 +44,7 @@ const SpotDetail = () => {
     console.log("These are all the reviews in an array ==================>", allReviews);
     if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
         console.log("allSpots is undefined");
+        dispatch(fetchReview())
         return (
             <h1>Loading...</h1>
         )
@@ -51,6 +52,7 @@ const SpotDetail = () => {
     console.log("current user is  ===================>", currentUser);
     allReviews.forEach(review => {
         if (review.User?.id === currentUser.user?.id) {
+
             // setDidUserPost(true)
         }
     });

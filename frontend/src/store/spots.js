@@ -133,37 +133,30 @@ const initialState = { "spots": null }
 export default function spotsReducer(state = initialState, action) {
     switch (action.type) {
         case GET_SPOTS: {
-            const normalizedSpots = {allSpots : {}};
+            const normalizedSpots = {...state ,allSpots : {}};
             action.spots.forEach(spot => {
                 normalizedSpots.allSpots[spot.id] = spot
             });
             return { ...normalizedSpots }
         }
         case CURRENT_SPOT: {
-            // console.log("this is the crrent state ====> ",state);
-            // console.log("this is the current action ====> ",state);
-            const spotsWithDetails = { ...state, [action.details.id]: { ...action.details } }
-
-            return spotsWithDetails
+            const spotsWithDetails = { ...state, [action.details.id]: action.details };
+            return spotsWithDetails;
         }
+
         case CREATE_SPOT: {
-
-            const objWithNewSpot = { ...state, [action.details.id]: {...action.details}}
-
-            return objWithNewSpot
+            return { ...state, [action.details.id]: { ...action.details } };
         }
+
         case DELETE_SPOT: {
-            // console.log("this is the real old state =========> ", state);
-            const newSpotsObj = { ...state }
-            delete newSpotsObj.allSpots[action.spotId]
-            // console.log("this is the real new state =========> ", newSpotsObj);
-            return newSpotsObj
+            const { [action.spotId]: deletedSpot, ...newSpotsObj } = state.allSpots;
+            return { allSpots: newSpotsObj };
         }
+
         case UPDATE_SPOT: {
-            const newSpotsObj = { ...state }
-            newSpotsObj[action.spot.id] = action.spot
-            return newSpotsObj
+            return { ...state, [action.spot.id]: { ...state[action.spot.id], ...action.spot } };
         }
+
 
 
 

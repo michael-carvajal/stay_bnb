@@ -69,6 +69,7 @@ export const deleteReview = (spotId) => async dispatch => {
         const deleteMEssage = await response.json();
         console.log(deleteMEssage);
         dispatch(removeReview(spotId))
+        dispatch(getUserReviews())
     } catch (error) {
         return error.json()
     }
@@ -78,10 +79,9 @@ export const deleteReview = (spotId) => async dispatch => {
 const reviewReducer = (state = {}, action) => {
     switch (action.type) {
         case GET_REVIEW: {
-            const normalizeReview = {spot: {}};
-            console.log("reviews repsonse =====>", action.reviews);
-            action.reviews.Reviews?.forEach(review => {
-                normalizeReview.spot[review.id] = {
+            const normalizedReviews = {};
+            action.reviews.Reviews?.forEach((review) => {
+                normalizedReviews[review.id] = {
                     id: review.id,
                     review: review.review,
                     createdAt: review.createdAt,
@@ -89,11 +89,12 @@ const reviewReducer = (state = {}, action) => {
                     stars: review.stars,
                     spotId: review.spotId,
                     User: { ...review.User },
-                    ReviewImages : [...review.ReviewImages]
-                }
-            })
-            return normalizeReview;
+                    ReviewImages: [...review.ReviewImages],
+                };
+            });
+            return { spot: normalizedReviews };
         }
+
         case POST_REVIEW: {
             const newReviews = { ...state };
             console.log("this is the action.review =>", action.review);
@@ -102,12 +103,13 @@ const reviewReducer = (state = {}, action) => {
             console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
-        case DELETE_REVIEW: {
-            const newReviews = { ...state };
-            console.log("new Reviews inside refucer =======>",newReviews);
-            delete newReviews.spot[action.spotId]
-            return newReviews
-        }
+        case DELETE_REVIEW:
+            const newSpots = { ...state.spots };
+            delete newSpots[action.spotId];
+            return {
+                ...state,
+                spots: newSpots,
+            };
         case USER_REVIEWS: {
             const normalizeReview = { user: {} };
             console.log("reviews repsonse =====>", action.reviews);
@@ -121,7 +123,7 @@ const reviewReducer = (state = {}, action) => {
                     spotId: review.spotId,
                     User: { ...review.User },
                     ReviewImages: [...review.ReviewImages],
-                    Spot: {...review.Spot}
+                    Spot: { ...review.Spot }
                 }
             })
             return normalizeReview;
