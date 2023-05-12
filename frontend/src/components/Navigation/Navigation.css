@@ -26,10 +26,10 @@
     width: 100%;
 }
 #logo-text{
-    width: 70%;
+    width: fit-content;
 }
 #create-spot-li{
-    width: fit-content;
+    width: 300px;
 }
 .header-ul {
     border-bottom: 2px lightgray solid ;
@@ -74,7 +74,6 @@
 }
 .profile-dropdown > *{
     color: white;
-    border-bottom: black solid 1px;
 }
 .profile-dropdown > li {
     margin: 10px auto;
@@ -113,4 +112,14 @@ padding-bottom: 10px;
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.signup-login{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    gap: 10px;
 }

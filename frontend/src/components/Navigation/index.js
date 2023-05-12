@@ -19,6 +19,7 @@ function Navigation({ isLoaded }) {
 
                 </NavLink>
             </li>
+            <li id='invisible-li'></li>
             <li id='create-spot-li'>
 
             {sessionUser && (
