@@ -76,7 +76,10 @@
     color: white;
 }
 .profile-dropdown > li {
-    margin: 10px auto;
+    margin: 0px auto;
+}
+.profile-dropdown:last-child {
+    padding: 15px;
 }
 .profile-dropdown > *:hover{
     cursor: pointer;
@@ -99,6 +102,7 @@
         align-items: center;
         padding: 10px;
         gap: 10px;
+        top: 7px;
 }
 
 
@@ -106,7 +110,6 @@
 .manage-spot-btn {
 width: 100%;
 text-align: center;
-padding-bottom: 10px;
 }
 .manage-user {
     display: flex;
