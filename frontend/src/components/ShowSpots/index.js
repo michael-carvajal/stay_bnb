@@ -24,13 +24,14 @@ export const ShowSpots = () => {
         <div className="show-spots">
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
+                const roundedAvg = spot?.avgRating
                 return (
                     <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}` }>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating ">
                             <p className="normal-font">{spot?.city}, {spot?.state}</p>
-                            <p className="normal-font">{spot?.avgRating}</p>
+                            <p className="normal-font">{roundedAvg}</p>
                         </div>
                         <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
 
