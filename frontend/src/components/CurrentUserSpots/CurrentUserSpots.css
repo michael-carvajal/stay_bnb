@@ -10,6 +10,10 @@
     margin: 0;
 }
 
+.manage-heading{
+    width: 80%;
+    margin: 30px auto 0px;
+}
 .current-spots{
     display: flex;
         max-width: 100%;

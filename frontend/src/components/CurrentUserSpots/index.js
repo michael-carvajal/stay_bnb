@@ -5,8 +5,9 @@ import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 import "./CurrentUserSpots.css"
 import OpenModalButton from "../OpenModalButton";
 import DeleteSpotModal from "./DeleteSpotModal";
+import missingImage from "../../assets/images/no-photo.jpeg"
 const CurrentUserSpots = () => {
-    let {allSpots} = useSelector(state => state.spots)
+    let { allSpots } = useSelector(state => state.spots)
     console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
     const spotsArray = !allSpots ? null : Object.values(allSpots).map(spot => spot)
 
@@ -18,34 +19,34 @@ const CurrentUserSpots = () => {
     }, [])
 
     if (!spotsArray) {
+        dispatch(fetchUserSpots())
         return (<h2>Loading...</h2>)
     }
 
 
     return (
-        <div className="manage-spots">
+        <div className="manage-user-spots">
+
             <div className="manage-heading">
                 <h1>Manage Your Spots</h1>
-                {spotsArray.length  === 0 && <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>}
+                {spotsArray.length === 0 && <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>}
+
             </div>
-            <div className="current-spots">
-                {spotsArray.map(spot => {
-                    console.log(spot?.id);
+            <div className="show-spots">
+                {spotsArray?.map((spot, index) => {
+                    // console.log(spot?.id);
                     const roundedAvg = spot?.avgRating
                     const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
                     return (
-                        <NavLink key={spot?.id} className="manage-spot-card" to={`/spots/${spot?.id}`}>
-                            <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; }} />
+                        <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
+                            <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
-                            <div className="location-rating">
-                                <p>{spot?.city}, {spot?.state}</p>
+                            <div className="location-rating ">
+                                <p className="normal-font">{spot?.city}, {spot?.state}</p>
                                 {rating}
                             </div>
-                            <div>${spot?.price} night</div>
-                            <div className="update-delete">
-                                <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
-                                <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteSpotModal spotId={spot?.id} />} />
-                            </div>
+                            <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
+
                         </NavLink>
                     )
                 })}
@@ -56,3 +57,28 @@ const CurrentUserSpots = () => {
 
 
 export default CurrentUserSpots
+
+            // <div className="show-spots">
+            //     <div className="spot-card">
+            //         {spotsArray.map(spot => {
+            //             console.log(spot?.id);
+            //             const roundedAvg = spot?.avgRating
+            //             const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
+            //             return (
+            //                 <NavLink key={spot?.id} className="spot-card" to={`/spots/${spot?.id}`}>
+            //                     <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; }} />
+
+            //                     <div className="location-rating">
+            //                         <p>{spot?.city}, {spot?.state}</p>
+            //                         {rating}
+            //                     </div>
+            //                     <div>${spot?.price} night</div>
+            //                     <div className="update-delete">
+            //                         <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
+            //                         <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteSpotModal spotId={spot?.id} />} />
+            //                     </div>
+            //                 </NavLink>
+            //             )
+            //         })}
+            //     </div>
+            // </div>
