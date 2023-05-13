@@ -25,16 +25,22 @@ export const ShowSpots = () => {
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 const roundedAvg = spot?.avgRating
-                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg % 1 !== 0 ? roundedAvg.toFixed(2) : roundedAvg}</p>;
+                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> :
+                    <div className="reserve-stats">
+                        <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
+
+                        <p className="normal-font">{roundedAvg % 1 !== 0 ? roundedAvg.toFixed(2) : roundedAvg}
+                        </p>
+                    </div>
                 return (
                     <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating ">
                             <p className="normal-font">{spot?.city}, {spot?.state}</p>
-                        {rating}
+                            {rating}
                         </div>
-                        <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
+                        <div className="normal-font"><p className="reserve-price" style={{ fontSize: "14px", fontWeight: "600" }}> ${spot?.price}</p> night</div>
 
                     </NavLink>
                 )
