@@ -25,7 +25,7 @@ export const ShowSpots = () => {
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 const roundedAvg = spot?.avgRating
-                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
+                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg % 1 !== 0 ? roundedAvg.toFixed(2) : roundedAvg}</p>;
                 return (
                     <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
