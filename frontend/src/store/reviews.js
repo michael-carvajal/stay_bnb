@@ -3,6 +3,7 @@ const GET_REVIEW = "/reviews/GET_REVIEW"
 const POST_REVIEW = "/reviews/POST_REVIEW"
 const DELETE_REVIEW = "/reviews/DELETE_REVIEW"
 const USER_REVIEWS = "/reviews/USER_REVIEWS"
+const PUT_REVIEW = "/reviews/PUT_REVIEW"
 
 const getReview = (reviews) => {
     return {
@@ -14,6 +15,13 @@ const createReview = (review) => {
     return {
         type: POST_REVIEW,
         review
+    }
+}
+const updateReview = (review, reviewId) => {
+    return {
+        type: PUT_REVIEW,
+        review,
+        reviewId
     }
 }
 const removeReview = (spotId) => {
@@ -54,6 +62,26 @@ export const postReview = (reviewObj) => async dispatch => {
         console.log("this was created after post requrst ====> ", createdReview);
         createdReview.user = reviewObj.user.user
         dispatch(createReview(createdReview))
+    } catch (error) {
+        return error.json()
+    }
+
+
+}
+export const putReview = (reviewObj, reviewId) => async dispatch => {
+    console.log("this is review OBJ", reviewObj);
+    console.log("this is review id=========>", reviewId);
+    try {
+        const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ review: reviewObj.review, stars: reviewObj.stars })
+        });
+        const updatedReview = await response.json();
+        console.log("this was created after post requrst ====> ", updatedReview);
+        updatedReview.user = reviewObj.user.user
+        dispatch(updateReview(updatedReview, reviewId))
+       
     } catch (error) {
         return error.json()
     }
@@ -101,6 +129,13 @@ const reviewReducer = (state = {}, action) => {
             console.log("reviews before ====>  ", newReviews);
             newReviews.spot[action.review.id] = action.review
             console.log("reviews after ===========================>  ", newReviews);
+            return newReviews
+        }
+        case PUT_REVIEW: {
+            const newReviews = { ...state, user : {[action.reviewId]  : {...action.review }}};
+            // console.log("this is the action.review =>", action.review);
+            // console.log("reviews before ====>  ", newReviews);
+            // console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
         case DELETE_REVIEW:

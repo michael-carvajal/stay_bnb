@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getUserReviews } from "../../store/reviews";
 import OpenModalButton from "../OpenModalButton";
 import DeleteReviewModal from "../SpotDetail/DeleteReviewModal";
+import ReviewModal from "../SpotDetail/ReviewModal";
 
 export default function CurrentUserReview() {
     const dispatch = useDispatch();
@@ -12,7 +13,7 @@ export default function CurrentUserReview() {
     useEffect(() => {
         dispatch(getUserReviews())
     }, [dispatch])
-    if (!allReviews) {
+    if (!allReviews || !reviews) {
         return (<h1>Loading...</h1>)
     }
     console.log("allReviews of current =====>", allReviews);
@@ -43,12 +44,12 @@ export default function CurrentUserReview() {
 
                         return (
                             <div key={review.id} className="each-review">
-                                <p>{review.Spot.name} </p>
+                                <p>{review.Spot?.name} </p>
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 <div className="update-delete">
-                                    <OpenModalButton buttonText={"Update"} modalComponent={<DeleteReviewModal spotId={review.Spot.id} reviewId={review.id} />} />
-                                    <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={review.Spot.id} reviewId={review.id} deleteType="review" />} />
+                                    <OpenModalButton buttonText={"Update"} modalComponent={<ReviewModal spotId={review.Spot?.id} buttonType="update" spotName={review.Spot?.name} currentReview={review} />} />
+                                    <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={review.Spot?.id} reviewId={review.id} deleteType="review" />} />
                                 </div>
                                 {/* <p>{review.user?.firstName || review.User?.firstName}</p>
                                 {userId === reviewOwnerId ?
