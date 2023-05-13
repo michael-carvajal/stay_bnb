@@ -29,7 +29,7 @@ export const ShowSpots = () => {
                     <div className="reserve-stats">
                         <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
 
-                        <p className="normal-font">{roundedAvg % 1 !== 0 ? roundedAvg.toFixed(2) : roundedAvg}
+                        <p className="normal-font">{roundedAvg % 1 !== 0 ? roundedAvg.toFixed(2) : roundedAvg.toFixed(1)}
                         </p>
                     </div>
                 return (
