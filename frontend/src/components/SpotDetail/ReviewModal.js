@@ -123,7 +123,7 @@ export default function ReviewModal({ spotId, buttonType, reviewId, spotName, cu
         <form className="review-modal" onSubmit={updateReview}>
             <h1 style={{textAlign:"center"}}>How was your stay at
                 <br />
-                {spotName}
+                {spotName}?
             </h1>
 
             {formErrors.exists && <span>{formErrors.exists}</span>}
@@ -149,7 +149,7 @@ export default function ReviewModal({ spotId, buttonType, reviewId, spotName, cu
                     <p>Stars</p>
                 </div>
             </div>
-            <button disabled={btnDisable} className={`reserve-btn submit-review ${booleanTen}`}>Submit Your Review</button>
+            <button disabled={btnDisable} className={`reserve-btn submit-review ${booleanTen}`}>Update Your Review</button>
         </form>
         : <form className="review-modal" onSubmit={handleSubmit}>
             <h1>How was your stay?</h1>

@@ -204,7 +204,8 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
-                                    <div className="post-review">
+                                    <div className="update-delete">
+                                        <OpenModalButton buttonText={"Update"} modalComponent={<ReviewModal spotId={spotId} buttonType="update" spotName={currentSpot.name} currentReview={review} />} />
                                         <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={spot?.id} reviewId={review?.id} />} />
                                     </div>
                                     : null}
