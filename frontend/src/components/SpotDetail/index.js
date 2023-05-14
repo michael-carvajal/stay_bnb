@@ -29,7 +29,7 @@ const SpotDetail = () => {
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
     const dispatch = useDispatch();
 
-    const [didUserPost, setDidUserPost] = useState(false)
+    let didUserPost = false;
     useEffect(() => {
 
         async function getDetails() {
@@ -56,7 +56,13 @@ const SpotDetail = () => {
     //         // setDidUserPost(true)
     //     }
     // });
-
+    allReviews.forEach(review => {
+        const userId = currentUser.user?.id
+        const reviewOwnerId = review.user?.id || review.User?.id
+        if (userId === reviewOwnerId) {
+            didUserPost = true
+        }
+    })
     const numberOfReviews = allReviews?.length;
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
@@ -149,6 +155,8 @@ const SpotDetail = () => {
     // <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
     // <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
     // <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
+
+
     return (
         <div className="spot-detail">
             <h1 className="spot-name">{currentSpot.name}</h1>
@@ -209,6 +217,7 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
+
                                     <div className="update-delete">
                                         <OpenModalButton buttonText={"Update"} modalComponent={<ReviewModal spotId={spotId} buttonType="update" spotName={currentSpot.name} currentReview={review} />} />
                                         <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={spot?.id} reviewId={review?.id} deleteType="review" />} />
