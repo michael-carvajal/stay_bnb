@@ -211,7 +211,7 @@ const SpotDetail = () => {
                                     : null}
                             </div>
                         )
-                    })}
+                    }).reverse()}
             </div>
         </div>
     )
