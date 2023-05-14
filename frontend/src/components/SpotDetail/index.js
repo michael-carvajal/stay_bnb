@@ -67,16 +67,21 @@ const SpotDetail = () => {
 
 
     const numberOfReviews = allReviews?.length;
+    const avgRating = currentSpot?.avgStarRating;
+    const visibleImages = [];
+
     const reviewRender = (reviewsLength, size) => {
         if (size === "small") {
             if (reviewsLength > 0) {
                 return (<div className="reserve-stats">
 
-                    <i className={` ${checkObj(1)} `}></i>
-                    <i className={` ${checkObj(2)} `}></i>
-                    <i className={` ${checkObj(3)} `}></i>
-                    <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }
+                    <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
+
+                    <p className="normal-font">{avgRating % 1 !== 0 ? avgRating?.toFixed(2) : avgRating?.toFixed(1)}
+                    </p>
+
+
+                    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"}
                 </div>)
             } else {
                 return (<div className="reserve-stats">
@@ -89,11 +94,12 @@ const SpotDetail = () => {
             if (reviewsLength > 0) {
                 return (<div className="reserve-stats" id="stars">
 
-                    <i className={` ${checkObj(1)} `}></i>
-                    <i className={` ${checkObj(2)} `}></i>
-                    <i className={` ${checkObj(3)} `}></i>
-                    <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
+                    <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
+
+                    <p className="normal-font">{avgRating % 1 !== 0 ? avgRating?.toFixed(2) : avgRating?.toFixed(1)}
+                    </p>
+
+                    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
 
                     <p>{numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }</p>
                 </div>)
@@ -108,8 +114,7 @@ const SpotDetail = () => {
         }
     }
 
-    const avgRating = currentSpot?.avgStarRating;
-    const visibleImages = [];
+
     const ratingObj = {};
     for (let i = 0; i <= 3; i++) {
         const element = restOfImages[i];
