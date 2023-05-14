@@ -84,3 +84,7 @@ span{
     width: 20px;
     font-size: 20px;
 }
+
+.form-group > label, p {
+    font-size: 14px;
+}
