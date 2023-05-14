@@ -60,7 +60,7 @@ const SpotDetail = () => {
     const numberOfReviews = allReviews?.length;
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
-            <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
+            {currentUser.user ? <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} /> : null}
              { numberOfReviews === 0 ?<p>Be the first to post a review!</p> : null}
         </div>
     )
