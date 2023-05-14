@@ -57,16 +57,16 @@ const SpotDetail = () => {
     //     }
     // });
 
+    const numberOfReviews = allReviews?.length;
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
             <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
-            <p>Be the first to post a review!</p>
+             { numberOfReviews === 0 ?<p>Be the first to post a review!</p> : null}
         </div>
     )
     const renderPostReview = currentUser.user?.id === currentSpot.ownerId ? null : ownerOfSpot;
 
 
-    const numberOfReviews = allReviews?.length;
     const avgRating = currentSpot?.avgStarRating;
     const visibleImages = [];
 
