@@ -155,7 +155,7 @@ export default function CreateSpot() {
                                 type="text"
                                 id="city"
                                 name="city"
-                                placeHolder="City"
+                                placeholder="City"
                                 required
                                 value={city || spot?.city}
                                 onChange={(event) => setCity(event.target.value)}
