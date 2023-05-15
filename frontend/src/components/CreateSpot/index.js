@@ -15,7 +15,6 @@ export default function CreateSpot() {
         dispatch(getSpotDetails(spotId))
     }, [dispatch, spotId])
 
-console.log('hello');
     const [country, setCountry] = useState("" || spot?.country);
     const [exactAddress, setExactAddress] = useState(spot?.address || "");
     const [city, setCity] = useState(spot?.city || "");

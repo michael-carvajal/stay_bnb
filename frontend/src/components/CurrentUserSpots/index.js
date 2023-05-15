@@ -8,10 +8,10 @@ import DeleteSpotModal from "./DeleteSpotModal";
 import missingImage from "../../assets/images/no-photo.jpeg"
 const CurrentUserSpots = () => {
     let { allSpots } = useSelector(state => state.spots)
-    console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
+    // console.log("this is userSpts from currentUserSpots =====================>   ", allSpots);
     const spotsArray = !allSpots ? null : Object.values(allSpots).map(spot => spot)
 
-    console.log(spotsArray);
+    // console.log(spotsArray);
     const dispatch = useDispatch()
 
     useEffect(() => {

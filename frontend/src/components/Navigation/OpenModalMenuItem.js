@@ -16,7 +16,7 @@ function OpenModalMenuItem({
         if (onItemClick) onItemClick();
     };
     const signUp = itemText === "Sign Up" ? "sign-up-item" : "";
-    console.log(signUp);
+    // console.log(signUp);
     return (
         <li className={signUp} onClick={onClick}>{itemText}</li>
     );

@@ -25,8 +25,8 @@ export const ShowSpots = () => {
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 const roundedAvg = Number(spot?.avgRating)
-                console.log("roundedAvg:", roundedAvg);
-                console.log("typeof roundedAvg:", typeof roundedAvg);
+                // console.log("roundedAvg:", roundedAvg);
+                // console.log("typeof roundedAvg:", typeof roundedAvg);
                 const rating = roundedAvg === 0 ? <p className="normal-font">New</p> :
 
                     <div className="reserve-stats">

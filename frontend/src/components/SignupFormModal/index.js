@@ -20,7 +20,7 @@ function SignupFormModal() {
         e.preventDefault();
         if (password === confirmPassword) {
             setErrors({});
-            console.log("this is submit for modal sign in =====> ");
+            // console.log("this is submit for modal sign in =====> ");
 
             return dispatch(
                 sessionActions.signup({
