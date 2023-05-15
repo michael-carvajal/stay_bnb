@@ -25,7 +25,10 @@ export const ShowSpots = () => {
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 const roundedAvg = spot?.avgRating
-                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> :
+                console.log("roundedAvg:", roundedAvg);
+                console.log("typeof roundedAvg:", typeof roundedAvg);
+                const rating = roundedAvg === null ? <p className="normal-font">New</p> :
+                    
                     <div className="reserve-stats">
                         <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
 
