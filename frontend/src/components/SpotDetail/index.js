@@ -126,7 +126,7 @@ const SpotDetail = () => {
     for (let i = 0; i <= 3; i++) {
         const element = restOfImages[i];
         if (!element) {
-            visibleImages.push("")
+            visibleImages.push(missingImage)
         } else {
             visibleImages.push(element)
         }
