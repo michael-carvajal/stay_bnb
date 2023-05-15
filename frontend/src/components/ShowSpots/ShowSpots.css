@@ -45,6 +45,7 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    top: -4px;
     width: fit-content;
     height: fit-content;
     border: solid transparent;
@@ -54,9 +55,8 @@
     top: 90px;
     border-width: 12px;
     border-top-color: black;
-    margin-top: -100px;
+    margin-top: -50px;
     z-index: 10000;
-    /* add a negative margin to adjust position */
 }
 
 .spot-card-toolip:hover::after {

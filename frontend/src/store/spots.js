@@ -140,7 +140,7 @@ export default function spotsReducer(state = initialState, action) {
             return { ...normalizedSpots }
         }
         case CURRENT_SPOT: {
-            const spotsWithDetails = { ...state, user :{[action.details.id]: {...action.details}} };
+            const spotsWithDetails = { ...state, spot: {}, user :{[action.details.id]: {...action.details}} };
             return spotsWithDetails;
         }
 

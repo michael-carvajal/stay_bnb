@@ -15,6 +15,7 @@ export default function CreateSpot() {
         dispatch(getSpotDetails(spotId))
     }, [dispatch, spotId])
 
+console.log('hello');
     const [country, setCountry] = useState("" || spot?.country);
     const [exactAddress, setExactAddress] = useState(spot?.address || "");
     const [city, setCity] = useState(spot?.city || "");
@@ -48,15 +49,15 @@ export default function CreateSpot() {
 
         if (!spot || !spot?.city) {
 
-           return (
-               <h2>Loading...</h2>
-           )
-       }
+            return (
+                <h2>Loading...</h2>
+            )
+        }
         allSpotImages = spot.SpotImages?.filter(image => {
-           if (image.url) {
-               return image
-           }
-       })
+            if (image.url) {
+                return image
+            }
+        })
     }
     async function handleSubmit(event) {
         event.preventDefault();
@@ -255,8 +256,8 @@ export default function CreateSpot() {
                     {allSpotImages?.map(image => {
                         return (
                             <div className="image-placeholder" key={image.id}>
-                                <img className="update-single-image" src={image.url} />
-                                <button>Delete</button>
+                                {/* <img className="update-single-image" src={image.url} />
+                                <button>Delete</button> */}
                             </div>
                         )
                     })}
