@@ -43,16 +43,21 @@ export default function CreateSpot() {
     //         setPrice(spot.price || 0);
     //     }
     // }, [spot]);
-    if (!spot || !spot?.city) {
-        return (
-            <h2>Loading...</h2>
-        )
+    let allSpotImages;
+    if (spotId) {
+
+        if (!spot || !spot?.city) {
+
+           return (
+               <h2>Loading...</h2>
+           )
+       }
+        allSpotImages = spot.SpotImages?.filter(image => {
+           if (image.url) {
+               return image
+           }
+       })
     }
-    const allSpotImages = spot.SpotImages?.filter(image => {
-        if (image.url) {
-            return image
-        }
-    })
     async function handleSubmit(event) {
         event.preventDefault();
         const newErrors = {};
