@@ -39,8 +39,8 @@
         width: calc(100%);
     }
 }
-.spot-card:hover::before,
-.spot-card:hover::after {
+.spot-card-toolip:hover::before,
+.spot-card-toolip:hover::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -50,7 +50,7 @@
     border: solid transparent;
 }
 
-.spot-card:hover::before {
+.spot-card-toolip:hover::before {
     top: 90px;
     border-width: 12px;
     border-top-color: black;
@@ -59,7 +59,7 @@
     /* add a negative margin to adjust position */
 }
 
-.spot-card:hover::after {
+.spot-card-toolip:hover::after {
     content: attr(data-tooltip);
     bottom: calc(100% + 10px);
     background-color: black;

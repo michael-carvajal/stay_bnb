@@ -28,7 +28,7 @@ const CurrentUserSpots = () => {
         <div className="manage-user-spots">
 
             <div className="manage-heading">
-                <h1>Manage Your Spots</h1>
+             <h1>Manage Your Spots</h1>
                 {spotsArray.length === 0 && <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>}
 
             </div>
@@ -38,9 +38,9 @@ const CurrentUserSpots = () => {
                     const roundedAvg = spot?.avgRating
                     const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
                     return (
-                        <div >
+                        <div className="spot-card">
 
-                            <NavLink key={`spotIndex-${index}`} to={`/spots/${spot?.id}`} className="spot-card" data-tooltip={spot.name}>
+                            <NavLink key={`spotIndex-${index}`} className="user-spot-nav spot-card-toolip" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
                                 <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                                 <div className="location-rating ">

@@ -33,7 +33,7 @@ export const ShowSpots = () => {
                         </p>
                     </div>
                 return (
-                    <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
+                    <NavLink key={spot.id} className="spot-card spot-card-toolip" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
                         <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
 
                         <div className="location-rating ">
