@@ -7,15 +7,15 @@ import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 export const ShowSpots = () => {
     const dispatch = useDispatch();
     let allSpots = useSelector(state => state.spots.allSpots);
-    console.log(allSpots);
+    // console.log(allSpots);
     useEffect(() => {
-        console.log(1);
+        // console.log(1);
         dispatch(getAllSpots())
     }, [dispatch])
 
     allSpots = !allSpots ? null : Object.values(allSpots).map(spot => spot)
     if (!allSpots || !Array.isArray(allSpots)) {
-        console.log("allSpots is undefined");
+        // console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
         )
