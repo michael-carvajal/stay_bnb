@@ -46,7 +46,7 @@ export const fetchReview = (spotId) => async dispatch => {
 export const getUserReviews = () => async dispatch => {
     const response = await csrfFetch(`/api/reviews/current`);
     const reviews = await response.json();
-    console.log("These are a reviews of current user ========>", reviews);
+    // console.log("These are a reviews of current user ========>", reviews);
     return dispatch(userReviews(reviews))
 
 }

@@ -40,7 +40,7 @@ function LoginFormModal() {
                 }
             });
     }
-console.log("this is log in modal");
+// console.log("this is log in modal");
     return (
         <div className="log-in">
             <h1>Log In</h1>

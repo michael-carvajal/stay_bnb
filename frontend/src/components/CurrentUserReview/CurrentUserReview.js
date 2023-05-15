@@ -16,7 +16,7 @@ export default function CurrentUserReview() {
     if (!allReviews || !reviews) {
         return (<h1>Loading...</h1>)
     }
-    console.log("allReviews of current =====>", allReviews);
+    // console.log("allReviews of current =====>", allReviews);
     return (
         <div className="manage-spots">
             <div>

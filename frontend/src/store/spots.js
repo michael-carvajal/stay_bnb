@@ -47,20 +47,20 @@ export const getAllSpots = () => async dispatch => {
 export const getSpotDetails = (spotId) => async dispatch => {
     const response = await fetch(`/api/spots/${spotId}`);
     const details = await response.json();
-    console.log("details for the spot right here ====>", details);
+    // console.log("details for the spot right here ====>", details);
     dispatch(currentSpotDetials(details))
 }
 
 
 export const postCreateSpot = (details) => async dispatch => {
-    console.log("here are the post create spot details ====>", details.spot);
+    // console.log("here are the post create spot details ====>", details.spot);
     const postSpot = await csrfFetch(`/api/spots`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(details.spot)
     });
     const spotThatWasCreated = await postSpot.json();
-    console.log("created for the spot right here ====>", spotThatWasCreated);
+    // console.log("created for the spot right here ====>", spotThatWasCreated);
     dispatch(createSpot(spotThatWasCreated))
 
     const previewImage = await csrfFetch(`/api/spots/${spotThatWasCreated.id}/images`, {
@@ -86,7 +86,7 @@ export const postCreateSpot = (details) => async dispatch => {
 export const fetchUserSpots = () => async dispatch => {
     const response = await csrfFetch('/api/spots/current');
     const userSpotsArray = await response.json();
-    console.log('user spots array looks like this ===>', userSpotsArray);
+    // console.log('user spots array looks like this ===>', userSpotsArray);
     dispatch(allSpots(userSpotsArray.Spots))
 }
 export const deleteUserSpot = (spotId) => async dispatch => {
@@ -98,7 +98,7 @@ export const deleteUserSpot = (spotId) => async dispatch => {
     dispatch(deleteSpot(spotId))
 }
 export const putSpot = (details) => async dispatch => {
-    console.log("here are the post create spot details ====>", details);
+    // console.log("here are the post create spot details ====>", details);
     const postSpot = await csrfFetch(`/api/spots/${details.spot.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ export const putSpot = (details) => async dispatch => {
     });
     const updatedSpot = await postSpot.json();
 
-    console.log("created for the spot right here ====>", updatedSpot);
+    // console.log("created for the spot right here ====>", updatedSpot);
 
     // const previewImage = await csrfFetch(`/api/spots/${updatedSpot.id}/images`, {
     //     method: "PUT",
