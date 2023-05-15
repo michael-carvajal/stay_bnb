@@ -3,6 +3,7 @@ const GET_REVIEW = "/reviews/GET_REVIEW"
 const POST_REVIEW = "/reviews/POST_REVIEW"
 const DELETE_REVIEW = "/reviews/DELETE_REVIEW"
 const USER_REVIEWS = "/reviews/USER_REVIEWS"
+const PUT_REVIEW = "/reviews/PUT_REVIEW"
 
 const getReview = (reviews) => {
     return {
@@ -16,10 +17,17 @@ const createReview = (review) => {
         review
     }
 }
-const removeReview = (spotId) => {
+const updateReview = (review, reviewId) => {
+    return {
+        type: PUT_REVIEW,
+        review,
+        reviewId
+    }
+}
+const removeReview = (reviewId) => {
     return {
         type: DELETE_REVIEW,
-        spotId
+        reviewId
     }
 }
 const userReviews = (reviews) => {
@@ -60,6 +68,27 @@ export const postReview = (reviewObj) => async dispatch => {
 
 
 }
+export const putReview = (reviewObj, reviewId) => async dispatch => {
+    console.log("this is review OBJ", reviewObj);
+    console.log("this is review id=========>", reviewId);
+    try {
+        const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ review: reviewObj.review, stars: reviewObj.stars })
+        });
+        const updatedReview = await response.json();
+        console.log("this was created after post requrst ====> ", updatedReview);
+        updatedReview.user = reviewObj.user.user
+        dispatch(updateReview(updatedReview, reviewId))
+        // dispatch(getUserReviews())
+
+    } catch (error) {
+        return error.json()
+    }
+
+
+}
 export const deleteReview = (spotId) => async dispatch => {
     // console.log("this is review OBJ", spotId);
     try {
@@ -69,7 +98,7 @@ export const deleteReview = (spotId) => async dispatch => {
         const deleteMEssage = await response.json();
         console.log(deleteMEssage);
         dispatch(removeReview(spotId))
-        dispatch(getUserReviews())
+        // dispatch(getUserReviews())
     } catch (error) {
         return error.json()
     }
@@ -103,13 +132,23 @@ const reviewReducer = (state = {}, action) => {
             console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
+        case PUT_REVIEW: {
+            const { reviewId, review } = action;
+            const newReview = { ...review };
+            const newSpot = {
+                ...state.spot,
+                [reviewId]: newReview,
+            };
+            const newState = { ...state, spot: newSpot };
+            return newState;
+        }
         case DELETE_REVIEW:
-            const newSpots = { ...state.spots };
-            delete newSpots[action.spotId];
+            const { [action.reviewId]: deletedSpot, ...remainingSpots } = state.spot;
             return {
                 ...state,
-                spots: newSpots,
+                spot: remainingSpots,
             };
+
         case USER_REVIEWS: {
             const normalizeReview = { user: {} };
             console.log("reviews repsonse =====>", action.reviews);

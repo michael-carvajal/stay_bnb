@@ -11,8 +11,8 @@ import DeleteReviewModal from "./DeleteReviewModal"
 
 const SpotDetail = () => {
     const { spotId } = useParams()
-    let currentSpot = useSelector(state => state.spots)
-    currentSpot = currentSpot[spotId]
+    let {spots} = useSelector(state => state)
+    const currentSpot = !spots.user ? null : spots.user[spotId]
     let { session } = useSelector(state => state)
     const currentUser = session
     // console.log("this is the current user ====================>", currentUser);
@@ -29,21 +29,22 @@ const SpotDetail = () => {
     const restOfImages = currentSpot?.SpotImages?.filter(image => image.preview === false)
     const dispatch = useDispatch();
 
-    const [didUserPost, setDidUserPost] = useState(false)
+    let didUserPost = false;
     useEffect(() => {
 
-        async function getDetails() {
-            dispatch(getSpotDetails(spotId));
-            dispatch(fetchReview(spotId));
+        // async function getDetails() {
+        dispatch(getSpotDetails(spotId));
 
-        }
-        getDetails()
+            dispatch(fetchReview(spotId));
+        console.log("useEffect is happening!!!!!!!!!!");
+        // }
+        // getDetails()
 
     }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
     console.log("These are all the reviews in an array ==================>", allReviews);
-    if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
-        console.log("allSpots is undefined");
+    if (!restOfImages || !allReviews || !currentUser) {
+        // console.log("allSpots is undefined", currentSpot, );
         dispatch(fetchReview(spotId))
         return (
             <h1>Loading...</h1>
@@ -56,27 +57,38 @@ const SpotDetail = () => {
     //         // setDidUserPost(true)
     //     }
     // });
-
+    allReviews.forEach(review => {
+        const userId = currentUser.user?.id
+        const reviewOwnerId = review.user?.id || review.User?.id
+        if (userId === reviewOwnerId) {
+            didUserPost = true
+        }
+    })
+    const numberOfReviews = allReviews?.length;
     const ownerOfSpot = didUserPost ? null : (
         <div className="post-review">
-            <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} />
-            <p>Be the first to post a review!</p>
+            {currentUser.user ? <OpenModalButton buttonText={"Post Your Review"} modalComponent={<ReviewModal spotId={spotId} />} /> : null}
+             { numberOfReviews === 0 ?<p>Be the first to post a review!</p> : null}
         </div>
     )
     const renderPostReview = currentUser.user?.id === currentSpot.ownerId ? null : ownerOfSpot;
 
 
-    const numberOfReviews = allReviews?.length;
+    const avgRating = currentSpot?.avgStarRating;
+    const visibleImages = [];
+
     const reviewRender = (reviewsLength, size) => {
         if (size === "small") {
             if (reviewsLength > 0) {
                 return (<div className="reserve-stats">
 
-                    <i className={` ${checkObj(1)} `}></i>
-                    <i className={` ${checkObj(2)} `}></i>
-                    <i className={` ${checkObj(3)} `}></i>
-                    <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }
+                    <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
+
+                    <p className="normal-font">{avgRating % 1 !== 0 ? avgRating?.toFixed(2) : avgRating?.toFixed(1)}
+                    </p>
+
+
+                    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>  {numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"}
                 </div>)
             } else {
                 return (<div className="reserve-stats">
@@ -89,11 +101,12 @@ const SpotDetail = () => {
             if (reviewsLength > 0) {
                 return (<div className="reserve-stats" id="stars">
 
-                    <i className={` ${checkObj(1)} `}></i>
-                    <i className={` ${checkObj(2)} `}></i>
-                    <i className={` ${checkObj(3)} `}></i>
-                    <i className={` ${checkObj(4)} `}></i>
-                    <i className={` ${checkObj(5)} `}></i>    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
+                    <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
+
+                    <p className="normal-font">{avgRating % 1 !== 0 ? avgRating?.toFixed(2) : avgRating?.toFixed(1)}
+                    </p>
+
+                    <i className="fas fa-circle" style={{ color: "black", fontSize: "5px" }}></i>
 
                     <p>{numberOfReviews} {numberOfReviews > 1 ? "reviews" : "review"  }</p>
                 </div>)
@@ -108,13 +121,12 @@ const SpotDetail = () => {
         }
     }
 
-    const avgRating = currentSpot?.avgStarRating;
-    const visibleImages = [];
+
     const ratingObj = {};
     for (let i = 0; i <= 3; i++) {
         const element = restOfImages[i];
         if (!element) {
-            visibleImages.push("")
+            visibleImages.push(missingImage)
         } else {
             visibleImages.push(element)
         }
@@ -144,6 +156,8 @@ const SpotDetail = () => {
     // <img id="detail-img2" src={restOfImages[1]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
     // <img id="detail-img3" src={restOfImages[2]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/>
     // <img id="detail-img4" src={restOfImages[3]?.url} alt={currentSpot.name} onError = {(e) => { e.target.onerror = null; e.target.src = missingImage; }}/> */}
+
+
     return (
         <div className="spot-detail">
             <h1 className="spot-name">{currentSpot.name}</h1>
@@ -204,13 +218,15 @@ const SpotDetail = () => {
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>
                                 {userId === reviewOwnerId ?
-                                    <div className="post-review">
-                                        <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={spot?.id} reviewId={review?.id} />} />
+
+                                    <div className="update-delete">
+                                        <OpenModalButton buttonText={"Update"} modalComponent={<ReviewModal spotId={spotId} buttonType="update" spotName={currentSpot.name} currentReview={review} />} />
+                                        <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteReviewModal spotId={spot?.id} reviewId={review?.id} deleteType="review" />} />
                                     </div>
                                     : null}
                             </div>
                         )
-                    })}
+                    }).reverse()}
             </div>
         </div>
     )

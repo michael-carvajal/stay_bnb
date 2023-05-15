@@ -28,7 +28,7 @@ const CurrentUserSpots = () => {
         <div className="manage-user-spots">
 
             <div className="manage-heading">
-                <h1>Manage Your Spots</h1>
+             <h1>Manage Your Spots</h1>
                 {spotsArray.length === 0 && <NavLink to="/spots/new" className="smaller-btn manage-create-spot">Create a New Spot</NavLink>}
 
             </div>
@@ -38,16 +38,23 @@ const CurrentUserSpots = () => {
                     const roundedAvg = spot?.avgRating
                     const rating = spot?.avgRating === null ? <p className="normal-font">New</p> : <p className="normal-font">{roundedAvg}</p>;
                     return (
-                        <NavLink key={spot.id} className="spot-card" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
-                            <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+                        <div className="spot-card">
 
-                            <div className="location-rating ">
-                                <p className="normal-font">{spot?.city}, {spot?.state}</p>
-                                {rating}
+                            <NavLink key={`spotIndex-${index}`} className="user-spot-nav spot-card-toolip" to={`/spots/${spot?.id}`} data-tooltip={spot.name}>
+                                <img src={spot?.previewImage} alt={spot?.name} className="preview-image" onError={(e) => { e.target.onerror = null; e.target.src = missingImage; }} />
+
+                                <div className="location-rating ">
+                                    <p className="normal-font">{spot?.city}, {spot?.state}</p>
+                                    {rating}
+                                </div>
+                                <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
+
+                            </NavLink>
+                            <div className="update-delete">
+                                <NavLink to={`/spots/${spot?.id}/edit`} className="reserve-btn">Update</NavLink>
+                                <OpenModalButton buttonText={"Delete"} modalComponent={<DeleteSpotModal spotId={spot?.id} />} />
                             </div>
-                            <div className="normal-font"><p className="reserve-price"> ${spot?.price}</p> night</div>
-
-                        </NavLink>
+                        </div>
                     )
                 })}
             </div>

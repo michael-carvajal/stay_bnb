@@ -1,8 +1,8 @@
 .create-spot{
     width: 35%;
-    margin: 30px auto;
+    margin: 15px auto 30px;
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex-direction: column;
 }
 .form-group{
@@ -11,6 +11,9 @@
     gap: 5px;
     margin-bottom: 10px;
     width: 100%;
+}
+.form-group > h2{
+    margin-bottom: 10px;
 }
 textarea, input{
     border: 3px solid black;
@@ -83,4 +86,8 @@ span{
 .create-price > p {
     width: 20px;
     font-size: 20px;
+}
+
+.form-group > label, p {
+    font-size: 14px;
 }
