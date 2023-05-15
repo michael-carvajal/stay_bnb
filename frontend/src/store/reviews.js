@@ -24,10 +24,10 @@ const updateReview = (review, reviewId) => {
         reviewId
     }
 }
-const removeReview = (spotId) => {
+const removeReview = (reviewId) => {
     return {
         type: DELETE_REVIEW,
-        spotId
+        reviewId
     }
 }
 const userReviews = (reviews) => {
@@ -81,7 +81,8 @@ export const putReview = (reviewObj, reviewId) => async dispatch => {
         console.log("this was created after post requrst ====> ", updatedReview);
         updatedReview.user = reviewObj.user.user
         dispatch(updateReview(updatedReview, reviewId))
-       
+        // dispatch(getUserReviews())
+
     } catch (error) {
         return error.json()
     }
@@ -97,7 +98,7 @@ export const deleteReview = (spotId) => async dispatch => {
         const deleteMEssage = await response.json();
         console.log(deleteMEssage);
         dispatch(removeReview(spotId))
-        dispatch(getUserReviews())
+        // dispatch(getUserReviews())
     } catch (error) {
         return error.json()
     }
@@ -132,19 +133,22 @@ const reviewReducer = (state = {}, action) => {
             return newReviews
         }
         case PUT_REVIEW: {
-            const newReviews = { ...state, user : {[action.reviewId]  : {...action.review }}};
-            // console.log("this is the action.review =>", action.review);
-            // console.log("reviews before ====>  ", newReviews);
-            // console.log("reviews after ===========================>  ", newReviews);
-            return newReviews
+            const { reviewId, review } = action;
+            const newReview = { ...review };
+            const newSpot = {
+                ...state.spot,
+                [reviewId]: newReview,
+            };
+            const newState = { ...state, spot: newSpot };
+            return newState;
         }
         case DELETE_REVIEW:
-            const newSpots = { ...state.spots };
-            delete newSpots[action.spotId];
+            const { [action.reviewId]: deletedSpot, ...remainingSpots } = state.spot;
             return {
                 ...state,
-                spots: newSpots,
+                spot: remainingSpots,
             };
+
         case USER_REVIEWS: {
             const normalizeReview = { user: {} };
             console.log("reviews repsonse =====>", action.reviews);

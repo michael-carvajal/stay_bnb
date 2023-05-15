@@ -5,17 +5,17 @@ import { getSpotDetails, postCreateSpot, putSpot } from "../../store/spots";
 import "./CreateSpot.css"
 export default function CreateSpot() {
     const { spotId } = useParams();
-    const spot = useSelector(state => state.spots[spotId])
+    const { spots } = useSelector(state => state)
+    let spot = !spots.user ? null : spots?.user[spotId]
 
     // console.log("this is the spot =====>", spot);
     const dispatch = useDispatch();
     const history = useHistory();
     useEffect(() => {
         dispatch(getSpotDetails(spotId))
-    }, [dispatch])
+    }, [dispatch, spotId])
 
-
-    const [country, setCountry] = useState(spot?.country || "");
+    const [country, setCountry] = useState("" || spot?.country);
     const [exactAddress, setExactAddress] = useState(spot?.address || "");
     const [city, setCity] = useState(spot?.city || "");
     const [state, setState] = useState(spot?.state || "");
@@ -32,8 +32,18 @@ export default function CreateSpot() {
     const [formErrors, setFormErrors] = useState({})
 
 
-
-    if (!spot) {
+    // useEffect(() => {
+    //     if (spot) {
+    //         setCountry(spot.country || "");
+    //         setExactAddress(spot.address || "");
+    //         setCity(spot.city || "");
+    //         setState(spot.state || "");
+    //         setDescription(spot.description || "");
+    //         setSpotName(spot.name || '');
+    //         setPrice(spot.price || 0);
+    //     }
+    // }, [spot]);
+    if (!spot || !spot?.city) {
         return (
             <h2>Loading...</h2>
         )
@@ -129,7 +139,7 @@ export default function CreateSpot() {
                         name="country"
                         placeholder="Country"
                         required
-                        value={country || spot?.country}
+                        value={country}
                         onChange={(event) => setCountry(event.target.value)}
                     />
                 </div>
@@ -141,7 +151,7 @@ export default function CreateSpot() {
                         name="address"
                         placeholder="Address"
                         required
-                        value={exactAddress || spot?.address}
+                        value={exactAddress}
                         onChange={(event) => setExactAddress(event.target.value)}
                     />
                 </div>
@@ -157,7 +167,7 @@ export default function CreateSpot() {
                                 name="city"
                                 placeholder="City"
                                 required
-                                value={city || spot?.city}
+                                value={city}
                                 onChange={(event) => setCity(event.target.value)}
                             ></input>
                         </div>
@@ -173,7 +183,7 @@ export default function CreateSpot() {
                                 name="state"
                                 required
                                 placeholder="STATE"
-                                value={state || spot?.state}
+                                value={state}
                                 onChange={(event) => setState(event.target.value)}
                             />
                         </div>
@@ -191,7 +201,7 @@ export default function CreateSpot() {
                     name="description"
                     minLength="30"
                     required
-                    value={description || spot?.description}
+                    value={description}
                     onChange={(event) => setDescription(event.target.value)}
                     rows="8" cols="50"
                     placeholder="Please write at least 30 characters "
@@ -209,7 +219,7 @@ export default function CreateSpot() {
                     id="spot-name"
                     name="spot-name"
                     required
-                    value={spotName || spot?.name}
+                    value={spotName}
                     placeholder="Name of your spot"
                     onChange={(event) => setSpotName(event.target.value)}
                 />
@@ -228,7 +238,7 @@ export default function CreateSpot() {
                         name="price"
                         required
                         placeholder="Price per night (USD)"
-                        value={price || spot?.price}
+                        value={price}
                         onChange={(event) => setPrice(event.target.value)}
                     />
                 </div>

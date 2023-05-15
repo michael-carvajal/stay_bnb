@@ -10,7 +10,7 @@ export default function DeleteReviewModal({ spotId, reviewId,  deleteType}) {
     const removeReview = (e) => {
         // const reviewId = e.target.value;
         dispatch(deleteReview(reviewId))
-        dispatch(getSpotDetails(spotId))
+        // dispatch(getSpotDetails(spotId))
         closeModal()
     }
     // console.log("this is the button text =======>", buttonText);

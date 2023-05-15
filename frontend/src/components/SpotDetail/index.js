@@ -11,8 +11,8 @@ import DeleteReviewModal from "./DeleteReviewModal"
 
 const SpotDetail = () => {
     const { spotId } = useParams()
-    let currentSpot = useSelector(state => state.spots)
-    currentSpot = currentSpot[spotId]
+    let {spots} = useSelector(state => state)
+    const currentSpot = !spots.user ? null : spots.user[spotId]
     let { session } = useSelector(state => state)
     const currentUser = session
     // console.log("this is the current user ====================>", currentUser);
@@ -32,18 +32,19 @@ const SpotDetail = () => {
     let didUserPost = false;
     useEffect(() => {
 
-        async function getDetails() {
-            dispatch(getSpotDetails(spotId));
-            dispatch(fetchReview(spotId));
+        // async function getDetails() {
+        dispatch(getSpotDetails(spotId));
 
-        }
-        getDetails()
+            dispatch(fetchReview(spotId));
+        console.log("useEffect is happening!!!!!!!!!!");
+        // }
+        // getDetails()
 
     }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
     console.log("These are all the reviews in an array ==================>", allReviews);
-    if (!currentSpot || !restOfImages || !allReviews || !currentUser) {
-        console.log("allSpots is undefined");
+    if (!restOfImages || !allReviews || !currentUser) {
+        // console.log("allSpots is undefined", currentSpot, );
         dispatch(fetchReview(spotId))
         return (
             <h1>Loading...</h1>
