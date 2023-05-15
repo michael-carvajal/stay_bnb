@@ -43,7 +43,7 @@ export default function CurrentUserReview() {
                         // const reviewOwnerId = review.user?.id || review.User?.id
 
                         return (
-                            <div key={review.id} className="each-review">
+                            <div key={`user-reviewId-${review.id}`} className="each-review">
                                 <p>{review.Spot?.name} </p>
                                 <p className="review-date">{`${monthName} ${yearNumber}`}</p>
                                 <p>{review.review}</p>

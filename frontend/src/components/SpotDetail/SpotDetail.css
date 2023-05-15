@@ -22,6 +22,8 @@ h1 ,h2 {
 #detail-img0{
     width: 49%;
     border: 2px black solid;
+    object-fit: cover;
+    object-position: center;
 }
 
 .sub-images {
@@ -31,6 +33,9 @@ h1 ,h2 {
     flex-wrap: wrap;
     justify-content: space-between;
     align-content: space-between;
+     object-fit: cover;
+    object-position: center;
+
 }
 .sub-images > * {
     width: 49%;

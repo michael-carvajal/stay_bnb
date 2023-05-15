@@ -7,15 +7,15 @@ import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 export const ShowSpots = () => {
     const dispatch = useDispatch();
     let allSpots = useSelector(state => state.spots.allSpots);
-    console.log(allSpots);
+    // console.log(allSpots);
     useEffect(() => {
-        console.log(1);
+        // console.log(1);
         dispatch(getAllSpots())
     }, [dispatch])
 
     allSpots = !allSpots ? null : Object.values(allSpots).map(spot => spot)
     if (!allSpots || !Array.isArray(allSpots)) {
-        console.log("allSpots is undefined");
+        // console.log("allSpots is undefined");
         return (
             <h1>Loading...</h1>
         )
@@ -25,7 +25,10 @@ export const ShowSpots = () => {
             {allSpots?.map((spot, index) => {
                 // console.log(spot?.id);
                 const roundedAvg = spot?.avgRating
-                const rating = spot?.avgRating === null ? <p className="normal-font">New</p> :
+                console.log("roundedAvg:", roundedAvg);
+                console.log("typeof roundedAvg:", typeof roundedAvg);
+                const rating = roundedAvg === null ? <p className="normal-font">New</p> :
+                    
                     <div className="reserve-stats">
                         <i className="fas fa-star" style={{ marginRight: "5px" }}></i>
 

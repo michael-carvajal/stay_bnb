@@ -36,13 +36,13 @@ const SpotDetail = () => {
         dispatch(getSpotDetails(spotId));
 
             dispatch(fetchReview(spotId));
-        console.log("useEffect is happening!!!!!!!!!!");
+        // console.log("useEffect is happening!!!!!!!!!!");
         // }
         // getDetails()
 
     }, [dispatch]);
     // console.log("this is theallReviews from use seleector ====>", allReviews);
-    console.log("These are all the reviews in an array ==================>", allReviews);
+    // console.log("These are all the reviews in an array ==================>", allReviews);
     if (!restOfImages || !allReviews || !currentUser) {
         // console.log("allSpots is undefined", currentSpot, );
         dispatch(fetchReview(spotId))
@@ -50,7 +50,7 @@ const SpotDetail = () => {
             <h1>Loading...</h1>
         )
     }
-    console.log("current user is  ===================>", currentUser);
+    // console.log("current user is  ===================>", currentUser);
     // allReviews.forEach(review => {
     //     if (review.User?.id === currentUser.user?.id) {
 

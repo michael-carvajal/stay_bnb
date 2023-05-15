@@ -96,11 +96,12 @@ export const deleteReview = (spotId) => async dispatch => {
             method: "DELETE"
         });
         const deleteMEssage = await response.json();
-        console.log(deleteMEssage);
+        // console.log(deleteMEssage);
+
         dispatch(removeReview(spotId))
         // dispatch(getUserReviews())
     } catch (error) {
-        return error.json()
+        return await error.json()
     }
 
 
@@ -126,10 +127,10 @@ const reviewReducer = (state = {}, action) => {
 
         case POST_REVIEW: {
             const newReviews = { ...state };
-            console.log("this is the action.review =>", action.review);
-            console.log("reviews before ====>  ", newReviews);
+            // console.log("this is the action.review =>", action.review);
+            // console.log("reviews before ====>  ", newReviews);
             newReviews.spot[action.review.id] = action.review
-            console.log("reviews after ===========================>  ", newReviews);
+            // console.log("reviews after ===========================>  ", newReviews);
             return newReviews
         }
         case PUT_REVIEW: {
@@ -143,15 +144,26 @@ const reviewReducer = (state = {}, action) => {
             return newState;
         }
         case DELETE_REVIEW:
-            const { [action.reviewId]: deletedSpot, ...remainingSpots } = state.spot;
-            return {
-                ...state,
-                spot: remainingSpots,
-            };
+
+
+            const { [action.reviewId]: deletedSpot, ...remainingSpots } = state.user || state.spot;
+            if (state.user) {
+                return {
+                    ...state,
+                    user: remainingSpots,
+                };
+
+            } else {
+                return {
+                    ...state,
+                    spot: remainingSpots,
+                };
+
+            }
 
         case USER_REVIEWS: {
-            const normalizeReview = { user: {} };
-            console.log("reviews repsonse =====>", action.reviews);
+            const normalizeReview = {...state, user: {} };
+            // console.log("reviews repsonse =====>", action.reviews);
             action.reviews.Reviews?.forEach(review => {
                 normalizeReview.user[review.id] = {
                     id: review.id,
